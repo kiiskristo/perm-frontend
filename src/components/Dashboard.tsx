@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { LineChart, BarChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { Calendar, ChevronDown, ChevronUp, Search, Clock, ArrowRight } from 'lucide-react';
+import { Calendar, ChevronDown, ChevronUp, Clock, ArrowRight } from 'lucide-react';
 
 // Dashboard data interfaces
 interface DashboardData {
@@ -355,7 +355,6 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
-        
         {/* Date Predictor */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
           <div className="flex items-center mb-4">
