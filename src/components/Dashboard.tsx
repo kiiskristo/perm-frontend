@@ -5,12 +5,6 @@ import { LineChart, BarChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip, R
 import { Calendar, ChevronDown, ChevronUp, Clock, ArrowRight } from 'lucide-react';
 import { fetchDashboardData, getPrediction, type DashboardData, type DatePrediction } from '@/services/permService';
 
-// Dashboard data interfaces
-interface ExpectedTime {
-  days: number;
-  confidence: number;
-}
-
 // Main Dashboard Component
 const Dashboard = () => {
   const [timeRange, setTimeRange] = useState(30);
