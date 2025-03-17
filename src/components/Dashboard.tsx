@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { LineChart, BarChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import { Calendar, ChevronDown, ChevronUp, Clock, ArrowRight } from 'lucide-react';
+import { ChevronDown, ChevronUp, Clock, ArrowRight } from 'lucide-react';
 import { fetchDashboardData, getPrediction, type DashboardData, type DatePrediction } from '@/services/permService';
 
 // Main Dashboard Component
