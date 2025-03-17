@@ -40,12 +40,27 @@ export async function GET(request: Request) {
         volume: Math.floor(Math.random() * 500) + 1000,
       };
     }),
+    monthly_backlog: [
+      {
+        month: "June 2023",
+        backlog: 0,
+        is_active: false,
+        withdrawn: 982
+      },
+      // ... include all your sample data here
+    ],
     metrics: {
       new_cases: Math.floor(Math.random() * 100) + 400,
       new_cases_change: Math.floor(Math.random() * 10) - 5,
       processed_cases: Math.floor(Math.random() * 100) + 350,
       processed_cases_change: Math.floor(Math.random() * 10) + 2,
       current_backlog: Math.floor(Math.random() * 500) + 2000,
+      processing_times: {
+        lower_estimate_days: 486,
+        median_days: 494,
+        upper_estimate_days: 507,
+        as_of_date: "2025-03-16"
+      }
     },
   };
   

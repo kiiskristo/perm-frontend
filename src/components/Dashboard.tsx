@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { LineChart, BarChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { LineChart, BarChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { Calendar, ChevronDown, ChevronUp, Clock, ArrowRight } from 'lucide-react';
 import { fetchDashboardData, getPrediction, type DashboardData, type DatePrediction } from '@/services/permService';
 
@@ -169,10 +169,18 @@ const Dashboard = () => {
             <h3 className="text-gray-500 dark:text-gray-400 text-sm font-medium mb-4">Average Process Time</h3>
             <div className="flex items-end justify-between">
               <div>
-                <p className="text-2xl font-bold dark:text-white">127 days</p>
+                <p className="text-2xl font-bold dark:text-white">
+                  {dashboardData.metrics.processing_times.median_days} days
+                </p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  Range: {dashboardData.metrics.processing_times.lower_estimate_days}-{dashboardData.metrics.processing_times.upper_estimate_days} days
+                </p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  As of {new Date(dashboardData.metrics.processing_times.as_of_date).toLocaleDateString()}
+                </p>
               </div>
               <div className="h-12 w-12 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center">
-                <Calendar className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+                <Clock className="h-6 w-6 text-purple-600 dark:text-purple-400" />
               </div>
             </div>
           </div>
@@ -181,95 +189,188 @@ const Dashboard = () => {
       
       {/* Charts */}
       {dashboardData && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-            <h3 className="text-lg font-semibold mb-4 dark:text-white">Daily Case Volume</h3>
-            <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart
-                  data={dashboardData.daily_volume}
-                  margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.1} />
-                  <XAxis 
-                    dataKey="date" 
-                    tick={{ fontSize: 12 }} 
-                    tickFormatter={(value) => new Date(value).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
-                  />
-                  <YAxis tick={{ fontSize: 12 }} />
-                  <Tooltip 
-                    formatter={(value) => [`${value} cases`, 'Volume']}
-                    labelFormatter={(label) => new Date(label).toLocaleDateString()}
-                  />
-                  <Line type="monotone" dataKey="volume" stroke="#3B82F6" activeDot={{ r: 8 }} />
-                </LineChart>
-              </ResponsiveContainer>
+        <>
+          {/* First row of charts - 2 columns */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Daily Case Volume */}
+            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+              <h3 className="text-lg font-semibold mb-4 dark:text-white">Daily Case Volume</h3>
+              <div className="h-64">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart
+                    data={dashboardData.daily_volume}
+                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.1} />
+                    <XAxis 
+                      dataKey="date" 
+                      tick={{ fontSize: 12 }}
+                      tickFormatter={(value) => new Date(value).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                    />
+                    <YAxis tick={{ fontSize: 12 }} />
+                    <Tooltip 
+                      formatter={(value) => [`${value} cases`, 'Volume']}
+                    />
+                    <Line type="monotone" dataKey="volume" stroke="#3B82F6" />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+            
+            {/* Weekly Average Processing - Restored */}
+            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+              <h3 className="text-lg font-semibold mb-4 dark:text-white">Weekly Average Processing</h3>
+              <div className="h-64">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={dashboardData.weekly_averages}
+                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.1} />
+                    <XAxis dataKey="day" tick={{ fontSize: 12 }} />
+                    <YAxis tick={{ fontSize: 12 }} />
+                    <Tooltip 
+                      formatter={(value) => [`${value} cases`, 'Average']}
+                    />
+                    <Bar dataKey="average" fill="#3B82F6" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
             </div>
           </div>
           
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-            <h3 className="text-lg font-semibold mb-4 dark:text-white">Weekly Average Processing</h3>
-            <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
+          {/* Second row of charts - 2 columns */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+            {/* Weekly Case Volume */}
+            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+              <h3 className="text-lg font-semibold mb-4 dark:text-white">Weekly Case Volume</h3>
+              <div className="h-64">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={dashboardData.weekly_volumes}
+                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.1} />
+                    <XAxis 
+                      dataKey="week" 
+                      tick={{ fontSize: 12 }} 
+                    />
+                    <YAxis tick={{ fontSize: 12 }} />
+                    <Tooltip 
+                      formatter={(value) => [`${value} cases`, 'Volume']}
+                    />
+                    <Bar dataKey="volume" fill="#10B981" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+            
+            {/* Monthly Volume Trend */}
+            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+              <h3 className="text-lg font-semibold mb-4 dark:text-white">Monthly Volume Trend</h3>
+              <div className="h-64">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart
+                    data={dashboardData.monthly_volumes}
+                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.1} />
+                    <XAxis dataKey="month" tick={{ fontSize: 12 }} />
+                    <YAxis tick={{ fontSize: 12 }} />
+                    <Tooltip 
+                      formatter={(value) => [`${value} cases`, 'Volume']}
+                    />
+                    <Line type="monotone" dataKey="volume" stroke="#8B5CF6" />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+          </div>
+          
+          {/* Third row - Monthly Backlog (full width) */}
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow mt-6">
+            <h3 className="text-lg font-semibold mb-4 dark:text-white">Monthly Backlog</h3>
+            <div className="h-80">
+              <ResponsiveContainer width="100%" height="90%">
                 <BarChart
-                  data={dashboardData.weekly_averages}
-                  margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                  data={(() => {
+                    // Find the first active month and compute this ONCE
+                    const firstActiveIndex = dashboardData.monthly_backlog.findIndex(item => item.is_active);
+                    // If there's an active month, show from that month onward
+                    return firstActiveIndex >= 0
+                      ? dashboardData.monthly_backlog.slice(firstActiveIndex)
+                      : dashboardData.monthly_backlog.slice(-12);
+                  })()}
+                  margin={{ top: 5, right: 30, left: 20, bottom: 70 }}
                 >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.1} />
-                  <XAxis dataKey="day" tick={{ fontSize: 12 }} />
-                  <YAxis tick={{ fontSize: 12 }} />
-                  <Tooltip 
-                    formatter={(value) => [`${value} days`, 'Average']}
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis 
+                    dataKey="month" 
+                    angle={-45} 
+                    textAnchor="end"
+                    height={70} 
+                    tick={{ fontSize: 12 }}
                   />
-                  <Bar dataKey="average" fill="#3B82F6" />
+                  <YAxis 
+                    tickFormatter={(value) => value.toLocaleString()} 
+                  />
+                  <Tooltip 
+                    formatter={(value) => value.toLocaleString()} 
+                    labelFormatter={(label) => `Month: ${label}`}
+                  />
+                  <Bar 
+                    dataKey="backlog" 
+                    name="Backlog"
+                  >
+                    {(() => {
+                      const firstActiveIndex = dashboardData.monthly_backlog.findIndex(item => item.is_active);
+                      const dataArray = firstActiveIndex >= 0
+                        ? dashboardData.monthly_backlog.slice(firstActiveIndex)
+                        : dashboardData.monthly_backlog.slice(-12);
+                      
+                      return dataArray.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.is_active ? "#3b82f6" : "#93c5fd"} />
+                      ));
+                    })()}
+                  </Bar>
+                  <Bar 
+                    dataKey="withdrawn" 
+                    name="Withdrawn" 
+                  >
+                    {(() => {
+                      const firstActiveIndex = dashboardData.monthly_backlog.findIndex(item => item.is_active);
+                      const dataArray = firstActiveIndex >= 0
+                        ? dashboardData.monthly_backlog.slice(firstActiveIndex)
+                        : dashboardData.monthly_backlog.slice(-12);
+                      
+                      // Only show withdrawn for non-active months
+                      return dataArray.map((entry, index) => (
+                        <Cell 
+                          key={`cell-withdrawn-${index}`} 
+                          fill={entry.is_active ? "transparent" : "#ef4444"}
+                        />
+                      ));
+                    })()}
+                  </Bar>
                 </BarChart>
               </ResponsiveContainer>
+              <div className="flex justify-center mt-4 space-x-6">
+                <div className="flex items-center">
+                  <div className="w-3 h-3 rounded-full bg-blue-500 mr-1"></div>
+                  <span className="text-sm text-gray-600 dark:text-gray-300">Active Month</span>
+                </div>
+                <div className="flex items-center">
+                  <div className="w-3 h-3 rounded-full bg-blue-300 mr-1"></div>
+                  <span className="text-sm text-gray-600 dark:text-gray-300">Processed Month</span>
+                </div>
+                <div className="flex items-center">
+                  <div className="w-3 h-3 rounded-full bg-red-500 mr-1"></div>
+                  <span className="text-sm text-gray-600 dark:text-gray-300">Withdrawn (processed months only)</span>
+                </div>
+              </div>
             </div>
           </div>
-          
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-            <h3 className="text-lg font-semibold mb-4 dark:text-white">Weekly Case Volume</h3>
-            <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  data={dashboardData.weekly_volumes}
-                  margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.1} />
-                  <XAxis 
-                    dataKey="week" 
-                    tick={{ fontSize: 12 }} 
-                  />
-                  <YAxis tick={{ fontSize: 12 }} />
-                  <Tooltip 
-                    formatter={(value) => [`${value} cases`, 'Volume']}
-                  />
-                  <Bar dataKey="volume" fill="#10B981" />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-          
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-            <h3 className="text-lg font-semibold mb-4 dark:text-white">Monthly Volume Trend</h3>
-            <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart
-                  data={dashboardData.monthly_volumes}
-                  margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.1} />
-                  <XAxis dataKey="month" tick={{ fontSize: 12 }} />
-                  <YAxis tick={{ fontSize: 12 }} />
-                  <Tooltip 
-                    formatter={(value) => [`${value} cases`, 'Volume']}
-                  />
-                  <Line type="monotone" dataKey="volume" stroke="#8B5CF6" />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-        </div>
+        </>
       )}
       
       {/* Case Prediction */}
@@ -325,23 +426,77 @@ const Dashboard = () => {
                   </p>
                 </div>
               </div>
+              
               <div className="mt-3 space-y-2">
                 <p className="text-xs text-gray-500 dark:text-gray-400">
                   Confidence level: {Math.round(datePrediction.confidence_level * 100)}%
                 </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">
-                  Estimated processing time: {datePrediction.estimated_days} days
-                </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">
-                  Upper bound (worst case): {new Date(datePrediction.upper_bound_date).toLocaleDateString()} 
-                  ({datePrediction.upper_bound_days} days)
-                </p>
-                <div className="mt-1 pt-1 border-t border-gray-200 dark:border-gray-700">
-                  <p className="text-xs text-gray-600 dark:text-gray-400 font-medium">Factors considered:</p>
-                  <ul className="text-xs text-gray-500 dark:text-gray-400 list-disc list-inside">
-                    <li>Current backlog: {datePrediction.factors_considered.current_backlog.toLocaleString()} cases</li>
-                    <li>Base processing time: {datePrediction.factors_considered.base_processing_time} days</li>
-                  </ul>
+                <div className="flex justify-between">
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                    Estimated: {datePrediction.estimated_days} days
+                  </p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                    Worst case: {datePrediction.upper_bound_days} days
+                  </p>
+                </div>
+                
+                {/* Queue Analysis Section */}
+                <div className="mt-2 pt-2 border-t border-gray-200 dark:border-gray-700">
+                  <p className="text-xs text-gray-600 dark:text-gray-400 font-medium mb-1">Queue Analysis:</p>
+                  <div className="grid grid-cols-2 gap-x-2 gap-y-1">
+                    <div>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">Current Backlog:</p>
+                      <p className="text-sm font-medium dark:text-gray-300">{datePrediction.queue_analysis.current_backlog.toLocaleString()} cases</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">Est. Queue Position:</p>
+                      <p className="text-sm font-medium dark:text-gray-300">{datePrediction.queue_analysis.estimated_queue_position.toLocaleString()}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">Weekly Processing:</p>
+                      <p className="text-sm font-medium dark:text-gray-300">{datePrediction.queue_analysis.weekly_processing_rate.toLocaleString()} cases</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">Est. Queue Wait:</p>
+                      <p className="text-sm font-medium dark:text-gray-300">{datePrediction.queue_analysis.estimated_queue_wait_weeks.toFixed(1)} weeks</p>
+                    </div>
+                    <div className="col-span-2">
+                      <p className="text-xs text-gray-500 dark:text-gray-400">Days Already in Queue:</p>
+                      <p className="text-sm font-medium dark:text-gray-300">{datePrediction.queue_analysis.days_already_in_queue} days</p>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Time Breakdown */}
+                <div className="mt-2 pt-2 border-t border-gray-200 dark:border-gray-700">
+                  <p className="text-xs text-gray-600 dark:text-gray-400 font-medium mb-1">Processing Time Breakdown:</p>
+                  <div className="relative pt-1">
+                    <div className="flex mb-2 items-center justify-between">
+                      <div>
+                        <span className="text-xs font-medium text-blue-500 dark:text-blue-400">
+                          Days passed: {datePrediction.queue_analysis.days_already_in_queue} days
+                        </span>
+                      </div>
+                      <div>
+                        <span className="text-xs font-medium text-purple-500 dark:text-purple-400">
+                          Queue Time: {datePrediction.factors_considered.queue_time} days
+                        </span>
+                      </div>
+                    </div>
+                    <div className="overflow-hidden h-2 mb-2 text-xs flex rounded bg-gray-200 dark:bg-gray-700">
+                      <div 
+                        style={{ width: `${(datePrediction.queue_analysis.days_already_in_queue / datePrediction.estimated_days) * 100}%` }}
+                        className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500"
+                      ></div>
+                      <div 
+                        style={{ width: `${(datePrediction.factors_considered.queue_time / datePrediction.estimated_days) * 100}%` }}
+                        className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-purple-500"
+                      ></div>
+                    </div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400 text-right">
+                      Total: {datePrediction.estimated_days} days
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
