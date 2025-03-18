@@ -49,18 +49,21 @@ export interface DatePrediction {
   confidence_level: number;  // This is a decimal (0.8 = 80%)
 }
 
+// The API base URL - use environment variable
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
 /**
  * Fetch dashboard data with metrics and charts
  */
 export async function fetchDashboardData(days = 30): Promise<DashboardData> {
-  return fetchFromAPI<DashboardData>(`/api/data/dashboard?days=${days}`);
+  return fetchFromAPI<DashboardData>(`${API_URL}/data/dashboard?days=${days}`);
 }
 
 /**
  * Get estimated completion prediction for a PERM case
  */
 export async function getPrediction(submitDate: string): Promise<DatePrediction> {
-  return fetchFromAPI<DatePrediction>('/api/predictions/from-date', {
+  return fetchFromAPI<DatePrediction>(`${API_URL}/predictions/from-date`, {
     method: 'POST',
     body: JSON.stringify({ submit_date: submitDate }),
   });

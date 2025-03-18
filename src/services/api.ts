@@ -1,16 +1,12 @@
 // Base API configuration and helpers
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
-
 /**
  * Generic fetch wrapper with error handling
  */
 export async function fetchFromAPI<T>(
-  endpoint: string, 
+  url: string, 
   options: RequestInit = {}
 ): Promise<T> {
-  const url = `${API_URL}${endpoint}`;
-  
   try {
     const response = await fetch(url, {
       ...options,
