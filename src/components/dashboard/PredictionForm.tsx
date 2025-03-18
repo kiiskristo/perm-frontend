@@ -185,12 +185,24 @@ export function PredictionForm({ type = 'date' }: PredictionFormProps) {
             </p>
             <div className="flex justify-between">
               <p className="text-xs text-gray-500 dark:text-gray-400">
-                Estimated: {datePrediction.estimated_days} days
+                Total time: {datePrediction.estimated_days} days
               </p>
               <p className="text-xs text-gray-500 dark:text-gray-400">
-                Worst case: {datePrediction.upper_bound_days} days
+                Remaining: {'remaining_days' in datePrediction ? datePrediction.remaining_days : 'N/A'} days
               </p>
             </div>
+            
+            {/* Employer Name Factor */}
+            {'factors_considered' in datePrediction && 'employer_name_letter' in datePrediction.factors_considered && (
+              <div className="mt-2 pt-2 border-t border-gray-200 dark:border-gray-700">
+                <p className="text-xs text-gray-600 dark:text-gray-400 font-medium">Employer Name Factor:</p>
+                <p className="text-sm">
+                  Starting with <span className="font-bold text-blue-600 dark:text-blue-400">
+                    {datePrediction.employer_first_letter || datePrediction.factors_considered.employer_name_letter}
+                  </span>
+                </p>
+              </div>
+            )}
             
             {/* Queue Analysis Section */}
             <div className="mt-2 pt-2 border-t border-gray-200 dark:border-gray-700">
@@ -201,20 +213,24 @@ export function PredictionForm({ type = 'date' }: PredictionFormProps) {
                   <p className="text-sm font-medium dark:text-gray-300">{datePrediction.queue_analysis.current_backlog.toLocaleString()} cases</p>
                 </div>
                 <div>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">Est. Queue Position:</p>
-                  <p className="text-sm font-medium dark:text-gray-300">{datePrediction.queue_analysis.estimated_queue_position.toLocaleString()}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Your Queue Position:</p>
+                  <p className="text-sm font-medium dark:text-gray-300">
+                    {('adjusted_queue_position' in datePrediction.queue_analysis 
+                      ? datePrediction.queue_analysis.adjusted_queue_position 
+                      : datePrediction.queue_analysis.estimated_queue_position).toLocaleString()}
+                  </p>
                 </div>
                 <div>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">Weekly Processing:</p>
-                  <p className="text-sm font-medium dark:text-gray-300">{datePrediction.queue_analysis.weekly_processing_rate.toLocaleString()} cases</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Processing Rate:</p>
+                  <p className="text-sm font-medium dark:text-gray-300">
+                    {datePrediction.queue_analysis.weekly_processing_rate.toLocaleString()} / week
+                    {datePrediction.queue_analysis.daily_processing_rate && 
+                      ` (${datePrediction.queue_analysis.daily_processing_rate.toLocaleString()} / day)`}
+                  </p>
                 </div>
                 <div>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">Est. Queue Wait:</p>
-                  <p className="text-sm font-medium dark:text-gray-300">{datePrediction.queue_analysis.estimated_queue_wait_weeks.toFixed(1)} weeks</p>
-                </div>
-                <div className="col-span-2">
-                  <p className="text-xs text-gray-500 dark:text-gray-400">Days Already in Queue:</p>
-                  <p className="text-sm font-medium dark:text-gray-300">{datePrediction.queue_analysis.days_already_in_queue} days</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Estimated Wait:</p>
+                  <p className="text-sm font-medium dark:text-gray-300">~{Math.round(datePrediction.queue_analysis.estimated_queue_wait_weeks)} weeks</p>
                 </div>
               </div>
             </div>
@@ -231,7 +247,7 @@ export function PredictionForm({ type = 'date' }: PredictionFormProps) {
                   </div>
                   <div>
                     <span className="text-xs font-medium text-purple-500 dark:text-purple-400">
-                      Queue Time: {datePrediction.factors_considered.queue_time} days
+                      Remaining: {'remaining_days' in datePrediction ? datePrediction.remaining_days : 'N/A'} days
                     </span>
                   </div>
                 </div>
@@ -241,12 +257,14 @@ export function PredictionForm({ type = 'date' }: PredictionFormProps) {
                     className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500"
                   ></div>
                   <div 
-                    style={{ width: `${(datePrediction.factors_considered.queue_time / datePrediction.estimated_days) * 100}%` }}
+                    style={{ 
+                      width: `${(('remaining_days' in datePrediction ? datePrediction.remaining_days : 0) / datePrediction.estimated_days) * 100}%` 
+                    }}
                     className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-purple-500"
                   ></div>
                 </div>
                 <div className="text-xs text-gray-500 dark:text-gray-400 text-right">
-                  Total: {datePrediction.estimated_days} days
+                  Total journey: {datePrediction.estimated_days} days
                 </div>
               </div>
             </div>

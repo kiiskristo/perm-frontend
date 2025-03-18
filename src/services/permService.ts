@@ -30,21 +30,29 @@ export interface DashboardData {
 // Updated to match the latest API response
 export interface DatePrediction {
   submit_date: string;
+  employer_first_letter?: string;
   estimated_completion_date: string;
   upper_bound_date: string;
   estimated_days: number;
+  remaining_days?: number;
   upper_bound_days: number;
   queue_analysis: {
     current_backlog: number;
-    estimated_queue_position: number;
+    raw_queue_position?: number;
+    adjusted_queue_position?: number;
+    estimated_queue_position?: number;
     weekly_processing_rate: number;
+    daily_processing_rate?: number;
     estimated_queue_wait_weeks: number;
     days_already_in_queue: number;
   };
   factors_considered: {
-    base_processing_time: number;
-    queue_time: number;
-    total_time: number;
+    queue_time?: number;
+    days_remaining?: number;
+    total_journey_days?: number;
+    employer_name_letter?: string;
+    base_processing_time?: number;
+    total_time?: number;
   };
   confidence_level: number;  // This is a decimal (0.8 = 80%)
 }
