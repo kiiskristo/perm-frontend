@@ -25,6 +25,10 @@ export function PredictionForm({ type = 'date' }: PredictionFormProps) {
     try {
       // Get reCAPTCHA token
       const recaptchaKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || '';
+      if (!recaptchaKey) {
+        throw new Error('No reCAPTCHA site key found. Please check your environment variables.');
+      }
+      console.log('recaptchaKey', recaptchaKey);
       const token = await executeRecaptcha(recaptchaKey, 'prediction_form');
       
       if (!token) {
