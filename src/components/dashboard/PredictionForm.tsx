@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { getPrediction, type DatePrediction } from '@/services/permService';
+import { executeRecaptcha } from '@/utils/recaptcha';
 
 interface PredictionFormProps {
   type: 'date' | 'caseNumber';
@@ -22,6 +23,14 @@ export function PredictionForm({ type = 'date' }: PredictionFormProps) {
     setPredictionError('');
     
     try {
+      // Get reCAPTCHA token
+      const recaptchaKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || '';
+      const token = await executeRecaptcha(recaptchaKey, 'prediction_form');
+      
+      if (!token) {
+        throw new Error("Failed to verify you're human. Please try again.");
+      }
+      
       let submitDate = inputValue;
       
       // If this is a case number, parse the date from it
@@ -30,7 +39,7 @@ export function PredictionForm({ type = 'date' }: PredictionFormProps) {
         const match = inputValue.match(caseNumberPattern);
         
         if (!match) {
-          throw new Error('Invalid case number format. Expected format: G-100-YYDDD-XXXXXX');
+          throw new Error('Invalid case number format. Expected format: G-100-XXXXX-XXXXXX');
         }
         
         const dayCode = match[1];
@@ -47,10 +56,22 @@ export function PredictionForm({ type = 'date' }: PredictionFormProps) {
         submitDate = `${year}-${month}-${day}`;
       }
       
-      const prediction = await getPrediction(submitDate);
+      // Pass the reCAPTCHA token to your backend
+      const prediction = await getPrediction(submitDate, token);
       setDatePrediction(prediction);
     } catch (err) {
-      setPredictionError(err instanceof Error ? err.message : 'Failed to get prediction');
+      let errorMessage = 'Failed to get prediction';
+      
+      // Safely handle different error formats
+      if (err instanceof Error) {
+        errorMessage = err.message;
+      } else if (err && typeof err === 'object' && 'message' in err) {
+        errorMessage = String(err.message);
+      } else if (typeof err === 'string') {
+        errorMessage = err;
+      }
+      
+      setPredictionError(errorMessage);
       console.error('Error getting prediction:', err);
     } finally {
       setPredictionLoading(false);
@@ -68,8 +89,8 @@ export function PredictionForm({ type = 'date' }: PredictionFormProps) {
           : 'Enter your PERM case number (G-100-XXXXX-XXXXXX) to get an estimated completion date:'}
       </p>
       
-      <div className="flex items-end space-x-2">
-        <div className="flex-1">
+      <div className="flex flex-col space-y-4">
+        <div className="w-full">
           <label htmlFor={`input-${type}`} className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             {type === 'date' ? 'Submission Date' : 'Case Number'}
           </label>
@@ -93,13 +114,16 @@ export function PredictionForm({ type = 'date' }: PredictionFormProps) {
           )}
           {predictionError && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{predictionError}</p>}
         </div>
-        <button
-          className="ml-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
-          onClick={handleDatePrediction}
-          disabled={predictionLoading}
-        >
-          {predictionLoading ? 'Loading...' : 'Predict'}
-        </button>
+        
+        <div className="w-full">
+          <button
+            className="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+            onClick={handleDatePrediction}
+            disabled={predictionLoading}
+          >
+            {predictionLoading ? 'Loading...' : 'Predict'}
+          </button>
+        </div>
       </div>
       
       {datePrediction && (

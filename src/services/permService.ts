@@ -62,9 +62,12 @@ export async function fetchDashboardData(days = 30): Promise<DashboardData> {
 /**
  * Get estimated completion prediction for a PERM case
  */
-export async function getPrediction(submitDate: string): Promise<DatePrediction> {
+export async function getPrediction(submitDate: string, recaptchaToken: string): Promise<DatePrediction> {
   return fetchFromAPI<DatePrediction>(`${API_URL}/predictions/from-date`, {
     method: 'POST',
-    body: JSON.stringify({ submit_date: submitDate }),
+    body: JSON.stringify({ 
+      submit_date: submitDate,
+      recaptcha_token: recaptchaToken 
+    }),
   });
 } 
