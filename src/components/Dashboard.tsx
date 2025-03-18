@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { ChevronDown, ChevronUp, FileText, CheckCircle, BarChart3, Clock } from 'lucide-react';
+import { ChevronDown, ChevronUp, FileText, CheckCircle, BarChart3 } from 'lucide-react';
 import { fetchDashboardData, type DashboardData } from '@/services/permService';
 
 // Import all of our components
