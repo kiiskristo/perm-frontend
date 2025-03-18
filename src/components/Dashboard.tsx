@@ -270,18 +270,27 @@ const Dashboard = () => {
               <h3 className="text-lg font-semibold mb-4 dark:text-white">Monthly Volume Trend</h3>
               <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart
+                  <BarChart
                     data={dashboardData.monthly_volumes}
                     margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
                   >
                     <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.1} />
-                    <XAxis dataKey="month" tick={{ fontSize: 12 }} />
-                    <YAxis tick={{ fontSize: 12 }} />
-                    <Tooltip 
-                      formatter={(value) => [`${value} cases`, 'Volume']}
+                    <XAxis 
+                      dataKey="month" 
+                      tick={{ fontSize: 12 }}
+                      angle={-30}
+                      textAnchor="end"
+                      height={60}
                     />
-                    <Line type="monotone" dataKey="volume" stroke="#8B5CF6" />
-                  </LineChart>
+                    <YAxis 
+                      tick={{ fontSize: 12 }} 
+                      tickFormatter={(value) => value.toLocaleString()}
+                    />
+                    <Tooltip 
+                      formatter={(value) => [`${value.toLocaleString()} cases`, 'Volume']}
+                    />
+                    <Bar dataKey="volume" fill="#8B5CF6" />
+                  </BarChart>
                 </ResponsiveContainer>
               </div>
             </div>
