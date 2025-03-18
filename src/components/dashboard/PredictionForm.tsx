@@ -9,6 +9,7 @@ interface PredictionFormProps {
 
 export function PredictionForm({ type = 'date' }: PredictionFormProps) {
   const [inputValue, setInputValue] = useState('');
+  const [employerFirstLetter, setEmployerFirstLetter] = useState('');
   const [datePrediction, setDatePrediction] = useState<DatePrediction | null>(null);
   const [predictionLoading, setPredictionLoading] = useState(false);
   const [predictionError, setPredictionError] = useState('');
@@ -16,6 +17,11 @@ export function PredictionForm({ type = 'date' }: PredictionFormProps) {
   const handleDatePrediction = async () => {
     if (!inputValue) {
       setPredictionError(`Please enter a ${type === 'date' ? 'submission date' : 'case number'}`);
+      return;
+    }
+    
+    if (!employerFirstLetter) {
+      setPredictionError('Please enter the first letter of the employer name');
       return;
     }
     
@@ -56,8 +62,8 @@ export function PredictionForm({ type = 'date' }: PredictionFormProps) {
         submitDate = `${year}-${month}-${day}`;
       }
       
-      // Pass the reCAPTCHA token to your backend
-      const prediction = await getPrediction(submitDate, token);
+      // Pass the reCAPTCHA token and employer first letter to your backend
+      const prediction = await getPrediction(submitDate, token, employerFirstLetter.toUpperCase());
       setDatePrediction(prediction);
     } catch (err) {
       let errorMessage = 'Failed to get prediction';
@@ -85,8 +91,8 @@ export function PredictionForm({ type = 'date' }: PredictionFormProps) {
       </h3>
       <p className="text-gray-600 dark:text-gray-300 mb-4">
         {type === 'date' 
-          ? 'Enter your PERM submission date to get an estimated completion date:' 
-          : 'Enter your PERM case number (G-100-XXXXX-XXXXXX) to get an estimated completion date:'}
+          ? 'Enter your PERM submission date for an estimated completion date:' 
+          : 'Enter your PERM case number (G-100-XXXXX-XXXXXX) for an estimated completion date:'}
       </p>
       
       <div className="flex flex-col space-y-4">
@@ -112,8 +118,33 @@ export function PredictionForm({ type = 'date' }: PredictionFormProps) {
               onChange={(e) => setInputValue(e.target.value)}
             />
           )}
-          {predictionError && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{predictionError}</p>}
         </div>
+        
+        <div className="w-full">
+          <label htmlFor="employer-letter" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            First Letter of Employer Name
+          </label>
+          <input
+            type="text"
+            id="employer-letter"
+            maxLength={1}
+            placeholder="A"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+            value={employerFirstLetter}
+            onChange={(e) => {
+              // Only allow alphabetic characters
+              const value = e.target.value.replace(/[^A-Za-z]/g, '');
+              setEmployerFirstLetter(value);
+            }}
+          />
+          <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+            DOL processes applications alphabetically by employer name within each month
+          </p>
+        </div>
+        
+        {predictionError && (
+          <p className="text-sm text-red-600 dark:text-red-400">{predictionError}</p>
+        )}
         
         <div className="w-full">
           <button
