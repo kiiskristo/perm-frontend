@@ -215,9 +215,18 @@ export function PredictionForm({ type = 'date' }: PredictionFormProps) {
                 <div>
                   <p className="text-xs text-gray-500 dark:text-gray-400">Your Queue Position:</p>
                   <p className="text-sm font-medium dark:text-gray-300">
-                    {('adjusted_queue_position' in datePrediction.queue_analysis 
-                      ? datePrediction.queue_analysis.adjusted_queue_position 
-                      : datePrediction.queue_analysis.estimated_queue_position).toLocaleString()}
+                    {(() => {
+                      const queueAnalysis = datePrediction.queue_analysis;
+                      if (!queueAnalysis) return 'N/A';
+                      
+                      if ('adjusted_queue_position' in queueAnalysis && queueAnalysis.adjusted_queue_position !== undefined) {
+                        return queueAnalysis.adjusted_queue_position.toLocaleString();
+                      } else if ('estimated_queue_position' in queueAnalysis && queueAnalysis.estimated_queue_position !== undefined) {
+                        return queueAnalysis.estimated_queue_position.toLocaleString();  
+                      } else {
+                        return 'N/A';
+                      }
+                    })()}
                   </p>
                 </div>
                 <div>
@@ -258,7 +267,12 @@ export function PredictionForm({ type = 'date' }: PredictionFormProps) {
                   ></div>
                   <div 
                     style={{ 
-                      width: `${(('remaining_days' in datePrediction ? datePrediction.remaining_days : 0) / datePrediction.estimated_days) * 100}%` 
+                      width: `${(() => {
+                        if (!datePrediction || !('remaining_days' in datePrediction) || datePrediction.remaining_days === undefined) {
+                          return 0;
+                        }
+                        return (datePrediction.remaining_days / datePrediction.estimated_days) * 100;
+                      })()}%` 
                     }}
                     className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-purple-500"
                   ></div>
