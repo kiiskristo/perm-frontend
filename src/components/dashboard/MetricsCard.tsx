@@ -27,7 +27,7 @@ export function MetricsCard({
           <p className="text-2xl font-bold dark:text-white">{value}</p>
           {change !== undefined && (
             <div className={`flex items-center text-sm ${change >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
-              {change >= 0 ? '+' : ''}{change}%
+              {change >= 0 ? '+' : ''}{Math.round(change)}%
             </div>
           )}
           {children}

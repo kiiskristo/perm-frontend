@@ -107,7 +107,7 @@ const Dashboard = () => {
           {/* Key Metrics */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <MetricsCard
-              title="New Cases"
+              title="Today's New Cases"
               value={dashboardData.metrics.new_cases}
               change={dashboardData.metrics.new_cases_change}
               bgColorClass="bg-blue-100 dark:bg-blue-900/30"
@@ -116,7 +116,7 @@ const Dashboard = () => {
             />
             
             <MetricsCard
-              title="Processed Cases"
+              title="Today's Processed Cases"
               value={dashboardData.metrics.processed_cases}
               change={dashboardData.metrics.processed_cases_change}
               bgColorClass="bg-green-100 dark:bg-green-900/30"

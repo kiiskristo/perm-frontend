@@ -5,6 +5,17 @@ interface DailyVolumeChartProps {
 }
 
 export function DailyVolumeChart({ data }: DailyVolumeChartProps) {
+  // Format date consistently for both tooltip and x-axis
+  const formatDate = (dateString: string) => {
+    // Ensure consistent date handling by explicitly parsing the date parts
+    const [year, month, day] = dateString.split('-').map(Number);
+    // Create date using local time (avoid timezone issues)
+    return new Date(year, month - 1, day).toLocaleDateString(undefined, { 
+      month: 'short', 
+      day: 'numeric' 
+    });
+  };
+  
   return (
     <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
       <h3 className="text-lg font-semibold mb-4 dark:text-white">Daily Case Volume</h3>
@@ -18,11 +29,12 @@ export function DailyVolumeChart({ data }: DailyVolumeChartProps) {
             <XAxis 
               dataKey="date" 
               tick={{ fontSize: 12 }}
-              tickFormatter={(value) => new Date(value).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+              tickFormatter={formatDate}
             />
             <YAxis tick={{ fontSize: 12 }} />
             <Tooltip 
               formatter={(value) => [`${value} cases`, 'Volume']}
+              labelFormatter={formatDate}
             />
             <Line type="monotone" dataKey="volume" stroke="#3B82F6" />
           </LineChart>

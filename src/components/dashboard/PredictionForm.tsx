@@ -92,7 +92,7 @@ export function PredictionForm({ type = 'date' }: PredictionFormProps) {
       <p className="text-gray-600 dark:text-gray-300 mb-4">
         {type === 'date' 
           ? 'Enter your PERM submission date for an estimated completion date:' 
-          : 'Enter your PERM case number (G-100-XXXXX-XXXXXX) for an estimated completion date:'}
+          : 'Enter your PERM case number for an estimated completion date:'}
       </p>
       
       <div className="flex flex-col space-y-4">

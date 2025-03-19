@@ -72,11 +72,11 @@ export function MonthlyBacklogChart({ data }: MonthlyBacklogChartProps) {
           </div>
           <div className="flex items-center">
             <div className="w-3 h-3 rounded-full bg-blue-300 mr-1"></div>
-            <span className="text-sm text-gray-600 dark:text-gray-300">Processed Month</span>
+            <span className="text-sm text-gray-600 dark:text-gray-300">To Be Processed Month</span>
           </div>
           <div className="flex items-center">
             <div className="w-3 h-3 rounded-full bg-red-500 mr-1"></div>
-            <span className="text-sm text-gray-600 dark:text-gray-300">Withdrawn (processed months only)</span>
+            <span className="text-sm text-gray-600 dark:text-gray-300">Withdrawn (reduced from baclog)</span>
           </div>
         </div>
       </div>
