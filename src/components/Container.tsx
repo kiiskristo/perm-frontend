@@ -59,8 +59,12 @@ export default function Container() {
 
           {/* Controls */}
           <div className="flex items-center space-x-4">
-            {/* Dark Mode Toggle */}
-            <button onClick={toggleDarkMode} className="p-2 bg-white/10 rounded-md hover:bg-white/20">
+            {/* Dark Mode Toggle - Add aria-label */}
+            <button 
+              onClick={toggleDarkMode} 
+              className="p-2 bg-white/10 rounded-md hover:bg-white/20"
+              aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
+            >
               {darkMode ? <Sun className="h-6 w-6" /> : <Moon className="h-6 w-6" />}
             </button>
 
