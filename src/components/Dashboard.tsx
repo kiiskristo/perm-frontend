@@ -43,6 +43,11 @@ const Dashboard = () => {
     loadDashboardData();
   }, [timeRange]);
 
+  useEffect(() => {
+    const isDarkMode = document.documentElement.classList.contains('dark');
+    console.log('Dark mode detected in Dashboard:', isDarkMode);
+  }, []);
+
   const toggleTimeOptions = () => {
     setShowTimeOptions(!showTimeOptions);
   };
@@ -53,7 +58,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 dark:text-white">
       {/* Header with title and time range selector */}
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold dark:text-white">PERM Dashboard</h2>
