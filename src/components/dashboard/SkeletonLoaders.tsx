@@ -1,13 +1,5 @@
 import React from 'react';
 
-export function SkeletonPulse() {
-  return (
-    <div className="animate-pulse">
-      <div className="bg-gray-300 dark:bg-gray-600 h-full w-full rounded-md"></div>
-    </div>
-  );
-}
-
 export function MetricsCardSkeleton() {
   return (
     <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">

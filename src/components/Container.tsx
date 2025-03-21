@@ -68,8 +68,12 @@ export default function Container() {
               {darkMode ? <Sun className="h-6 w-6" /> : <Moon className="h-6 w-6" />}
             </button>
 
-            {/* Mobile Menu Toggle */}
-            <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="md:hidden p-2">
+            {/* Mobile Menu Toggle - Add aria-label for accessibility */}
+            <button 
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)} 
+              className="md:hidden p-2"
+              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+            >
               {mobileMenuOpen ? <X className="h-8 w-8" /> : <Menu className="h-8 w-8" />}
             </button>
           </div>

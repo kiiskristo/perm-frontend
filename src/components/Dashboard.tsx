@@ -43,11 +43,6 @@ const Dashboard = () => {
     loadDashboardData();
   }, [timeRange]);
 
-  useEffect(() => {
-    const isDarkMode = document.documentElement.classList.contains('dark');
-    console.log('Dark mode detected in Dashboard:', isDarkMode);
-  }, []);
-
   const toggleTimeOptions = () => {
     setShowTimeOptions(!showTimeOptions);
   };
