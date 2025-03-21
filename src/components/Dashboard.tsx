@@ -13,6 +13,7 @@ import { WeeklyVolumeChart } from './dashboard/WeeklyVolumeChart';
 import { MonthlyVolumeChart } from './dashboard/MonthlyVolumeChart';
 import { MonthlyBacklogChart } from './dashboard/MonthlyBacklogChart';
 import { PredictionForm } from './dashboard/PredictionForm';
+import { MetricsCardSkeleton, ChartSkeleton, BacklogChartSkeleton } from './dashboard/SkeletonLoaders';
 
 // Main Dashboard Component
 const Dashboard = () => {
@@ -51,29 +52,6 @@ const Dashboard = () => {
     setShowTimeOptions(false);
   };
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="bg-red-50 dark:bg-red-900/20 p-4 rounded-lg border border-red-200 dark:border-red-800">
-        <h3 className="text-red-800 dark:text-red-400 font-medium">Error Loading Data</h3>
-        <p className="text-red-600 dark:text-red-300">{error}</p>
-        <button 
-          className="mt-3 px-4 py-2 bg-red-100 dark:bg-red-800 text-red-700 dark:text-red-200 rounded"
-          onClick={() => window.location.reload()}
-        >
-          Try Again
-        </button>
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-8">
       {/* Header with title and time range selector */}
@@ -101,67 +79,108 @@ const Dashboard = () => {
         </div>
       </div>
       
-      {/* Dashboard content */}
-      {dashboardData && (
-        <>
-          {/* Key Metrics */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <MetricsCard
-              title="Today's New Cases"
-              value={dashboardData.metrics.new_cases}
-              change={dashboardData.metrics.new_cases_change}
-              bgColorClass="bg-blue-100 dark:bg-blue-900/30"
-              icon={FileText}
-              iconColor="text-blue-600 dark:text-blue-400"
-            />
+      {/* Dashboard data visualization section */}
+      <div className="space-y-8">
+        {loading ? (
+          <>
+            {/* Key Metrics Skeletons */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <MetricsCardSkeleton />
+              <MetricsCardSkeleton />
+              <MetricsCardSkeleton />
+              <MetricsCardSkeleton />
+            </div>
             
-            <MetricsCard
-              title="Today's Processed Cases"
-              value={dashboardData.metrics.processed_cases}
-              change={dashboardData.metrics.processed_cases_change}
-              bgColorClass="bg-green-100 dark:bg-green-900/30"
-              icon={CheckCircle}
-              iconColor="text-green-600 dark:text-green-400"
-            />
+            {/* First row of charts - 2 columns */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <ChartSkeleton />
+              <ChartSkeleton />
+            </div>
             
-            <MetricsCard
-              title="Current Backlog"
-              value={dashboardData.metrics.current_backlog}
-              bgColorClass="bg-orange-100 dark:bg-orange-900/30"
-              icon={BarChart3}
-              iconColor="text-orange-600 dark:text-orange-400"
-            />
+            {/* Second row of charts - 2 columns */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+              <ChartSkeleton />
+              <ChartSkeleton />
+            </div>
             
-            <ProcessTimeCard
-              medianDays={dashboardData.metrics.processing_times.median_days}
-              lowerEstimate={dashboardData.metrics.processing_times.lower_estimate_days}
-              upperEstimate={dashboardData.metrics.processing_times.upper_estimate_days}
-              asOfDate={dashboardData.metrics.processing_times.as_of_date}
-            />
+            {/* Monthly Backlog Chart (full width) */}
+            <BacklogChartSkeleton />
+          </>
+        ) : error ? (
+          <div className="bg-red-50 dark:bg-red-900/20 p-4 rounded-lg border border-red-200 dark:border-red-800">
+            <h3 className="text-red-800 dark:text-red-400 font-medium">Error Loading Data</h3>
+            <p className="text-red-600 dark:text-red-300">{error}</p>
+            <button 
+              className="mt-3 px-4 py-2 bg-red-100 dark:bg-red-800 text-red-700 dark:text-red-200 rounded"
+              onClick={() => window.location.reload()}
+            >
+              Try Again
+            </button>
           </div>
-          
-          {/* First row of charts - 2 columns */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <DailyVolumeChart data={dashboardData.daily_volume} />
-            <WeeklyAverageChart data={dashboardData.weekly_averages} />
-          </div>
-          
-          {/* Second row of charts - 2 columns */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-            <WeeklyVolumeChart data={dashboardData.weekly_volumes} />
-            <MonthlyVolumeChart data={dashboardData.monthly_volumes} />
-          </div>
-          
-          {/* Monthly Backlog Chart (full width) */}
-          <MonthlyBacklogChart data={dashboardData.monthly_backlog} />
-          
-          {/* Prediction Forms */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <PredictionForm type="date" />
-            <PredictionForm type="caseNumber" />
-          </div>
-        </>
-      )}
+        ) : dashboardData && (
+          <>
+            {/* Key Metrics */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <MetricsCard
+                title="Today's New Cases"
+                value={dashboardData.metrics.new_cases}
+                change={dashboardData.metrics.new_cases_change}
+                bgColorClass="bg-blue-100 dark:bg-blue-900/30"
+                icon={FileText}
+                iconColor="text-blue-600 dark:text-blue-400"
+              />
+              
+              <MetricsCard
+                title="Today's Processed Cases"
+                value={dashboardData.metrics.processed_cases}
+                change={dashboardData.metrics.processed_cases_change}
+                bgColorClass="bg-green-100 dark:bg-green-900/30"
+                icon={CheckCircle}
+                iconColor="text-green-600 dark:text-green-400"
+              />
+              
+              <MetricsCard
+                title="Current Backlog"
+                value={dashboardData.metrics.current_backlog}
+                bgColorClass="bg-orange-100 dark:bg-orange-900/30"
+                icon={BarChart3}
+                iconColor="text-orange-600 dark:text-orange-400"
+              />
+              
+              <ProcessTimeCard
+                medianDays={dashboardData.metrics.processing_times.median_days}
+                lowerEstimate={dashboardData.metrics.processing_times.lower_estimate_days}
+                upperEstimate={dashboardData.metrics.processing_times.upper_estimate_days}
+                asOfDate={dashboardData.metrics.processing_times.as_of_date}
+              />
+            </div>
+            
+            {/* First row of charts - 2 columns */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <DailyVolumeChart data={dashboardData.daily_volume} />
+              <WeeklyAverageChart data={dashboardData.weekly_averages} />
+            </div>
+            
+            {/* Second row of charts - 2 columns */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+              <WeeklyVolumeChart data={dashboardData.weekly_volumes} />
+              <MonthlyVolumeChart data={dashboardData.monthly_volumes} />
+            </div>
+            
+            {/* Monthly Backlog Chart (full width) */}
+            <MonthlyBacklogChart data={dashboardData.monthly_backlog} />
+          </>
+        )}
+      </div>
+      
+      {/* Prediction Forms - Always visible and separate from loading state */}
+      <div className="mt-8">
+        <h2 className="text-xl font-semibold mb-4 dark:text-white">Timeline Estimator</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <PredictionForm type="date" />
+          <PredictionForm type="caseNumber" />
+        </div>
+      </div>
     </div>
   );
 };
