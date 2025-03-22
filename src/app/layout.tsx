@@ -16,8 +16,14 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  // Get API URL from environment variable
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || '';
+  
   return (
     <html lang="en" className="h-full">
+      <head>
+        {apiUrl && <link rel="dns-prefetch" href={apiUrl} />}
+      </head>
       <GoogleAnalytics ga_id={process.env.NEXT_PUBLIC_GA_ID!} />
       <body className={`${inter.className} h-full`}>{children}</body>
     </html>
