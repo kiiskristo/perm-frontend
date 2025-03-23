@@ -76,7 +76,7 @@ export default function PrivacyPolicy() {
           <p>
             If you have any questions about this Privacy Policy, please contact us at{' '}
             <a href="mailto:info@permupdate.com" className="text-blue-600 dark:text-blue-400 hover:underline">
-              privacy@permupdate.com
+              info@permupdate.com
             </a>.
           </p>
         </div>
