@@ -5,6 +5,10 @@ import GoogleAnalytics from '@/components/GoogleAnalytics';
 
 const inter = Inter({ subsets: ['latin'] });
 
+export const viewport = {
+  themeColor: '#4F46E5',
+};
+
 export const metadata = {
   title: 'PERM Analytics | Labor Certification Timeline Predictor',
   description: 'Track and predict PERM processing times with our analytics tools. Get accurate timeline estimates for your labor certification case.',
@@ -18,7 +22,6 @@ export const metadata = {
     ],
   },
   manifest: '/manifest.json',
-  themeColor: '#4F46E5',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
