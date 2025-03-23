@@ -23,6 +23,10 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+  const isDataFromPreviousDay = (asOfDate: string) => {
+    return new Date(asOfDate).toDateString() !== new Date().toDateString();
+  };
+
   // Fetch dashboard data
   useEffect(() => {
     async function loadDashboardData() {
@@ -132,6 +136,8 @@ const Dashboard = () => {
               
               <MetricsCard
                 title="Today's Processed Cases"
+                alternativeTitle="Yesterday's Processed Cases"
+                showAlternativeTitle={isDataFromPreviousDay(dashboardData.metrics.processing_times.as_of_date)}
                 value={dashboardData.metrics.processed_cases}
                 change={dashboardData.metrics.processed_cases_change}
                 bgColorClass="bg-green-100 dark:bg-green-900/30"

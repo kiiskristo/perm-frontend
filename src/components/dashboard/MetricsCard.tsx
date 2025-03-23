@@ -8,6 +8,8 @@ interface MetricsCardProps {
   icon: LucideIcon;
   iconColor?: string;
   children?: React.ReactNode;
+  alternativeTitle?: string;
+  showAlternativeTitle?: boolean;
 }
 
 export function MetricsCard({ 
@@ -17,11 +19,15 @@ export function MetricsCard({
   bgColorClass = "bg-blue-100 dark:bg-blue-900/30", 
   icon: Icon,
   iconColor = "text-blue-600 dark:text-blue-400",
-  children 
+  children,
+  alternativeTitle,
+  showAlternativeTitle = false
 }: MetricsCardProps) {
   return (
     <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-      <h3 className="text-gray-500 dark:text-gray-400 text-sm font-medium mb-4">{title}</h3>
+      <h3 className="text-gray-500 dark:text-gray-400 text-sm font-medium mb-4">
+        {showAlternativeTitle && alternativeTitle ? alternativeTitle : title}
+      </h3>
       <div className="flex items-center justify-between">
         <div>
           <p className="text-2xl font-bold dark:text-white">{value}</p>
