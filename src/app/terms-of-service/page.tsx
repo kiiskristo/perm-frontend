@@ -59,7 +59,7 @@ export default function TermsOfService() {
           <p>
             If you have any questions about these Terms of Service, please contact us at{' '}
             <a href="mailto:info@permupdate.com" className="text-blue-600 dark:text-blue-400 hover:underline">
-              legal@permupdate.com
+              info@permupdate.com
             </a>.
           </p>
         </div>
