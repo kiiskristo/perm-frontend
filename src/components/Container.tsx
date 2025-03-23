@@ -1,13 +1,21 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import Dashboard from './Dashboard';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { Clock, Menu, X, Moon, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+
+// Lazy load Dashboard component
+const Dashboard = lazy(() => import('./Dashboard'));
 
 export default function Container() {
   const [darkMode, setDarkMode] = useState<boolean | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isClient, setIsClient] = useState(false);
+
+  // Set isClient to true after component mounts
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   // Detect System Preference and User Preference
   useEffect(() => {
@@ -103,7 +111,13 @@ export default function Container() {
       </header>
 
       <main className="flex-grow container mx-auto px-4 py-8">
-        <Dashboard />
+        {isClient ? (
+          <Suspense fallback={<div className="animate-pulse h-96 w-full bg-gray-200 dark:bg-gray-700 rounded-lg"></div>}>
+            <Dashboard />
+          </Suspense>
+        ) : (
+          <div className="animate-pulse h-96 w-full bg-gray-200 dark:bg-gray-700 rounded-lg"></div>
+        )}
       </main>
 
       {/* Footer */}
