@@ -47,8 +47,11 @@ const nextConfig: NextConfig = {
             test: /[\\/]node_modules[\\/]/,
             priority: 20,
             name(module: any) {
-              const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1];
-              return `lib-${packageName.replace('@', '')}`;
+              // Safe check to avoid null error
+              if (!module.context) return 'lib-unknown';
+              const match = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/);
+              if (!match || !match[1]) return 'lib-unknown';
+              return `lib-${match[1].replace('@', '')}`;
             },
           },
           // Group smaller common chunks together
