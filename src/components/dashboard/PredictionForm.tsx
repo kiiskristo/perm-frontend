@@ -121,12 +121,12 @@ export function PredictionForm({ type = 'date' }: PredictionFormProps) {
         </div>
         
         <div className="w-full">
-          <label htmlFor="employer-letter" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label htmlFor={`employer-letter-${type}`} className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             First Letter of Employer Name
           </label>
           <input
             type="text"
-            id="employer-letter"
+            id={`employer-letter-${type}`}
             maxLength={1}
             placeholder="A"
             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
