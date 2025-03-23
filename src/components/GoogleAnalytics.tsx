@@ -17,7 +17,9 @@ export default function GoogleAnalytics({ ga_id }: { ga_id: string }) {
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
-          gtag('config', '${ga_id}');
+          gtag('config', '${ga_id}', {
+            cookie_flags: 'max-age=7200;secure;samesite=none;partitioned'
+          });
         `}
       </Script>
     </>
