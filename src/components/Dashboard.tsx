@@ -24,14 +24,8 @@ const Dashboard = () => {
   const [error, setError] = useState('');
 
   const isDataFromPreviousDay = (asOfDate: string) => {
-    // Create dates and set to start of day in local timezone
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    const dataDate = new Date(asOfDate);
-    dataDate.setHours(0, 0, 0, 0);
-
-    return dataDate.getTime() < today.getTime();
+    const today = new Date().toISOString().split('T')[0];  // YYYY-MM-DD
+    return asOfDate !== today;
   };
 
   // Fetch dashboard data
