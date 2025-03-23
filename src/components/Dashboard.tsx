@@ -1,21 +1,19 @@
 "use client";
 
-import React, { useState, useEffect, lazy, Suspense } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChevronDown, ChevronUp, FileText, CheckCircle, BarChart3 } from 'lucide-react';
 import { fetchDashboardData, type DashboardData } from '@/services/permService';
 
-// Import non-chart components eagerly
+// Import all of our components
 import { MetricsCard } from './dashboard/MetricsCard';
 import { ProcessTimeCard } from './dashboard/ProcessTimeCard';
+import { DailyVolumeChart } from './dashboard/DailyVolumeChart';
+import { WeeklyAverageChart } from './dashboard/WeeklyAverageChart';
+import { WeeklyVolumeChart } from './dashboard/WeeklyVolumeChart';
+import { MonthlyVolumeChart } from './dashboard/MonthlyVolumeChart';
+import { MonthlyBacklogChart } from './dashboard/MonthlyBacklogChart';
+import { PredictionForm } from './dashboard/PredictionForm';
 import { MetricsCardSkeleton, ChartSkeleton, BacklogChartSkeleton } from './dashboard/SkeletonLoaders';
-
-// Lazy load chart components
-const DailyVolumeChart = lazy(() => import('./dashboard/DailyVolumeChart').then(mod => ({ default: mod.DailyVolumeChart })));
-const WeeklyAverageChart = lazy(() => import('./dashboard/WeeklyAverageChart').then(mod => ({ default: mod.WeeklyAverageChart })));
-const WeeklyVolumeChart = lazy(() => import('./dashboard/WeeklyVolumeChart').then(mod => ({ default: mod.WeeklyVolumeChart })));
-const MonthlyVolumeChart = lazy(() => import('./dashboard/MonthlyVolumeChart').then(mod => ({ default: mod.MonthlyVolumeChart })));
-const MonthlyBacklogChart = lazy(() => import('./dashboard/MonthlyBacklogChart').then(mod => ({ default: mod.MonthlyBacklogChart })));
-const PredictionForm = lazy(() => import('./dashboard/PredictionForm').then(mod => ({ default: mod.PredictionForm })));
 
 // Main Dashboard Component
 const Dashboard = () => {
@@ -55,39 +53,34 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-8">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold dark:text-white">PERM Analytics Dashboard</h1>
+    <div className="space-y-8 dark:text-white">
+      {/* Header with title and time range selector */}
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-bold dark:text-white">PERM Dashboard</h2>
+        <div className="relative">
+          <button
+            onClick={toggleTimeOptions}
+            className="flex items-center space-x-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md px-4 py-2 text-sm"
+          >
+            <span>Last {timeRange} days</span>
+            {showTimeOptions ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+          </button>
           
-          <div className="relative">
-            <button 
-              onClick={toggleTimeOptions}
-              className="flex items-center space-x-1 bg-white dark:bg-gray-800 px-4 py-2 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700"
-            >
-              <span className="text-sm font-medium dark:text-white">Last {timeRange} Days</span>
-              {showTimeOptions ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-            </button>
-            
-            {showTimeOptions && (
-              <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 shadow-lg rounded-lg border border-gray-200 dark:border-gray-700 z-10">
-                <ul>
-                  {[7, 15, 30, 90, 180, 365].map(days => (
-                    <li key={days}>
-                      <button
-                        onClick={() => changeTimeRange(days)}
-                        className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white"
-                      >
-                        Last {days} Days
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </div>
+          {showTimeOptions && (
+            <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg border border-gray-200 dark:border-gray-700 z-10">
+              <ul className="py-1">
+                <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer" onClick={() => changeTimeRange(7)}>Last 7 days</li>
+                <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer" onClick={() => changeTimeRange(30)}>Last 30 days</li>
+                <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer" onClick={() => changeTimeRange(90)}>Last 90 days</li>
+                <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer" onClick={() => changeTimeRange(180)}>Last 180 days</li>
+              </ul>
+            </div>
+          )}
         </div>
-        
+      </div>
+      
+      {/* Dashboard data visualization section */}
+      <div className="space-y-8">
         {loading ? (
           <>
             {/* Key Metrics Skeletons */}
@@ -99,7 +92,7 @@ const Dashboard = () => {
             </div>
             
             {/* First row of charts - 2 columns */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <ChartSkeleton />
               <ChartSkeleton />
             </div>
@@ -164,28 +157,18 @@ const Dashboard = () => {
             
             {/* First row of charts - 2 columns */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <Suspense fallback={<ChartSkeleton />}>
-                <DailyVolumeChart data={dashboardData.daily_volume} />
-              </Suspense>
-              <Suspense fallback={<ChartSkeleton />}>
-                <WeeklyAverageChart data={dashboardData.weekly_averages} />
-              </Suspense>
+              <DailyVolumeChart data={dashboardData.daily_volume} />
+              <WeeklyAverageChart data={dashboardData.weekly_averages} />
             </div>
             
             {/* Second row of charts - 2 columns */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-              <Suspense fallback={<ChartSkeleton />}>
-                <WeeklyVolumeChart data={dashboardData.weekly_volumes} />
-              </Suspense>
-              <Suspense fallback={<ChartSkeleton />}>
-                <MonthlyVolumeChart data={dashboardData.monthly_volumes} />
-              </Suspense>
+              <WeeklyVolumeChart data={dashboardData.weekly_volumes} />
+              <MonthlyVolumeChart data={dashboardData.monthly_volumes} />
             </div>
             
             {/* Monthly Backlog Chart (full width) */}
-            <Suspense fallback={<BacklogChartSkeleton />}>
-              <MonthlyBacklogChart data={dashboardData.monthly_backlog} />
-            </Suspense>
+            <MonthlyBacklogChart data={dashboardData.monthly_backlog} />
           </>
         )}
       </div>
@@ -194,12 +177,8 @@ const Dashboard = () => {
       <div className="mt-8">
         <h2 className="text-xl font-semibold mb-4 dark:text-white">Timeline Estimator</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Suspense fallback={<div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow animate-pulse h-64"></div>}>
-            <PredictionForm type="date" />
-          </Suspense>
-          <Suspense fallback={<div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow animate-pulse h-64"></div>}>
-            <PredictionForm type="caseNumber" />
-          </Suspense>
+          <PredictionForm type="date" />
+          <PredictionForm type="caseNumber" />
         </div>
       </div>
     </div>
