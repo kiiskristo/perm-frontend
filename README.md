@@ -111,6 +111,4 @@ This project is proprietary software. All rights reserved.
 ## Contact
 
 For any inquiries:
-- Legal: legal@permupdate.com
-- Privacy: privacy@permupdate.com
 - General: info@permupdate.com 
