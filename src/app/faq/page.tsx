@@ -33,7 +33,7 @@ export default function FAQ() {
               <h2>How accurate are these timeline estimates?</h2>
               <p>
                 Our predictions incorporate recent processing data and statistical methods. While they typically 
-                reflect real-world results with around 80% confidence, they're estimations—not guarantees. 
+                reflect real-world results with around 80% confidence, they&apos;re estimations—not guarantees. 
                 Processing times can vary based on unforeseen factors at the DOL.
               </p>
             </div>
@@ -56,7 +56,7 @@ export default function FAQ() {
             </div>
 
             <div>
-              <h2>Can I rely solely on permupdate.com's predictions?</h2>
+              <h2>Can I rely solely on permupdate.com&apos;s predictions?</h2>
               <p>
                 No. Predictions provided by permupdate.com are purely informational. While we strive for accuracy, 
                 we are not a legal entity, and our information should not be used as definitive guidance or legal 

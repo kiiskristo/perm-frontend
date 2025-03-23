@@ -17,7 +17,7 @@ export default function PrivacyPolicy() {
 
           <h2>Introduction</h2>
           <p>
-            Welcome to permupdate.com ("we," "us," or "our"). This Privacy Policy describes how we collect, use, 
+            Welcome to permupdate.com (&quot;we,&quot; &quot;us,&quot; or &quot;our&quot;). This Privacy Policy describes how we collect, use, 
             disclose, and safeguard your information when you visit our website.
           </p>
           

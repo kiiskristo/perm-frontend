@@ -18,16 +18,16 @@ export default function HowItWorks() {
             combination of recent processing data and the specifics of your application.
           </p>
 
-          <h2>Here's a simplified breakdown of our prediction logic:</h2>
+          <h2>Here&apos;s a simplified breakdown of our prediction logic:</h2>
 
-          <h3>Employer's Name Initial (80% Influence):</h3>
+          <h3>Employer&apos;s Name Initial (80% Influence):</h3>
           <p>
             Employers whose names begin with earlier letters (A-I) typically experience shorter processing times. 
             Companies starting with letters later in the alphabet (S-Z) often experience longer processing times.
           </p>
           <p>
-            Example: An employer name beginning with "A" can be processed about 160 days faster than one beginning 
-            with "M". Conversely, one beginning with "Z" could take roughly 160 days longer than one starting with "M".
+            Example: An employer name beginning with &quot;A&quot; can be processed about 160 days faster than one beginning 
+            with &quot;M&quot;. Conversely, one beginning with &quot;Z&quot; could take roughly 160 days longer than one starting with &quot;M&quot;.
           </p>
 
           <h3>Submission Date (20% Influence):</h3>
@@ -36,7 +36,7 @@ export default function HowItWorks() {
             times by approximately 30-40 days.
           </p>
 
-          <h3>Real Processing Speeds & Buffer:</h3>
+          <h3>Real Processing Speeds &amp; Buffer:</h3>
           <p>
             Our estimator uses the actual processing speed observed from the last three weeks and adds a 15% buffer 
             to provide realistic upper-bound estimates.
@@ -44,7 +44,7 @@ export default function HowItWorks() {
 
           <h3>Confidence Level:</h3>
           <p>
-            Our estimates come with about an 80% confidence level, meaning they're reliable, but not guaranteed.
+            Our estimates come with about an 80% confidence level, meaning they&apos;re reliable, but not guaranteed.
           </p>
 
           <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg mt-6">

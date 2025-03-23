@@ -30,7 +30,7 @@ export default function TermsOfService() {
             <li>Modify or copy materials;</li>
             <li>Use materials commercially;</li>
             <li>Attempt to reverse engineer any software on our website;</li>
-            <li>Transfer materials to another person or "mirror" the materials on another server.</li>
+            <li>&quot;mirror&quot; the materials on another server.</li>
           </ul>
           <p>
             Violation of these terms will result in automatic termination of this license.
