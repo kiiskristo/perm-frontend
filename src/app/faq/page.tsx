@@ -6,10 +6,49 @@ export const metadata = {
   description: 'Frequently asked questions about PERM processing times, data sources, and prediction accuracy.',
 };
 
+// FAQ Schema for structured data
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "What determines how fast my PERM case gets processed?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Two main factors: 1) Employer Name Initial (80% impact) - Companies with earlier alphabet initials are processed faster. 2) Submission Date (20% impact) - The exact submission date within a month can slightly influence wait time."
+    }
+  }, {
+    "@type": "Question",
+    "name": "How accurate are these timeline estimates?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Our predictions incorporate recent processing data and statistical methods. They typically reflect real-world results with around 80% confidence, but they're estimations—not guarantees. Processing times can vary based on unforeseen factors at the DOL."
+    }
+  }, {
+    "@type": "Question",
+    "name": "Where does permupdate.com obtain its data?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "We primarily use publicly available data provided by the U.S. Department of Labor. Additionally, we manually gather daily updates from other publicly accessible websites to enhance accuracy and timeliness."
+    }
+  }, {
+    "@type": "Question",
+    "name": "Can I rely solely on permupdate.com's predictions?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Predictions provided by permupdate.com are purely informational. While we strive for accuracy, we are not a legal entity, and our information should not be used as definitive guidance or legal advice. Always consult official resources or a qualified attorney for final decision-making or immigration planning."
+    }
+  }]
+};
+
 export default function FAQ() {
   return (
     <Container>
       <div className="container mx-auto px-4 py-12">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        />
         <h1 className="text-3xl font-bold mb-8 dark:text-white">Frequently Asked Questions (FAQ)</h1>
         
         <div className="prose prose-lg dark:prose-invert max-w-none">

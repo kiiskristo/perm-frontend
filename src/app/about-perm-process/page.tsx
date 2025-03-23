@@ -6,10 +6,26 @@ export const metadata = {
   description: 'Learn about the Program Electronic Review Management (PERM) process and its key steps for labor certification.',
 };
 
+// Organization Schema for structured data
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "PERM Analytics",
+  "url": "https://permupdate.com",
+  "description": "PERM Analytics provides timeline predictions and analytics for PERM labor certification processing.",
+  "sameAs": [
+    "https://www.dol.gov/agencies/eta/foreign-labor/performance"
+  ]
+};
+
 export default function AboutPERMProcess() {
   return (
     <Container>
       <div className="container mx-auto px-4 py-12">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
         <h1 className="text-3xl font-bold mb-8 dark:text-white">About PERM Process</h1>
         
         <div className="prose prose-lg dark:prose-invert max-w-none">

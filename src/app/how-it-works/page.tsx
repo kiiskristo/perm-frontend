@@ -6,10 +6,35 @@ export const metadata = {
   description: 'Learn how our Timeline Estimator predicts PERM application processing times using employer name initials and submission dates.',
 };
 
+// Article Schema for structured data
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "How PERM Analytics Timeline Estimator Works",
+  "description": "Learn how our Timeline Estimator predicts PERM application processing times using employer name initials and submission dates.",
+  "author": {
+    "@type": "Organization",
+    "name": "PERM Analytics"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "PERM Analytics",
+    "url": "https://permupdate.com"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://permupdate.com/how-it-works"
+  }
+};
+
 export default function HowItWorks() {
   return (
     <Container>
       <div className="container mx-auto px-4 py-12">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+        />
         <h1 className="text-3xl font-bold mb-8 dark:text-white">Timeline Estimator (How It Works)</h1>
         
         <div className="prose prose-lg dark:prose-invert max-w-none">
