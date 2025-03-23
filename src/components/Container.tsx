@@ -1,11 +1,16 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ReactNode } from 'react';
+import Link from 'next/link';
 import Dashboard from './Dashboard';
 import { Clock, Menu, X, Moon, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-export default function Container() {
+interface ContainerProps {
+  children?: ReactNode;
+}
+
+export default function Container({ children }: ContainerProps) {
   const [darkMode, setDarkMode] = useState<boolean | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -42,19 +47,23 @@ export default function Container() {
       <header className="bg-gradient-to-r from-purple-600 to-blue-600 text-white dark:from-gray-800 dark:to-gray-700">
         <nav className="container mx-auto px-4 py-6 flex justify-between items-center">
           {/* Logo */}
-          <div className="flex items-center space-x-2">
+          <Link href="/" className="flex items-center space-x-2">
             <Clock className="h-8 w-8" />
             <span className="text-2xl font-bold">PERM Analytics</span>
-          </div>
+          </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex space-x-6">
-            <Button variant="ghost" className="text-white dark:text-gray-200 hover:bg-white/20">
-              Timeline Estimator
-            </Button>
-            <Button variant="ghost" className="text-white dark:text-gray-200 hover:bg-white/20">
-              About PERM
-            </Button>
+            <Link href="/how-it-works">
+              <Button variant="ghost" className="text-white dark:text-gray-200 hover:bg-white/20">
+                Timeline Estimator
+              </Button>
+            </Link>
+            <Link href="/about-perm-process">
+              <Button variant="ghost" className="text-white dark:text-gray-200 hover:bg-white/20">
+                About PERM
+              </Button>
+            </Link>
           </div>
 
           {/* Controls */}
@@ -85,12 +94,16 @@ export default function Container() {
             mobileMenuOpen ? 'max-h-40 py-4' : 'max-h-0 py-0'
           }`}
         >
-          <Button variant="ghost" className="text-black dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700">
-            Timeline Estimator
-          </Button>
-          <Button variant="ghost" className="text-black dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700">
-            About PERM
-          </Button>
+          <Link href="/how-it-works">
+            <Button variant="ghost" className="text-black dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700">
+              Timeline Estimator
+            </Button>
+          </Link>
+          <Link href="/about-perm-process">
+            <Button variant="ghost" className="text-black dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700">
+              About PERM
+            </Button>
+          </Link>
         </div>
         
         {/* Hero Section */}
@@ -103,7 +116,7 @@ export default function Container() {
       </header>
 
       <main className="flex-grow container mx-auto px-4 py-8">
-        <Dashboard />
+        {children || <Dashboard />}
       </main>
 
       {/* Footer */}
@@ -118,17 +131,17 @@ export default function Container() {
           <div>
             <h3 className="text-lg font-semibold mb-4">Resources</h3>
             <ul className="space-y-2 text-gray-400">
-              <li><a href="#" className="hover:text-white">About PERM Process</a></li>
-              <li><a href="#" className="hover:text-white">Timeline Estimator</a></li>
-              <li><a href="#" className="hover:text-white">FAQ</a></li>
+              <li><Link href="/about-perm-process" className="hover:text-white">About PERM Process</Link></li>
+              <li><Link href="/how-it-works" className="hover:text-white">Timeline Estimator</Link></li>
+              <li><Link href="/faq" className="hover:text-white">FAQ</Link></li>
             </ul>
           </div>
           <div>
             <h3 className="text-lg font-semibold mb-4">Legal</h3>
             <ul className="space-y-2 text-gray-400">
-              <li><a href="#" className="hover:text-white">Privacy Policy</a></li>
-              <li><a href="#" className="hover:text-white">Terms of Service</a></li>
-              <li><a href="#" className="hover:text-white">Disclaimer</a></li>
+              <li><Link href="/privacy-policy" className="hover:text-white">Privacy Policy</Link></li>
+              <li><Link href="/terms-of-service" className="hover:text-white">Terms of Service</Link></li>
+              <li><Link href="/disclaimer" className="hover:text-white">Disclaimer</Link></li>
             </ul>
           </div>
         </div>
