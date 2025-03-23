@@ -18,8 +18,10 @@ export default function GoogleAnalytics({ ga_id }: { ga_id: string }) {
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
           gtag('config', '${ga_id}', {
-            cookie_flags: 'max-age=7200;secure;samesite=none;partitioned'
+            cookie_flags: 'max-age=7200;secure;samesite=none;partitioned',
+            send_page_view: false
           });
+          gtag('event', 'page_view');
         `}
       </Script>
     </>
