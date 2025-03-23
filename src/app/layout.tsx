@@ -9,6 +9,21 @@ export const metadata = {
   title: 'PERM Analytics | Labor Certification Timeline Predictor',
   description: 'Track and predict PERM processing times with our analytics tools. Get accurate timeline estimates for your labor certification case.',
   keywords: 'PERM timeline, PERM processing time, labor certification, PERM prediction, PERM analytics, PERM case tracker',
+  icons: {
+    icon: [
+      { url: '/icon.svg', type: 'image/svg+xml' },
+    ],
+    apple: [
+      { url: '/icon.svg' },
+    ],
+  },
+  manifest: '/manifest.json',
+  themeColor: '#4F46E5',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'PERM Analytics',
+  },
 };
 
 export default function RootLayout({
