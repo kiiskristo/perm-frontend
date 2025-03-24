@@ -107,6 +107,12 @@ export function PredictionForm({ type = 'date' }: PredictionFormProps) {
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  handleDatePrediction();
+                }
+              }}
             />
           ) : (
             <input
@@ -116,6 +122,12 @@ export function PredictionForm({ type = 'date' }: PredictionFormProps) {
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  handleDatePrediction();
+                }
+              }}
             />
           )}
         </div>
@@ -135,6 +147,12 @@ export function PredictionForm({ type = 'date' }: PredictionFormProps) {
               // Only allow alphabetic characters
               const value = e.target.value.replace(/[^A-Za-z]/g, '');
               setEmployerFirstLetter(value);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                handleDatePrediction();
+              }
             }}
           />
           <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
