@@ -2,6 +2,8 @@ import React from 'react';
 import './globals.css';
 import { Inter } from 'next/font/google';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
+import { DefaultSeo } from 'next-seo';
+import seoConfig from './seo-config';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -10,9 +12,9 @@ export const viewport = {
 };
 
 export const metadata = {
-  title: 'PERM Analytics | Labor Certification Timeline Predictor',
-  description: 'Track and predict PERM processing times with our analytics tools. Get accurate timeline estimates for your labor certification case.',
-  keywords: 'PERM timeline, PERM processing time, labor certification, PERM prediction, PERM analytics, PERM case tracker',
+  title: 'PERM Tracker & Timeline Analytics | Processing Time Predictions',
+  description: 'Track your PERM case processing times with our advanced timeline tracker. Get accurate predictions and real-time analytics for your labor certification process.',
+  keywords: 'perm tracker, perm timeline, perm processing time tracker, perm case tracking, labor certification timeline, perm approval tracker',
   icons: {
     icon: [
       { url: '/icon.svg', type: 'image/svg+xml' },
@@ -25,7 +27,7 @@ export const metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
-    title: 'PERM Analytics',
+    title: 'PERM Timeline Tracker',
   },
 };
 
@@ -42,6 +44,7 @@ export default function RootLayout({
       <head>
         {apiUrl && <link rel="dns-prefetch" href={apiUrl} />}
       </head>
+      <DefaultSeo {...seoConfig} />
       <GoogleAnalytics ga_id={process.env.NEXT_PUBLIC_GA_ID!} />
       <body className={`${inter.className} h-full`}>{children}</body>
     </html>

@@ -108,9 +108,9 @@ export default function Container({ children }: ContainerProps) {
         
         {/* Hero Section */}
         <section className="py-10 px-4 text-center">
-          <h1 className="text-5xl font-bold mb-6">PERM Processing Timeline Analytics</h1>
+          <h1 className="text-5xl font-bold mb-6">PERM Timeline Tracker</h1>
           <p className="text-xl mb-8 max-w-2xl mx-auto">
-            Track and predict PERM labor certification processing times with our intelligent analytics tools and case tracker.
+            Track your PERM processing times and get accurate timeline predictions with our advanced case tracking system.
           </p>
         </section>
       </header>
@@ -123,9 +123,9 @@ export default function Container({ children }: ContainerProps) {
       <footer className="bg-gray-900 text-white py-8">
         <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
-            <h3 className="text-lg font-semibold mb-4">PERM Analytics</h3>
+            <h3 className="text-lg font-semibold mb-4">PERM Timeline Tracker</h3>
             <p className="text-gray-400">
-              Track your PERM labor certification timeline with accurate predictions and real-time analytics.
+              Track your PERM labor certification timeline with our advanced processing time tracker and real-time predictions.
             </p>
           </div>
           <div>
