@@ -2,8 +2,6 @@ import React from 'react';
 import './globals.css';
 import { Inter } from 'next/font/google';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
-import { DefaultSeo } from 'next-seo';
-import seoConfig from './seo-config';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -44,7 +42,6 @@ export default function RootLayout({
       <head>
         {apiUrl && <link rel="dns-prefetch" href={apiUrl} />}
       </head>
-      <DefaultSeo {...seoConfig} />
       <GoogleAnalytics ga_id={process.env.NEXT_PUBLIC_GA_ID!} />
       <body className={`${inter.className} h-full`}>{children}</body>
     </html>
