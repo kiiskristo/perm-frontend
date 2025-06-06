@@ -63,7 +63,12 @@ export function PredictionForm({ type = 'date' }: PredictionFormProps) {
       }
       
       // Pass the reCAPTCHA token and employer first letter to your backend
-      const prediction = await getPrediction(submitDate, token, employerFirstLetter.toUpperCase());
+      const prediction = await getPrediction(
+        submitDate, 
+        token, 
+        employerFirstLetter.toUpperCase(),
+        type === 'caseNumber' ? inputValue : undefined
+      );
       setDatePrediction(prediction);
     } catch (err) {
       let errorMessage = 'Failed to get prediction';

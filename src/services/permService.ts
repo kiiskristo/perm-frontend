@@ -73,14 +73,22 @@ export async function fetchDashboardData(days = 30): Promise<DashboardData> {
 export async function getPrediction(
   submitDate: string, 
   recaptchaToken: string, 
-  employerFirstLetter: string = ''
+  employerFirstLetter: string = '',
+  caseNumber?: string
 ): Promise<DatePrediction> {
+  const requestBody: any = { 
+    submit_date: submitDate,
+    recaptcha_token: recaptchaToken,
+    employer_first_letter: employerFirstLetter
+  };
+  
+  // Add case number if provided
+  if (caseNumber) {
+    requestBody.case_number = caseNumber;
+  }
+  
   return fetchFromAPI<DatePrediction>(`${API_URL}/predictions/from-date`, {
     method: 'POST',
-    body: JSON.stringify({ 
-      submit_date: submitDate,
-      recaptcha_token: recaptchaToken,
-      employer_first_letter: employerFirstLetter
-    }),
+    body: JSON.stringify(requestBody),
   });
 } 
