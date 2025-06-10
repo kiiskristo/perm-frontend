@@ -87,6 +87,7 @@ export function DailySyncLettersChart({ data, dataDate }: DailySyncLettersChartP
       </h3>
       <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
         As of {formatDateSafely(dataDate)} (10+ cases only)
+        <span className="text-xs">X -letter includes numeric and special character company names</span>
       </p>
       <div className="h-64">
         <ResponsiveContainer width="100%" height="100%">
