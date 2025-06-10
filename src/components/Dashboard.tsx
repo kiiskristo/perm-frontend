@@ -128,8 +128,8 @@ const Dashboard = () => {
             {/* Key Metrics */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <MetricsCard
-                title="Today's New Cases"
-                alternativeTitle="Yesterday's New Cases"
+                title="Today's Processed Cases"
+                alternativeTitle="Yesterday's Processed Cases"
                 showAlternativeTitle={isDataFromPreviousDay(dashboardData.metrics.processing_times.as_of_date)}
                 value={dashboardData.metrics.new_cases}
                 change={dashboardData.metrics.new_cases_change}
@@ -139,8 +139,8 @@ const Dashboard = () => {
               />
               
               <MetricsCard
-                title="Today's Processed Cases"
-                alternativeTitle="Yesterday's Processed Cases"
+                title="Today's Certified Cases"
+                alternativeTitle="Yesterday's Certified Cases"
                 showAlternativeTitle={isDataFromPreviousDay(dashboardData.metrics.processing_times.as_of_date)}
                 value={dashboardData.metrics.processed_cases}
                 change={dashboardData.metrics.processed_cases_change}
