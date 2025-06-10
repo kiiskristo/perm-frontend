@@ -1,10 +1,11 @@
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+import { ComposedChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 
 interface MostActiveMonthChartProps {
   data: {
     employer_first_letter: string;
     submit_month: number;
     case_count: number;
+    total_count: number;
   }[];
   mostActiveLetter: string;
   latestActiveMonth: number;
@@ -26,13 +27,14 @@ export function MostActiveMonthChart({
     return months[monthNum - 1] || 'Unknown';
   };
 
-  // Sort data by case count descending
+  // Sort data by total count descending
   const chartData = data
     .map(item => ({
       letter: item.employer_first_letter,
-      count: item.case_count
+      certified: item.case_count,
+      total: item.total_count
     }))
-    .sort((a, b) => b.count - a.count);
+    .sort((a, b) => b.total - a.total);
 
   return (
     <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
@@ -45,7 +47,7 @@ export function MostActiveMonthChart({
       </p>
       <div className="h-64">
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart
+          <ComposedChart
             data={chartData}
             margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
           >
@@ -56,18 +58,21 @@ export function MostActiveMonthChart({
             />
             <YAxis tick={{ fontSize: 12 }} />
             <Tooltip 
-              formatter={(value) => [`${value} cases`, 'Cases']}
+              formatter={(value, name) => [`${value} cases`, name]}
               labelFormatter={(label) => `Letter: ${label}`}
             />
-            <Bar dataKey="count">
+            {/* Background bar showing total submitted cases */}
+            <Bar dataKey="total" fill="#E5E7EB" name="Total Submitted" />
+            {/* Overlapping bar showing certified cases */}
+            <Bar dataKey="certified" name="Certified">
               {chartData.map((entry, index) => (
                 <Cell 
                   key={`cell-${index}`} 
-                  fill={entry.letter === mostActiveLetter ? "#10B981" : "#6B7280"} 
+                  fill={entry.letter === mostActiveLetter ? "#10B981" : "#3B82F6"} 
                 />
               ))}
             </Bar>
-          </BarChart>
+          </ComposedChart>
         </ResponsiveContainer>
       </div>
     </div>

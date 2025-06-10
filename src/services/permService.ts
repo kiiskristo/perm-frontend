@@ -29,6 +29,7 @@ export interface DashboardData {
         employer_first_letter: string;
         submit_month: number;
         case_count: number;
+        total_count: number;
       }[];
       most_active_letter: string;
       latest_active_month: number;
