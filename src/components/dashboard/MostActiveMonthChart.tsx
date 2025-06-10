@@ -27,6 +27,33 @@ export function MostActiveMonthChart({
     return months[monthNum - 1] || 'Unknown';
   };
 
+  // Custom tooltip component with nice colors
+  const CustomTooltip = ({ active, payload, label }: {
+    active?: boolean;
+    payload?: Array<{
+      dataKey: string;
+      value: number;
+      payload: {
+        letter: string;
+        certified: number;
+        total: number;
+      };
+    }>;
+    label?: string;
+  }) => {
+    if (active && payload && payload.length) {
+      const data = payload[0].payload;
+      return (
+        <div className="bg-white dark:bg-gray-800 p-3 border border-gray-300 dark:border-gray-600 rounded shadow-lg">
+          <p className="font-medium">{`Letter: ${label}`}</p>
+          <p className="text-blue-600 dark:text-blue-400">{`Certified: ${data.certified}`}</p>
+          <p className="text-gray-600 dark:text-gray-400">{`Total Submitted: ${data.total}`}</p>
+        </div>
+      );
+    }
+    return null;
+  };
+
   // Sort data by total count descending
   const chartData = data
     .map(item => ({
@@ -57,12 +84,9 @@ export function MostActiveMonthChart({
               tick={{ fontSize: 12 }}
             />
             <YAxis tick={{ fontSize: 12 }} />
-            <Tooltip 
-              formatter={(value, name) => [`${value} cases`, name]}
-              labelFormatter={(label) => `Letter: ${label}`}
-            />
-            {/* Background bar showing total submitted cases */}
-            <Bar dataKey="total" fill="#E5E7EB" name="Total Submitted" />
+            <Tooltip content={<CustomTooltip />} />
+            {/* Background bar showing total submitted cases - darker gray */}
+            <Bar dataKey="total" fill="#9CA3AF" name="Total Submitted" />
             {/* Overlapping bar showing certified cases */}
             <Bar dataKey="certified" name="Certified">
               {chartData.map((entry, index) => (
