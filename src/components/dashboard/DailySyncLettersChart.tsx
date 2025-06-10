@@ -68,7 +68,7 @@ export function DailySyncLettersChart({ data, dataDate }: DailySyncLettersChartP
             />
             <YAxis tick={{ fontSize: 12 }} />
             <Tooltip 
-              formatter={(value, name, props) => [
+              formatter={(value) => [
                 `${value} cases`,
                 'Cases'
               ]}
