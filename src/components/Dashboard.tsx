@@ -36,6 +36,13 @@ const Dashboard = () => {
     isBeta = false;
   }
 
+  // Utility function to safely format dates without timezone issues
+  const formatDateSafely = (dateString: string) => {
+    const [year, month, day] = dateString.split('-').map(Number);
+    const date = new Date(year, month - 1, day); // month is 0-indexed
+    return date.toLocaleDateString();
+  };
+
   const isDataFromPreviousDay = (asOfDate: string) => {
     const today = new Date().toISOString().split('T')[0];  // YYYY-MM-DD
     return asOfDate !== today;
@@ -164,7 +171,7 @@ const Dashboard = () => {
               
               <MetricsCard
                 title="Last Sync"
-                value={new Date(dashboardData.metrics.processing_times.as_of_date).toLocaleDateString()}
+                value={formatDateSafely(dashboardData.metrics.processing_times.as_of_date)}
                 bgColorClass="bg-purple-100 dark:bg-purple-900/30"
                 icon={RefreshCw}
                 iconColor="text-purple-600 dark:text-purple-400"

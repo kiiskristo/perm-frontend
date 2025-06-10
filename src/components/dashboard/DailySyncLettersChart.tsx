@@ -10,6 +10,13 @@ interface DailySyncLettersChartProps {
 }
 
 export function DailySyncLettersChart({ data, dataDate }: DailySyncLettersChartProps) {
+  // Utility function to safely format dates without timezone issues
+  const formatDateSafely = (dateString: string) => {
+    const [year, month, day] = dateString.split('-').map(Number);
+    const date = new Date(year, month - 1, day); // month is 0-indexed
+    return date.toLocaleDateString();
+  };
+
   // Aggregate data by letter and filter for at least 10 cases
   const aggregatedData = data.reduce((acc, item) => {
     const letter = item.employer_first_letter;
@@ -35,7 +42,7 @@ export function DailySyncLettersChart({ data, dataDate }: DailySyncLettersChartP
         Last Sync Letters Activity
       </h3>
       <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-        As of {new Date(dataDate).toLocaleDateString()} (10+ cases only)
+        As of {formatDateSafely(dataDate)} (10+ cases only)
       </p>
       <div className="h-64">
         <ResponsiveContainer width="100%" height="100%">
