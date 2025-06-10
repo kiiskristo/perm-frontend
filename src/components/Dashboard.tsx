@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { ChevronDown, ChevronUp, FileText, CheckCircle, BarChart3 } from 'lucide-react';
+import { ChevronDown, ChevronUp, FileText, CheckCircle, BarChart3, RefreshCw } from 'lucide-react';
 import { fetchDashboardData, type DashboardData } from '@/services/permService';
+import { useSearchParams } from 'next/navigation';
 
 // Import all of our components
 import { MetricsCard } from './dashboard/MetricsCard';
@@ -12,6 +13,8 @@ import { WeeklyAverageChart } from './dashboard/WeeklyAverageChart';
 import { WeeklyVolumeChart } from './dashboard/WeeklyVolumeChart';
 import { MonthlyVolumeChart } from './dashboard/MonthlyVolumeChart';
 import { MonthlyBacklogChart } from './dashboard/MonthlyBacklogChart';
+import { DailySyncLettersChart } from './dashboard/DailySyncLettersChart';
+import { MostActiveMonthChart } from './dashboard/MostActiveMonthChart';
 import { PredictionForm } from './dashboard/PredictionForm';
 import { MetricsCardSkeleton, ChartSkeleton, BacklogChartSkeleton } from './dashboard/SkeletonLoaders';
 
@@ -22,6 +25,10 @@ const Dashboard = () => {
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  
+  // Check for beta parameter
+  const searchParams = useSearchParams();
+  const isBeta = searchParams.get('beta') === 'true';
 
   const isDataFromPreviousDay = (asOfDate: string) => {
     const today = new Date().toISOString().split('T')[0];  // YYYY-MM-DD
@@ -150,11 +157,11 @@ const Dashboard = () => {
               />
               
               <MetricsCard
-                title="Current Backlog"
-                value={dashboardData.metrics.current_backlog}
-                bgColorClass="bg-orange-100 dark:bg-orange-900/30"
-                icon={BarChart3}
-                iconColor="text-orange-600 dark:text-orange-400"
+                title="Last Sync"
+                value={new Date(dashboardData.metrics.processing_times.as_of_date).toLocaleDateString()}
+                bgColorClass="bg-purple-100 dark:bg-purple-900/30"
+                icon={RefreshCw}
+                iconColor="text-purple-600 dark:text-purple-400"
               />
               
               <ProcessTimeCard
@@ -179,6 +186,22 @@ const Dashboard = () => {
             
             {/* Monthly Backlog Chart (full width) */}
             <MonthlyBacklogChart data={dashboardData.monthly_backlog} />
+            
+            {/* Beta Charts - PERM Cases Activity */}
+            {isBeta && dashboardData.perm_cases && (
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+                <DailySyncLettersChart 
+                  data={dashboardData.perm_cases.daily_activity.activity_data}
+                  dataDate={dashboardData.perm_cases.daily_activity.data_date}
+                />
+                <MostActiveMonthChart 
+                  data={dashboardData.perm_cases.latest_month_activity.activity_data}
+                  mostActiveLetter={dashboardData.perm_cases.latest_month_activity.most_active_letter}
+                  latestActiveMonth={dashboardData.perm_cases.latest_month_activity.latest_active_month}
+                  totalCertifiedCases={dashboardData.perm_cases.latest_month_activity.total_certified_cases}
+                />
+              </div>
+            )}
           </>
         )}
       </div>

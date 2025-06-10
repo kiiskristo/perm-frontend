@@ -12,6 +12,29 @@ export interface DashboardData {
     is_active: boolean;
     withdrawn: number;
   }[];
+  perm_cases: {
+    daily_activity: {
+      activity_data: {
+        employer_first_letter: string;
+        submit_month: number;
+        case_count: number;
+      }[];
+      most_active_letter: string;
+      most_active_month: number;
+      total_certified_cases: number;
+      data_date: string;
+    };
+    latest_month_activity: {
+      activity_data: {
+        employer_first_letter: string;
+        submit_month: number;
+        case_count: number;
+      }[];
+      most_active_letter: string;
+      latest_active_month: number;
+      total_certified_cases: number;
+    };
+  };
   metrics: {
     new_cases: number;
     new_cases_change: number;
