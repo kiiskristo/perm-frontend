@@ -17,22 +17,33 @@ export function DailySyncLettersChart({ data, dataDate }: DailySyncLettersChartP
     return date.toLocaleDateString();
   };
 
-  // Aggregate data by letter and filter for at least 10 cases
+  // Convert month number to month name
+  const getMonthName = (monthNum: number) => {
+    const months = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+    return months[monthNum - 1] || 'Unknown';
+  };
+
+  // Aggregate data by letter and collect month information
   const aggregatedData = data.reduce((acc, item) => {
     const letter = item.employer_first_letter;
     if (!acc[letter]) {
-      acc[letter] = 0;
+      acc[letter] = { count: 0, months: new Set() };
     }
-    acc[letter] += item.case_count;
+    acc[letter].count += item.case_count;
+    acc[letter].months.add(item.submit_month);
     return acc;
-  }, {} as Record<string, number>);
+  }, {} as Record<string, { count: number; months: Set<number> }>);
 
   // Convert to array format and filter for at least 10 cases
   const chartData = Object.entries(aggregatedData)
-    .filter(([, count]) => count >= 10)
-    .map(([letter, count]) => ({
+    .filter(([, data]) => data.count >= 10)
+    .map(([letter, data]) => ({
       letter,
-      count
+      count: data.count,
+      monthsActive: Array.from(data.months).sort((a, b) => a - b).map(getMonthName).join(', ')
     }))
     .sort((a, b) => b.count - a.count); // Sort by count descending
 
@@ -57,8 +68,16 @@ export function DailySyncLettersChart({ data, dataDate }: DailySyncLettersChartP
             />
             <YAxis tick={{ fontSize: 12 }} />
             <Tooltip 
-              formatter={(value) => [`${value} cases`, 'Cases']}
-              labelFormatter={(label) => `Letter: ${label}`}
+              formatter={(value, name, props) => [
+                `${value} cases`,
+                'Cases'
+              ]}
+              labelFormatter={(label, payload) => {
+                if (payload && payload[0]) {
+                  return `Letter: ${label} (Active in: ${payload[0].payload.monthsActive})`;
+                }
+                return `Letter: ${label}`;
+              }}
             />
             <Bar dataKey="count" fill="#3B82F6" />
           </BarChart>
