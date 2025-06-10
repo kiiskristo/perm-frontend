@@ -41,7 +41,7 @@ export function MostActiveMonthChart({
       </h3>
       <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
         Most Active Letter: {mostActiveLetter} | Total: {totalCertifiedCases.toLocaleString()} cases<br/>
-        <span className="text-xs">Letters include numeric and special character company names</span>
+        <span className="text-xs">X -letter includes numeric and special character company names</span>
       </p>
       <div className="h-64">
         <ResponsiveContainer width="100%" height="100%">

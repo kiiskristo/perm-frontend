@@ -26,6 +26,31 @@ export function DailySyncLettersChart({ data, dataDate }: DailySyncLettersChartP
     return months[monthNum - 1] || 'Unknown';
   };
 
+  // Custom tooltip component
+  const CustomTooltip = ({ active, payload, label }: {
+    active?: boolean;
+    payload?: Array<{
+      payload: {
+        letter: string;
+        count: number;
+        monthsActive: string;
+      };
+    }>;
+    label?: string;
+  }) => {
+    if (active && payload && payload.length) {
+      const data = payload[0].payload;
+      return (
+        <div className="bg-white dark:bg-gray-800 p-3 border border-gray-300 dark:border-gray-600 rounded shadow-lg">
+          <p className="font-medium">{`Letter: ${label}`}</p>
+          <p className="text-blue-600 dark:text-blue-400">{`Cases: ${data.count}`}</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400">{`Active in: ${data.monthsActive}`}</p>
+        </div>
+      );
+    }
+    return null;
+  };
+
   // Aggregate data by letter and collect month information
   const aggregatedData = data.reduce((acc, item) => {
     const letter = item.employer_first_letter;
@@ -67,18 +92,7 @@ export function DailySyncLettersChart({ data, dataDate }: DailySyncLettersChartP
               tick={{ fontSize: 12 }}
             />
             <YAxis tick={{ fontSize: 12 }} />
-            <Tooltip 
-              formatter={(value) => [
-                `${value} cases`,
-                'Cases'
-              ]}
-              labelFormatter={(label, payload) => {
-                if (payload && payload[0]) {
-                  return `Letter: ${label} (Active in: ${payload[0].payload.monthsActive})`;
-                }
-                return `Letter: ${label}`;
-              }}
-            />
+            <Tooltip content={<CustomTooltip />} />
             <Bar dataKey="count" fill="#3B82F6" />
           </BarChart>
         </ResponsiveContainer>
