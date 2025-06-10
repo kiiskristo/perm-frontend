@@ -55,21 +55,29 @@ export function DailySyncLettersChart({ data, dataDate }: DailySyncLettersChartP
   const aggregatedData = data.reduce((acc, item) => {
     const letter = item.employer_first_letter;
     if (!acc[letter]) {
-      acc[letter] = { count: 0, months: new Set() };
+      acc[letter] = { count: 0, monthData: [] };
     }
     acc[letter].count += item.case_count;
-    acc[letter].months.add(item.submit_month);
+    acc[letter].monthData.push({ month: item.submit_month, cases: item.case_count });
     return acc;
-  }, {} as Record<string, { count: number; months: Set<number> }>);
+  }, {} as Record<string, { count: number; monthData: Array<{ month: number; cases: number }> }>);
 
   // Convert to array format and filter for at least 10 cases
   const chartData = Object.entries(aggregatedData)
     .filter(([, data]) => data.count >= 10)
-    .map(([letter, data]) => ({
-      letter,
-      count: data.count,
-      monthsActive: Array.from(data.months).sort((a, b) => a - b).map(getMonthName).join(', ')
-    }))
+    .map(([letter, data]) => {
+      // Only show months that have at least 10% of the total cases for this letter
+      const significantMonths = data.monthData
+        .filter(monthData => monthData.cases >= data.count * 0.1)
+        .map(monthData => getMonthName(monthData.month))
+        .sort();
+      
+      return {
+        letter,
+        count: data.count,
+        monthsActive: significantMonths.join(', ')
+      };
+    })
     .sort((a, b) => b.count - a.count); // Sort by count descending
 
   return (
