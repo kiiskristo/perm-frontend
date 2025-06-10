@@ -22,7 +22,7 @@ export function DailySyncLettersChart({ data, dataDate }: DailySyncLettersChartP
 
   // Convert to array format and filter for at least 10 cases
   const chartData = Object.entries(aggregatedData)
-    .filter(([_, count]) => count >= 10)
+    .filter(([, count]) => count >= 10)
     .map(([letter, count]) => ({
       letter,
       count

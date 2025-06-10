@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { ChevronDown, ChevronUp, FileText, CheckCircle, BarChart3, RefreshCw } from 'lucide-react';
+import { ChevronDown, ChevronUp, FileText, CheckCircle, RefreshCw } from 'lucide-react';
 import { fetchDashboardData, type DashboardData } from '@/services/permService';
 import { useSearchParams } from 'next/navigation';
 
