@@ -26,9 +26,15 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   
-  // Check for beta parameter
-  const searchParams = useSearchParams();
-  const isBeta = searchParams.get('beta') === 'true';
+  // Check for beta parameter - safely handle SSR
+  let isBeta = false;
+  try {
+    const searchParams = useSearchParams();
+    isBeta = searchParams.get('beta') === 'true';
+  } catch {
+    // During SSR, useSearchParams might not be available
+    isBeta = false;
+  }
 
   const isDataFromPreviousDay = (asOfDate: string) => {
     const today = new Date().toISOString().split('T')[0];  // YYYY-MM-DD
