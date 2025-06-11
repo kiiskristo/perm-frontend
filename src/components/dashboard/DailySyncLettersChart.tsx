@@ -43,7 +43,7 @@ export function DailySyncLettersChart({ data, dataDate }: DailySyncLettersChartP
       return (
         <div className="bg-white dark:bg-gray-800 p-3 border border-gray-300 dark:border-gray-600 rounded shadow-lg">
           <p className="font-medium">{`Letter: ${label}`}</p>
-          <p className="text-blue-600 dark:text-blue-400">{`Cases: ${data.count}`}</p>
+          <p className="text-purple-600 dark:text-purple-400">{`Cases: ${data.count}`}</p>
           <p className="text-sm text-gray-600 dark:text-gray-400">{`Active in: ${data.monthsActive}`}</p>
         </div>
       );
@@ -102,7 +102,7 @@ export function DailySyncLettersChart({ data, dataDate }: DailySyncLettersChartP
             />
             <YAxis tick={{ fontSize: 12 }} />
             <Tooltip content={<CustomTooltip />} />
-            <Bar dataKey="count" fill="#3B82F6" />
+            <Bar dataKey="count" fill="#8B5CF6" />
           </BarChart>
         </ResponsiveContainer>
       </div>
