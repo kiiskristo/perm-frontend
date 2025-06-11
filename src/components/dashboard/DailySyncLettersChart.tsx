@@ -4,7 +4,7 @@ interface DailySyncLettersChartProps {
   data: {
     employer_first_letter: string;
     submit_month: number;
-    case_count: number;
+    certified_count: number;
   }[];
   dataDate: string;
 }
@@ -57,8 +57,8 @@ export function DailySyncLettersChart({ data, dataDate }: DailySyncLettersChartP
     if (!acc[letter]) {
       acc[letter] = { count: 0, monthData: [] };
     }
-    acc[letter].count += item.case_count;
-    acc[letter].monthData.push({ month: item.submit_month, cases: item.case_count });
+    acc[letter].count += item.certified_count;
+    acc[letter].monthData.push({ month: item.submit_month, cases: item.certified_count });
     return acc;
   }, {} as Record<string, { count: number; monthData: Array<{ month: number; cases: number }> }>);
 
