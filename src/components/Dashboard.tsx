@@ -15,7 +15,7 @@ import { MonthlyBacklogChart } from './dashboard/MonthlyBacklogChart';
 import { DailySyncLettersChart } from './dashboard/DailySyncLettersChart';
 import { MostActiveMonthChart } from './dashboard/MostActiveMonthChart';
 import { PredictionForm } from './dashboard/PredictionForm';
-import { MetricsCardSkeleton, ChartSkeleton, BacklogChartSkeleton } from './dashboard/SkeletonLoaders';
+import { MetricsCardSkeleton, ProcessTimeCardSkeleton, ChartSkeleton, BacklogChartSkeleton } from './dashboard/SkeletonLoaders';
 
 // Main Dashboard Component
 const Dashboard = () => {
@@ -105,7 +105,7 @@ const Dashboard = () => {
               <MetricsCardSkeleton />
               <MetricsCardSkeleton />
               <MetricsCardSkeleton />
-              <MetricsCardSkeleton />
+              <ProcessTimeCardSkeleton />
             </div>
             
             {/* First row of charts - 2 columns */}
@@ -122,6 +122,12 @@ const Dashboard = () => {
             
             {/* Monthly Backlog Chart (full width) */}
             <BacklogChartSkeleton />
+            
+            {/* PERM Cases Activity Charts - 2 columns */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+              <ChartSkeleton />
+              <ChartSkeleton />
+            </div>
           </>
         ) : error ? (
           <div className="bg-red-50 dark:bg-red-900/20 p-4 rounded-lg border border-red-200 dark:border-red-800">
