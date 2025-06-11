@@ -1,11 +1,11 @@
-import { ComposedChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 interface MostActiveMonthChartProps {
   data: {
     employer_first_letter: string;
     submit_month: number;
-    case_count: number;
-    total_count: number;
+    certified_count: number;
+    review_count: number;
   }[];
   mostActiveLetter: string;
   latestActiveMonth: number;
@@ -33,33 +33,33 @@ export function MostActiveMonthChart({
     payload?: Array<{
       dataKey: string;
       value: number;
-      payload: {
-        letter: string;
-        certified: number;
-        total: number;
-      };
+      name: string;
+      color: string;
     }>;
     label?: string;
   }) => {
     if (active && payload && payload.length) {
-      const data = payload[0].payload;
       return (
         <div className="bg-white dark:bg-gray-800 p-3 border border-gray-300 dark:border-gray-600 rounded shadow-lg">
           <p className="font-medium">{`Letter: ${label}`}</p>
-          <p className="text-blue-600 dark:text-blue-400">{`Certified: ${data.certified}`}</p>
-          <p className="text-gray-600 dark:text-gray-400">{`Total Submitted: ${data.total}`}</p>
+          {payload.map((entry, index) => (
+            <p key={index} style={{ color: entry.color }}>
+              {`${entry.name}: ${entry.value}`}
+            </p>
+          ))}
         </div>
       );
     }
     return null;
   };
 
-  // Sort data by total count descending
+  // Sort data by total volume (certified + review) descending
   const chartData = data
     .map(item => ({
       letter: item.employer_first_letter,
-      certified: item.case_count,
-      total: item.total_count
+      certified: item.certified_count,
+      review: item.review_count,
+      total: item.certified_count + item.review_count
     }))
     .sort((a, b) => b.total - a.total);
 
@@ -74,7 +74,7 @@ export function MostActiveMonthChart({
       </p>
       <div className="h-64">
         <ResponsiveContainer width="100%" height="100%">
-          <ComposedChart
+          <BarChart
             data={chartData}
             margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
           >
@@ -85,18 +85,12 @@ export function MostActiveMonthChart({
             />
             <YAxis tick={{ fontSize: 12 }} />
             <Tooltip content={<CustomTooltip />} />
-            {/* Background bar showing total submitted cases - darker gray */}
-            <Bar dataKey="total" fill="#9CA3AF" name="Total Submitted" />
-            {/* Overlapping bar showing certified cases */}
-            <Bar dataKey="certified" name="Certified">
-              {chartData.map((entry, index) => (
-                <Cell 
-                  key={`cell-${index}`} 
-                  fill={entry.letter === mostActiveLetter ? "#10B981" : "#3B82F6"} 
-                />
-              ))}
-            </Bar>
-          </ComposedChart>
+            <Legend />
+            {/* Bottom stack - Certified cases */}
+            <Bar dataKey="certified" stackId="a" fill="#3B82F6" name="Certified" />
+            {/* Top stack - Under review cases */}
+            <Bar dataKey="review" stackId="a" fill="#10B981" name="Under Review" />
+          </BarChart>
         </ResponsiveContainer>
       </div>
     </div>
