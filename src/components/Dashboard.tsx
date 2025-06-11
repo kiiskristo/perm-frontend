@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronDown, ChevronUp, FileText, CheckCircle, RefreshCw } from 'lucide-react';
 import { fetchDashboardData, type DashboardData } from '@/services/permService';
-import { useSearchParams } from 'next/navigation';
 
 // Import all of our components
 import { MetricsCard } from './dashboard/MetricsCard';
@@ -25,16 +24,6 @@ const Dashboard = () => {
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  
-  // Check for beta parameter - safely handle SSR
-  let isBeta = false;
-  try {
-    const searchParams = useSearchParams();
-    isBeta = searchParams.get('beta') === 'true';
-  } catch {
-    // During SSR, useSearchParams might not be available
-    isBeta = false;
-  }
 
   // Utility function to safely format dates without timezone issues
   const formatDateSafely = (dateString: string) => {
@@ -202,8 +191,8 @@ const Dashboard = () => {
             {/* Monthly Backlog Chart (full width) */}
             <MonthlyBacklogChart data={dashboardData.monthly_backlog} />
             
-            {/* Beta Charts - PERM Cases Activity */}
-            {isBeta && dashboardData.perm_cases && (
+            {/* PERM Cases Activity Charts */}
+            {dashboardData.perm_cases && (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
                 <DailySyncLettersChart 
                   data={dashboardData.perm_cases.daily_activity.activity_data}
