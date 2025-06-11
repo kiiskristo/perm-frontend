@@ -44,8 +44,10 @@ const Dashboard = () => {
   };
 
   const isDataFromPreviousDay = (asOfDate: string) => {
-    const today = new Date().toISOString().split('T')[0];  // YYYY-MM-DD
-    return asOfDate !== today;
+    // Get today's date in local timezone as YYYY-MM-DD
+    const today = new Date();
+    const todayString = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    return asOfDate !== todayString;
   };
 
   // Fetch dashboard data
