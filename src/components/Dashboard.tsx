@@ -15,7 +15,7 @@ import { MonthlyBacklogChart } from './dashboard/MonthlyBacklogChart';
 import { DailySyncLettersChart } from './dashboard/DailySyncLettersChart';
 import { MostActiveMonthChart } from './dashboard/MostActiveMonthChart';
 import { PredictionForm } from './dashboard/PredictionForm';
-import { MetricsCardSkeleton, ProcessTimeCardSkeleton, ChartSkeleton, BacklogChartSkeleton } from './dashboard/SkeletonLoaders';
+import { MetricsCardSkeleton, ProcessTimeCardSkeleton, ChartSkeleton, LetterChartSkeleton, BacklogChartSkeleton } from './dashboard/SkeletonLoaders';
 
 // Main Dashboard Component
 const Dashboard = () => {
@@ -125,8 +125,8 @@ const Dashboard = () => {
             
             {/* PERM Cases Activity Charts - 2 columns */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-              <ChartSkeleton />
-              <ChartSkeleton />
+              <LetterChartSkeleton />
+              <LetterChartSkeleton />
             </div>
           </>
         ) : error ? (
