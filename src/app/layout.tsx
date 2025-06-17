@@ -41,6 +41,12 @@ export default function RootLayout({
     <html lang="en" className="h-full">
       <head>
         {apiUrl && <link rel="dns-prefetch" href={apiUrl} />}
+        <meta name="google-adsense-account" content="ca-pub-9390909578965799" />
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9390909578965799"
+          crossOrigin="anonymous"
+        />
       </head>
       <GoogleAnalytics ga_id={process.env.NEXT_PUBLIC_GA_ID!} />
       <body className={`${inter.className} h-full`}>{children}</body>
