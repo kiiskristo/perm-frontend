@@ -220,8 +220,8 @@ const Dashboard = () => {
       <div className="mt-8">
         <h2 className="text-xl font-semibold mb-4 dark:text-white">Timeline Estimator</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <PredictionForm type="date" />
           <PredictionForm type="caseNumber" />
+          <PredictionForm type="date" />
         </div>
       </div>
     </div>
