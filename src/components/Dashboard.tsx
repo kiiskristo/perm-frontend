@@ -202,7 +202,7 @@ const Dashboard = () => {
             <AdCard adSlot="2964232736" className="lg:col-span-2" />
             
             {/* PERM Cases Activity Charts */}
-            {dashboardData.perm_cases && (
+            {/* dashboardData.perm_cases && (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
                 <DailySyncLettersChart 
                   data={dashboardData.perm_cases.daily_activity.activity_data}
@@ -215,7 +215,7 @@ const Dashboard = () => {
                   totalCertifiedCases={dashboardData.perm_cases.latest_month_activity.total_certified_cases}
                 />
               </div>
-            )}
+            ) */}
           </>
         )}
       </div>
