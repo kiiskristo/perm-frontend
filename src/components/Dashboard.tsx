@@ -12,8 +12,8 @@ import { WeeklyAverageChart } from './dashboard/WeeklyAverageChart';
 import { WeeklyVolumeChart } from './dashboard/WeeklyVolumeChart';
 import { MonthlyVolumeChart } from './dashboard/MonthlyVolumeChart';
 import { MonthlyBacklogChart } from './dashboard/MonthlyBacklogChart';
-import { DailySyncLettersChart } from './dashboard/DailySyncLettersChart';
-import { MostActiveMonthChart } from './dashboard/MostActiveMonthChart';
+// import { DailySyncLettersChart } from './dashboard/DailySyncLettersChart';
+// import { MostActiveMonthChart } from './dashboard/MostActiveMonthChart';
 import { PredictionForm } from './dashboard/PredictionForm';
 import { AdCard } from './ui/AdCard';
 import { MetricsCardSkeleton, ProcessTimeCardSkeleton, ChartSkeleton, LetterChartSkeleton, BacklogChartSkeleton } from './dashboard/SkeletonLoaders';
@@ -201,8 +201,8 @@ const Dashboard = () => {
             {/* Ad Card before PERM Cases Activity Charts */}
             <AdCard adSlot="2964232736" className="lg:col-span-2" />
             
-            {/* PERM Cases Activity Charts */}
-            {/* dashboardData.perm_cases && (
+            {/* PERM Cases Activity Charts - Temporarily commented out 
+            { dashboardData.perm_cases && (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
                 <DailySyncLettersChart 
                   data={dashboardData.perm_cases.daily_activity.activity_data}
@@ -215,7 +215,8 @@ const Dashboard = () => {
                   totalCertifiedCases={dashboardData.perm_cases.latest_month_activity.total_certified_cases}
                 />
               </div>
-            ) */}
+            ) }
+            */}
           </>
         )}
       </div>
