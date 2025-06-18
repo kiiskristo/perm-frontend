@@ -2,6 +2,13 @@
 
 import { useEffect, useState } from 'react';
 
+// Declare the adsbygoogle type for window
+declare global {
+  interface Window {
+    adsbygoogle: unknown[];
+  }
+}
+
 interface AdCardProps {
   adSlot: string;
   adClient?: string;
@@ -20,7 +27,7 @@ export function AdCard({
     const timer = setTimeout(() => {
       try {
         // Push the ad to AdSense
-        ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({});
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
         
         // Check if ad loaded after a short delay
         setTimeout(() => {
