@@ -12,7 +12,7 @@ import { WeeklyAverageChart } from './dashboard/WeeklyAverageChart';
 import { WeeklyVolumeChart } from './dashboard/WeeklyVolumeChart';
 import { MonthlyVolumeChart } from './dashboard/MonthlyVolumeChart';
 import { MonthlyBacklogChart } from './dashboard/MonthlyBacklogChart';
-import { MostActiveMonthChart } from './dashboard/MostActiveMonthChart';
+// import { MostActiveMonthChart } from './dashboard/MostActiveMonthChart';
 import { PredictionForm } from './dashboard/PredictionForm';
 import { AdCard } from './ui/AdCard';
 import { MetricsCardSkeleton, ProcessTimeCardSkeleton, ChartSkeleton, LetterChartSkeleton, BacklogChartSkeleton } from './dashboard/SkeletonLoaders';
@@ -200,7 +200,7 @@ const Dashboard = () => {
             {/* Ad Card before PERM Cases Activity Charts */}
             <AdCard adSlot="2964232736" className="lg:col-span-2" />
             
-            {/* PERM Cases Activity Charts */}
+            {/* PERM Cases Activity Charts - Temporarily hidden
             {dashboardData.perm_cases && (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
                 <LetterChartSkeleton />
@@ -212,6 +212,7 @@ const Dashboard = () => {
                 />
               </div>
             )}
+            */}
           </>
         )}
       </div>
