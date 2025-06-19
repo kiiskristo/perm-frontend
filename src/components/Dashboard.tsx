@@ -12,9 +12,10 @@ import { WeeklyAverageChart } from './dashboard/WeeklyAverageChart';
 import { WeeklyVolumeChart } from './dashboard/WeeklyVolumeChart';
 import { MonthlyVolumeChart } from './dashboard/MonthlyVolumeChart';
 import { MonthlyBacklogChart } from './dashboard/MonthlyBacklogChart';
-// import { MostActiveMonthChart } from './dashboard/MostActiveMonthChart';
+import { DailySyncLettersChart } from './dashboard/DailySyncLettersChart';
+import { MostActiveMonthChart } from './dashboard/MostActiveMonthChart';
 import { PredictionForm } from './dashboard/PredictionForm';
-import { AdCard } from './ui/AdCard';
+// import { AdCard } from './ui/AdCard';
 import { MetricsCardSkeleton, ProcessTimeCardSkeleton, ChartSkeleton, LetterChartSkeleton, BacklogChartSkeleton } from './dashboard/SkeletonLoaders';
 
 // Main Dashboard Component
@@ -197,13 +198,17 @@ const Dashboard = () => {
             {/* Monthly Backlog Chart (full width) */}
             <MonthlyBacklogChart data={dashboardData.monthly_backlog} />
             
-            {/* Ad Card before PERM Cases Activity Charts */}
+            {/* Ad Card before PERM Cases Activity Charts 
             <AdCard adSlot="2964232736" className="lg:col-span-2" />
-            
-            {/* PERM Cases Activity Charts - Temporarily hidden
+            */}
+
+            {/* PERM Cases Activity Charts */}
             {dashboardData.perm_cases && (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-                <LetterChartSkeleton />
+                <DailySyncLettersChart 
+                  data={dashboardData.perm_cases.daily_activity.activity_data}
+                  dataDate={dashboardData.perm_cases.daily_activity.data_date}
+                />
                 <MostActiveMonthChart 
                   data={dashboardData.perm_cases.latest_month_activity.activity_data}
                   mostActiveLetter={dashboardData.perm_cases.latest_month_activity.most_active_letter}
@@ -212,14 +217,13 @@ const Dashboard = () => {
                 />
               </div>
             )}
-            */}
           </>
         )}
       </div>
       
-      {/* Ad Card before Timeline Estimator */}
+      {/* Ad Card before Timeline Estimator
       <AdCard adSlot="8024987722" />
-      
+      */}
       {/* Prediction Forms - Always visible and separate from loading state */}
       <div className="mt-8">
         <h2 className="text-xl font-semibold mb-4 dark:text-white">Timeline Estimator</h2>
