@@ -8,9 +8,12 @@ export interface DashboardData {
   monthly_volumes: { month: string; volume: number }[];
   monthly_backlog: {
     month: string;
+    year: number;
     backlog: number;
     is_active: boolean;
     withdrawn: number;
+    denied: number;
+    rfi: number;
   }[];
   perm_cases: {
     daily_activity: {

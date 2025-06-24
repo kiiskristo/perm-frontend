@@ -1,50 +1,31 @@
-'use client';
-
-import React, { useState, useEffect, ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 import Link from 'next/link';
 import Dashboard from './Dashboard';
-import { Clock, Menu, X, Moon, Sun } from 'lucide-react';
+import { Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Banner } from '@/components/ui/Banner';
+import ClientWrapper, { NavControls, MobileMenu } from './ClientWrapper';
 
 interface ContainerProps {
   children?: ReactNode;
 }
 
 export default function Container({ children }: ContainerProps) {
-  const [darkMode, setDarkMode] = useState<boolean | null>(null);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  // Detect System Preference and User Preference
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const userPreference = localStorage.getItem('theme');
-      const systemPreference = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-      if (userPreference === 'dark' || (!userPreference && systemPreference)) {
-        document.documentElement.classList.add('dark');
-        setDarkMode(true);
-      } else {
-        document.documentElement.classList.remove('dark');
-        setDarkMode(false);
-      }
-    }
-  }, []);
-
-  // Toggle dark mode and force override system settings
-  const toggleDarkMode = () => {
-    setDarkMode((prev) => {
-      const newMode = !prev;
-      localStorage.setItem('theme', newMode ? 'dark' : 'light');
-      localStorage.setItem('theme-mode-override', 'true'); // Mark override
-      document.documentElement.classList.toggle('dark', newMode);
-      return newMode;
-    });
-  };
-
   return (
     <div className="min-h-screen flex flex-col bg-white text-black dark:bg-gray-900 dark:text-white">
+      {/* News/Updates Banner */}
+      <Banner 
+        message="📊 Syncing will start once per day at 10pm and finishes normally by 11pm ET time. Technical questions, like where is data coming from, is it correct etc:"
+        type="info"
+        dismissible={true}
+        enabled={false}
+        link={{
+          text: "Telegram",
+          href: "https://t.me/+pka9Y1te1KwwNmY8"
+        }}
+      />
       {/* Header */}
-      <header className="bg-gradient-to-r from-purple-600 to-blue-600 text-white dark:from-gray-800 dark:to-gray-700">
+      <header className="bg-gradient-to-r from-purple-600 to-blue-600 text-white dark:from-gray-800 dark:to-gray-700 relative">
         <nav className="container mx-auto px-4 py-6 flex justify-between items-center">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
@@ -52,61 +33,31 @@ export default function Container({ children }: ContainerProps) {
             <span className="text-2xl font-bold">PERM Analytics</span>
           </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex space-x-6">
-            <Link href="/how-it-works">
-              <Button variant="ghost" className="text-white dark:text-gray-200 hover:bg-white/20">
-                Timeline Estimator
-              </Button>
-            </Link>
-            <Link href="/about-perm-process">
-              <Button variant="ghost" className="text-white dark:text-gray-200 hover:bg-white/20">
-                About PERM
-              </Button>
-            </Link>
-          </div>
+          {/* Right side navigation - Desktop Navigation + Controls */}
+          <div className="flex items-center space-x-6">
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex space-x-6">
+              <Link href="/how-it-works">
+                <Button variant="ghost" className="text-white dark:text-gray-200 hover:bg-white/20">
+                  Timeline Estimator
+                </Button>
+              </Link>
+              <Link href="/about-perm-process">
+                <Button variant="ghost" className="text-white dark:text-gray-200 hover:bg-white/20">
+                  About PERM
+                </Button>
+              </Link>
+            </div>
 
-          {/* Controls */}
-          <div className="flex items-center space-x-4">
-            {/* Dark Mode Toggle - Add aria-label */}
-            <button 
-              onClick={toggleDarkMode} 
-              className="p-2 bg-white/10 rounded-md hover:bg-white/20"
-              aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
-            >
-              {darkMode ? <Sun className="h-6 w-6" /> : <Moon className="h-6 w-6" />}
-            </button>
-
-            {/* Mobile Menu Toggle - Add aria-label for accessibility */}
-            <button 
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)} 
-              className="md:hidden p-2"
-              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
-            >
-              {mobileMenuOpen ? <X className="h-8 w-8" /> : <Menu className="h-8 w-8" />}
-            </button>
+            {/* Client-side Navigation Controls */}
+            <NavControls />
           </div>
         </nav>
-
-        {/* Mobile Slide-down Menu */}
-        <div
-          className={`md:hidden flex flex-col items-center space-y-4 bg-white dark:bg-gray-800 transition-all duration-300 overflow-hidden ${
-            mobileMenuOpen ? 'max-h-40 py-4' : 'max-h-0 py-0'
-          }`}
-        >
-          <Link href="/how-it-works">
-            <Button variant="ghost" className="text-black dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700">
-              Timeline Estimator
-            </Button>
-          </Link>
-          <Link href="/about-perm-process">
-            <Button variant="ghost" className="text-black dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700">
-              About PERM
-            </Button>
-          </Link>
-        </div>
         
-        {/* Hero Section */}
+        {/* Mobile Menu */}
+        <MobileMenu />
+        
+        {/* Hero Section - Server Rendered */}
         <section className="py-10 px-4 text-center">
           <h1 className="text-5xl font-bold mb-6">PERM Timeline Tracker</h1>
           <p className="text-xl mb-8 max-w-2xl mx-auto">
@@ -116,10 +67,17 @@ export default function Container({ children }: ContainerProps) {
       </header>
 
       <main className="flex-grow container mx-auto px-4 py-8">
-        {children || <Dashboard />}
+        {children ? children : (
+          <>
+            {/* Dashboard Section - Client-side */}
+            <ClientWrapper>
+              <Dashboard />
+            </ClientWrapper>
+          </>
+        )}
       </main>
 
-      {/* Footer */}
+      {/* Footer - Server Rendered */}
       <footer className="bg-gray-900 text-white py-8">
         <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
