@@ -23,13 +23,13 @@ const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>)
         <p className="font-medium text-gray-900 dark:text-white">{`Month: ${label}`}</p>
         <p className="text-blue-600 dark:text-blue-400">{`Backlog: ${data.backlog.toLocaleString()}`}</p>
         {data.withdrawn > 0 && (
-          <p className="text-red-600 dark:text-red-400">{`Withdrawn: ${data.withdrawn.toLocaleString()}`}</p>
+          <p className="text-yellow-600 dark:text-yellow-400">{`Withdrawn: ${data.withdrawn.toLocaleString()}`}</p>
         )}
         {data.denied > 0 && (
-          <p className="text-orange-600 dark:text-orange-400">{`Denied: ${data.denied.toLocaleString()}`}</p>
+          <p className="text-red-600 dark:text-red-400">{`Denied: ${data.denied.toLocaleString()}`}</p>
         )}
         {data.rfi > 0 && (
-          <p className="text-yellow-600 dark:text-yellow-400">{`RFI: ${data.rfi.toLocaleString()}`}</p>
+          <p className="text-orange-600 dark:text-orange-400">{`RFI: ${data.rfi.toLocaleString()}`}</p>
         )}
       </div>
     );
