@@ -1,4 +1,4 @@
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 
 interface DailySyncLettersChartProps {
   data: {
@@ -26,14 +26,37 @@ export function DailySyncLettersChart({ data, dataDate }: DailySyncLettersChartP
     return months[monthNum - 1] || 'Unknown';
   };
 
+  // Color palette for different months
+  const monthColors = [
+    '#3B82F6', // Blue
+    '#10B981', // Emerald
+    '#8B5CF6', // Purple
+    '#F59E0B', // Amber
+    '#EF4444', // Red
+    '#06B6D4', // Cyan
+    '#84CC16', // Lime
+    '#F97316', // Orange
+    '#EC4899', // Pink
+    '#6366F1', // Indigo
+    '#14B8A6', // Teal
+    '#A855F7', // Violet
+  ];
+
+  // Get color for a month
+  const getMonthColor = (monthNum: number) => {
+    return monthColors[(monthNum - 1) % monthColors.length];
+  };
+
   // Custom tooltip component
   const CustomTooltip = ({ active, payload, label }: {
     active?: boolean;
     payload?: Array<{
       payload: {
+        letterMonth: string;
         letter: string;
+        month: number;
+        monthName: string;
         count: number;
-        monthsActive: string;
       };
     }>;
     label?: string;
@@ -42,53 +65,66 @@ export function DailySyncLettersChart({ data, dataDate }: DailySyncLettersChartP
       const data = payload[0].payload;
       return (
         <div className="bg-white dark:bg-gray-800 p-3 border border-gray-300 dark:border-gray-600 rounded shadow-lg">
-          <p className="font-medium">{`Letter: ${label}`}</p>
-          <p className="text-purple-600 dark:text-purple-400">{`Cases: ${data.count}`}</p>
-          <p className="text-sm text-gray-600 dark:text-gray-400">{`Active in: ${data.monthsActive}`}</p>
+          <p className="font-medium text-gray-900 dark:text-white">{`Letter: ${data.letter}`}</p>
+          <p className="text-gray-700 dark:text-gray-300">{`Month: ${data.monthName}`}</p>
+          <p style={{ color: getMonthColor(data.month) }}>{`Cases: ${data.count.toLocaleString()}`}</p>
         </div>
       );
     }
     return null;
   };
 
-  // Aggregate data by letter and collect month information
-  const aggregatedData = data.reduce((acc, item) => {
-    const letter = item.employer_first_letter;
-    if (!acc[letter]) {
-      acc[letter] = { count: 0, monthData: [] };
-    }
-    acc[letter].count += item.certified_count;
-    acc[letter].monthData.push({ month: item.submit_month, cases: item.certified_count });
-    return acc;
-  }, {} as Record<string, { count: number; monthData: Array<{ month: number; cases: number }> }>);
+  // Transform data to show individual letter-month combinations
+  const chartData = data
+    .filter(item => item.certified_count >= 10) // Filter for meaningful data (10+ cases)
+    .map(item => ({
+      letterMonth: `${item.employer_first_letter}-${getMonthName(item.submit_month).slice(0, 3)}`,
+      letter: item.employer_first_letter,
+      month: item.submit_month,
+      monthName: getMonthName(item.submit_month),
+      count: item.certified_count,
+      color: getMonthColor(item.submit_month)
+    }))
+    .sort((a, b) => {
+      // Sort by letter first, then by month
+      if (a.letter !== b.letter) {
+        return a.letter.localeCompare(b.letter);
+      }
+      return a.month - b.month;
+    });
 
-  // Convert to array format and filter for at least 10 cases
-  const chartData = Object.entries(aggregatedData)
-    .filter(([, data]) => data.count >= 10)
-    .map(([letter, data]) => {
-      // Only show months that have at least 10% of the total cases for this letter
-      const significantMonths = data.monthData
-        .filter(monthData => monthData.cases >= data.count * 0.1)
-        .map(monthData => getMonthName(monthData.month))
-        .sort();
-      
-      return {
-        letter,
-        count: data.count,
-        monthsActive: significantMonths.join(', ')
-      };
-    })
-    .sort((a, b) => b.count - a.count); // Sort by count descending
+  // Get unique months for legend
+  const uniqueMonths = [...new Set(data.map(item => item.submit_month))]
+    .sort((a, b) => a - b)
+    .map(month => ({
+      month,
+      name: getMonthName(month),
+      color: getMonthColor(month)
+    }));
 
   return (
     <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
       <h3 className="text-lg font-semibold mb-4 dark:text-white">
-        Last Sync Letters Activity
+        Last Sync Letters Activity by Month
       </h3>
       <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
         As of {formatDateSafely(dataDate)} (10+ cases only)<br/>
         <span className="text-xs">X -letter includes numeric and special character company names</span>
       </p>
+      
+      {/* Legend */}
+      <div className="flex flex-wrap gap-2 mb-4">
+        {uniqueMonths.map(month => (
+          <div key={month.month} className="flex items-center">
+            <div 
+              className="w-3 h-3 rounded-full mr-1" 
+              style={{ backgroundColor: month.color }}
+            ></div>
+            <span className="text-xs text-gray-600 dark:text-gray-300">{month.name.slice(0, 3)}</span>
+          </div>
+        ))}
+      </div>
+
       <div className="h-64">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
@@ -97,12 +133,19 @@ export function DailySyncLettersChart({ data, dataDate }: DailySyncLettersChartP
           >
             <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.1} />
             <XAxis 
-              dataKey="letter" 
-              tick={{ fontSize: 12 }}
+              dataKey="letterMonth" 
+              tick={{ fontSize: 10 }}
+              angle={-45}
+              textAnchor="end"
+              height={60}
             />
             <YAxis tick={{ fontSize: 12 }} />
             <Tooltip content={<CustomTooltip />} />
-            <Bar dataKey="count" fill="#8B5CF6" />
+            <Bar dataKey="count">
+              {chartData.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={entry.color} />
+              ))}
+            </Bar>
           </BarChart>
         </ResponsiveContainer>
       </div>
