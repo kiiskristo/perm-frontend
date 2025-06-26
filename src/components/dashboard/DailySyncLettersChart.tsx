@@ -48,7 +48,7 @@ export function DailySyncLettersChart({ data, dataDate }: DailySyncLettersChartP
   };
 
   // Custom tooltip component
-  const CustomTooltip = ({ active, payload, label }: {
+  const CustomTooltip = ({ active, payload }: {
     active?: boolean;
     payload?: Array<{
       payload: {
@@ -59,7 +59,6 @@ export function DailySyncLettersChart({ data, dataDate }: DailySyncLettersChartP
         count: number;
       };
     }>;
-    label?: string;
   }) => {
     if (active && payload && payload.length) {
       const data = payload[0].payload;
