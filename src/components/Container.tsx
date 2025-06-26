@@ -15,12 +15,12 @@ export default function Container({ children }: ContainerProps) {
     <div className="min-h-screen flex flex-col bg-white text-black dark:bg-gray-900 dark:text-white">
       {/* News/Updates Banner */}
       <Banner 
-        message="Syncing will start once per day at 10pm and finishes normally by 11pm ET time. Update: Monthly backlog tooltip has more details now. Coming soon: May 2025 and June 2025 backlog numbers, so prediction also works on these dates."
+        message="Our sync that should switch to next month, when it sees something was certified that month, did not work automatically, we had to switch manually to March in the morning. Now dashboard is updated, sorry for inconvenience. It takes a lot to run it fully automatically"
         type="info"
         dismissible={true}
         enabled={true}
         link={{
-          text: "Our sync that should switch to next month, when it sees something was certified that month, did not work automatically, we had to switch manually to March in the morning. Now dashboard is updated, sorry for inconvenience. It takes a lot to run it fully automatically",
+          text: "",
           href: ""
         }}
       />
