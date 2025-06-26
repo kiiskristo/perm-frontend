@@ -18,7 +18,7 @@ export default function Container({ children }: ContainerProps) {
         message="Our sync that should switch to next month, when it sees something was certified that month, did not work automatically, we had to switch manually to March in the morning. Now dashboard is updated, sorry for inconvenience. It takes a lot to run it fully automatically"
         type="info"
         dismissible={true}
-        enabled={true}
+        enabled={false}
         link={{
           text: "",
           href: ""
