@@ -34,8 +34,8 @@ interface CompanyCasesResponse {
 export default function CompanySearchPage() {
   const [companyQuery, setCompanyQuery] = useState('');
   const [selectedCompany, setSelectedCompany] = useState('');
-  const [startDate, setStartDate] = useState('2025-01-01');
-  const [endDate, setEndDate] = useState('2025-12-31');
+  const [startDate, setStartDate] = useState('2025-05-01');
+  const [endDate, setEndDate] = useState('2025-06-30');
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [searchResults, setSearchResults] = useState<CaseResult[]>([]);
@@ -231,8 +231,8 @@ export default function CompanySearchPage() {
                     id="startDate"
                     value={startDate}
                     onChange={(e) => setStartDate(e.target.value)}
-                    min="2025-01-01"
-                    max="2025-12-31"
+                    min="2025-05-01"
+                    max="2025-06-30"
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
                   />
                 </div>
@@ -247,8 +247,8 @@ export default function CompanySearchPage() {
                     id="endDate"
                     value={endDate}
                     onChange={(e) => setEndDate(e.target.value)}
-                    min="2025-01-01"
-                    max="2025-12-31"
+                    min="2025-05-01"
+                    max="2025-06-30"
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
                   />
                 </div>
