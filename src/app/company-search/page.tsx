@@ -45,7 +45,7 @@ export default function CompanySearchPage() {
   const [currentOffset, setCurrentOffset] = useState(0);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   
-  const suggestionTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
+  const suggestionTimeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const inputRef = useRef<HTMLInputElement>(null);
 
   // Debounced company search
