@@ -43,16 +43,25 @@ export default function HowItWorks() {
             combination of recent processing data and the specifics of your application.
           </p>
 
+          <div className="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-lg border border-yellow-200 dark:border-yellow-800 mb-6">
+            <h3 className="text-lg font-semibold text-yellow-800 dark:text-yellow-200 mb-2">Current Processing Times</h3>
+            <p className="text-yellow-700 dark:text-yellow-300">
+              PERM applications are currently taking <strong>490-500+ days</strong> to process. This timeline varies 
+              based on your submission month and employer name initial within that month.
+            </p>
+          </div>
+
           <h2>Here&apos;s a simplified breakdown of our prediction logic:</h2>
 
           <h3>Employer&apos;s Name Initial (80% Influence):</h3>
           <p>
-            Employers whose names begin with earlier letters (A-I) typically experience shorter processing times. 
-            Companies starting with letters later in the alphabet (S-Z) often experience longer processing times.
+            Within each submission month, the Department of Labor processes applications alphabetically by employer name. 
+            Companies whose names begin with earlier letters (A-I) are processed before those starting with later letters (S-Z).
           </p>
           <p>
-            Example: An employer name beginning with &quot;A&quot; can be processed about 160 days faster than one beginning 
-            with &quot;M&quot;. Conversely, one beginning with &quot;Z&quot; could take roughly 160 days longer than one starting with &quot;M&quot;.
+            Example: Within the same submission month, an employer name beginning with &quot;A&quot; might be processed 
+            a few days to a few weeks earlier than one beginning with &quot;Z&quot;, depending on DOL processing speed 
+            and the volume of cases in that month.
           </p>
 
           <h3>Submission Date (20% Influence):</h3>
@@ -70,6 +79,14 @@ export default function HowItWorks() {
           <h3>Confidence Level:</h3>
           <p>
             Our estimates come with about an 80% confidence level, meaning they&apos;re reliable, but not guaranteed.
+          </p>
+
+          <h3>Timeline Estimation Tool</h3>
+          <p>
+            Our timeline estimator uses statistical analysis and historical processing data to provide 
+            accurate predictions for PERM case completion dates. The algorithm calculates your queue position 
+            based on submission date and employer name initial, then applies current processing rates 
+            to estimate when your labor certification might be approved.
           </p>
 
           <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg mt-6">
