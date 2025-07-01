@@ -15,10 +15,10 @@ export default function Container({ children }: ContainerProps) {
     <div className="min-h-screen flex flex-col bg-white text-black dark:bg-gray-900 dark:text-white">
       {/* News/Updates Banner */}
       <Banner 
-        message="Our sync that should switch to next month, when it sees something was certified that month, did not work automatically, we had to switch manually to March in the morning. Now dashboard is updated, sorry for inconvenience. It takes a lot to run it fully automatically"
+        message="End of day on 1st of July, most active month will be switched to March 2025"
         type="info"
         dismissible={true}
-        enabled={false}
+        enabled={true}
         link={{
           text: "",
           href: ""
