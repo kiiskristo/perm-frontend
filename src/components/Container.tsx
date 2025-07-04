@@ -46,12 +46,16 @@ export default function Container({ children }: ContainerProps) {
             </div>
 
             {/* Client-side Navigation Controls */}
-            <NavControls />
+            <ClientWrapper>
+              <NavControls />
+            </ClientWrapper>
           </div>
         </nav>
         
         {/* Mobile Menu */}
-        <MobileMenu />
+        <ClientWrapper>
+          <MobileMenu />
+        </ClientWrapper>
         
         {/* Hero Section - Server Rendered */}
         <section className="py-10 px-4 text-center">
