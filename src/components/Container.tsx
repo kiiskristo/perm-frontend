@@ -77,7 +77,7 @@ export default function Container({ children }: ContainerProps) {
       {!children && (
         <section className="bg-gray-50 dark:bg-gray-800/50 py-12">
           <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto prose prose-gray dark:prose-invert">
+            <div className="mx-auto prose prose-gray dark:prose-invert">
               <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Understanding PERM Labor Certification Processing Times</h2>
               
               <div className="mb-6 p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800">
@@ -148,7 +148,6 @@ export default function Container({ children }: ContainerProps) {
           </div>
         </section>
       )}
-
       {/* Footer - Server Rendered */}
       <footer className="bg-gray-900 text-white py-8">
         <div className="container mx-auto px-4">
