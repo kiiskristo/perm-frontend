@@ -75,12 +75,11 @@ export function AdCard({
 
   // Always render the ad container - let AdSense handle the content
   return (
-    <div className={`${className}`}>
+    <div className={`text-center ${className}`}>
       <ins 
         ref={adElementRef}
-        align="center"
         className="adsbygoogle"
-        style={{ display: 'block' }}
+        style={{ display: 'block', margin: '0 auto' }}
         data-ad-client={adClient}
         data-ad-slot={adSlot}
         data-ad-format="auto"
