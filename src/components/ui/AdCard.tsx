@@ -38,23 +38,29 @@ export function AdCard({
           // Mark as initialized before pushing to prevent duplicate calls
           adInitialized.current = true;
           
+          console.log(`Initializing AdSense ad for slot: ${adSlot}`);
+          
           // Push the ad to AdSense
           (window.adsbygoogle = window.adsbygoogle || []).push({});
           
-          // Check if ad loaded after a short delay
+          // Check if ad loaded after a longer delay (AdSense can be slow)
           setTimeout(() => {
             if (adElementRef.current) {
               const adDisplay = window.getComputedStyle(adElementRef.current).display;
               const adHeight = adElementRef.current.clientHeight;
               
+              console.log(`Ad slot ${adSlot} - Display: ${adDisplay}, Height: ${adHeight}`);
+              
               // Ad loaded if it's visible and has height
               if (adDisplay !== 'none' && adHeight > 0) {
                 setAdLoaded(true);
+                console.log(`Ad slot ${adSlot} loaded successfully`);
               } else {
-                setAdError(true);
+                console.log(`Ad slot ${adSlot} may not have loaded yet or failed to load`);
+                // Don't set error - ads might still be loading
               }
             }
-          }, 1000);
+          }, 3000); // Increased timeout to 3 seconds
         }
       } catch (err) {
         console.error('AdSense error:', err);
@@ -67,11 +73,7 @@ export function AdCard({
     };
   }, [adSlot]); // Only depend on adSlot, not on other state changes
 
-  // Don't render anything if ad failed to load or hasn't loaded yet
-  if (adError || !adLoaded) {
-    return null;
-  }
-
+  // Always render the ad container - let AdSense handle the content
   return (
     <div className={`bg-white dark:bg-gray-800 rounded-lg shadow p-4 ${className}`}>
       <ins 
@@ -83,6 +85,12 @@ export function AdCard({
         data-ad-format="auto"
         data-full-width-responsive="true"
       />
+      {/* Debug info in development */}
+      {process.env.NODE_ENV === 'development' && (
+        <div className="text-xs text-gray-500 mt-2">
+          Ad Slot: {adSlot} | Loaded: {adLoaded ? 'Yes' : 'No'} | Error: {adError ? 'Yes' : 'No'}
+        </div>
+      )}
     </div>
   );
 } 

@@ -198,9 +198,8 @@ const Dashboard = () => {
             {/* Monthly Backlog Chart (full width) */}
             <MonthlyBacklogChart data={dashboardData.monthly_backlog} />
             
-            {/* Ad Card before PERM Cases Activity Charts 
+            {/* Ad Card before PERM Cases Activity Charts */}
             <AdCard adSlot="2964232736" className="lg:col-span-2" />
-            */}
 
             {/* PERM Cases Activity Charts */}
             {dashboardData.perm_cases && (
@@ -221,9 +220,9 @@ const Dashboard = () => {
         )}
       </div>
       
-      {/* Ad Card before Timeline Estimator */
+      {/* Ad Card before Timeline Estimator */}
       <AdCard adSlot="8024987722" />
-      }
+      
       {/* Prediction Forms - Always visible and separate from loading state */}
       <div className="mt-8">
         <h2 className="text-xl font-semibold mb-4 dark:text-white">Timeline Estimator</h2>
