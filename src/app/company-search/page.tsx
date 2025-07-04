@@ -180,8 +180,8 @@ export default function CompanySearchPage() {
   };
 
   return (
-    <Container>
-      <ClientWrapper>
+    <ClientWrapper>
+      <Container>
         <div className="container mx-auto px-4 py-12">
           <h1 className="text-3xl font-bold mb-8 dark:text-white">Company Case Search</h1>
           
@@ -331,7 +331,7 @@ export default function CompanySearchPage() {
             </div>
           </div>
         </div>
-      </ClientWrapper>
-    </Container>
+      </Container>
+    </ClientWrapper>
   );
 } 
