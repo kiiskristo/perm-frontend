@@ -324,8 +324,7 @@ export default function CompanySearchPage() {
               <h3 className="text-lg font-semibold mb-3 text-blue-800 dark:text-blue-200">About Company Search</h3>
               <ul className="text-blue-700 dark:text-blue-300 space-y-2">
                 <li>• Search for PERM cases by company name and date range</li>
-                <li>• Data is currently limited to May 2025 submissions</li>
-                <li>• June 2025 data coming next week, other 2025 months coming next month</li>
+                <li>• Data is currently limited to May and June 2025 submissions to help new people find thei case number</li>
                 <li>• Results include case numbers, job titles, and submission dates</li>
                 <li>• Use the autocomplete feature to find exact company names</li>
               </ul>
