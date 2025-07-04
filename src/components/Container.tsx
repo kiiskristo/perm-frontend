@@ -15,14 +15,10 @@ export default function Container({ children }: ContainerProps) {
     <div className="min-h-screen flex flex-col bg-white text-black dark:bg-gray-900 dark:text-white">
       {/* News/Updates Banner */}
       <Banner 
-        message="End of day on 1st of July, most active month will be switched to March 2025"
+        message="Currently finishing up May and June 2025 data, so new people can get current estimations. Case number search coming next week."
         type="info"
         dismissible={true}
-        enabled={true}
-        link={{
-          text: "",
-          href: ""
-        }}
+        enabled={false}
       />
       {/* Header */}
       <header className="bg-gradient-to-r from-purple-600 to-blue-600 text-white dark:from-gray-800 dark:to-gray-700 relative">

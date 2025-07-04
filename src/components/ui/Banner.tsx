@@ -60,7 +60,7 @@ export function Banner({
             <div className="flex-1">
               <p className="text-sm font-medium">
                 {message}
-                {link && (
+                {link && link.text && link.href && (
                   <a 
                     href={link.href}
                     className="ml-2 underline hover:no-underline font-semibold"
