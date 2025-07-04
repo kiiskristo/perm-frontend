@@ -75,9 +75,10 @@ export function AdCard({
 
   // Always render the ad container - let AdSense handle the content
   return (
-    <div className={`bg-white dark:bg-gray-800 rounded-lg shadow p-4 ${className}`}>
+    <div className={`${className}`}>
       <ins 
         ref={adElementRef}
+        align="center"
         className="adsbygoogle"
         style={{ display: 'block' }}
         data-ad-client={adClient}
