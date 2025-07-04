@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 // Declare the adsbygoogle type for window
 declare global {
@@ -22,37 +22,50 @@ export function AdCard({
 }: AdCardProps) {
   const [adLoaded, setAdLoaded] = useState(false);
   const [adError, setAdError] = useState(false);
+  const adInitialized = useRef(false);
+  const adElementRef = useRef<HTMLModElement>(null);
 
   useEffect(() => {
+    // Only initialize the ad once
+    if (adInitialized.current) {
+      return;
+    }
+
     const timer = setTimeout(() => {
       try {
-        // Push the ad to AdSense
-        (window.adsbygoogle = window.adsbygoogle || []).push({});
-        
-        // Check if ad loaded after a short delay
-        setTimeout(() => {
-          const adElement = document.querySelector(`ins[data-ad-slot="${adSlot}"]`);
-          if (adElement) {
-            const adDisplay = window.getComputedStyle(adElement).display;
-            const adHeight = adElement.clientHeight;
-            
-            // Ad loaded if it's visible and has height
-            if (adDisplay !== 'none' && adHeight > 0) {
-              setAdLoaded(true);
-            } else {
-              setAdError(true);
+        // Check if the ad element exists and hasn't been initialized
+        if (adElementRef.current && !adInitialized.current) {
+          // Mark as initialized before pushing to prevent duplicate calls
+          adInitialized.current = true;
+          
+          // Push the ad to AdSense
+          (window.adsbygoogle = window.adsbygoogle || []).push({});
+          
+          // Check if ad loaded after a short delay
+          setTimeout(() => {
+            if (adElementRef.current) {
+              const adDisplay = window.getComputedStyle(adElementRef.current).display;
+              const adHeight = adElementRef.current.clientHeight;
+              
+              // Ad loaded if it's visible and has height
+              if (adDisplay !== 'none' && adHeight > 0) {
+                setAdLoaded(true);
+              } else {
+                setAdError(true);
+              }
             }
-          }
-        }, 1000);
-        
+          }, 1000);
+        }
       } catch (err) {
         console.error('AdSense error:', err);
         setAdError(true);
       }
     }, 100);
 
-    return () => clearTimeout(timer);
-  }, [adSlot]);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [adSlot]); // Only depend on adSlot, not on other state changes
 
   // Don't render anything if ad failed to load or hasn't loaded yet
   if (adError || !adLoaded) {
@@ -62,6 +75,7 @@ export function AdCard({
   return (
     <div className={`bg-white dark:bg-gray-800 rounded-lg shadow p-4 ${className}`}>
       <ins 
+        ref={adElementRef}
         className="adsbygoogle"
         style={{ display: 'block' }}
         data-ad-client={adClient}
