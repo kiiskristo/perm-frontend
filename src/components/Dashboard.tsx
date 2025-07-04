@@ -15,7 +15,7 @@ import { MonthlyBacklogChart } from './dashboard/MonthlyBacklogChart';
 import { DailySyncLettersChart } from './dashboard/DailySyncLettersChart';
 import { MostActiveMonthChart } from './dashboard/MostActiveMonthChart';
 import { PredictionForm } from './dashboard/PredictionForm';
-// import { AdCard } from './ui/AdCard';
+import { AdCard } from './ui/AdCard';
 import { MetricsCardSkeleton, ProcessTimeCardSkeleton, ChartSkeleton, LetterChartSkeleton, BacklogChartSkeleton } from './dashboard/SkeletonLoaders';
 
 // Main Dashboard Component
@@ -221,9 +221,9 @@ const Dashboard = () => {
         )}
       </div>
       
-      {/* Ad Card before Timeline Estimator
+      {/* Ad Card before Timeline Estimator */
       <AdCard adSlot="8024987722" />
-      */}
+      }
       {/* Prediction Forms - Always visible and separate from loading state */}
       <div className="mt-8">
         <h2 className="text-xl font-semibold mb-4 dark:text-white">Timeline Estimator</h2>
