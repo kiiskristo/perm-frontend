@@ -22,39 +22,39 @@ export default function Container({ children }: ContainerProps) {
       />
       {/* Header */}
       <header className="bg-gradient-to-r from-purple-600 to-blue-600 text-white dark:from-gray-800 dark:to-gray-700 relative">
-        <nav className="container mx-auto px-4 py-6 flex justify-between items-center">
-          {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
-            <Clock className="h-8 w-8" />
-            <span className="text-2xl font-bold">PERM Analytics</span>
-          </Link>
-
-          {/* Right side navigation - Desktop Navigation + Controls */}
-          <div className="flex items-center space-x-6">
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex space-x-6">
-              <Link href="/how-it-works">
-                <Button variant="ghost" className="text-white dark:text-gray-200 hover:bg-white/20">
-                  Timeline Estimator
-                </Button>
-              </Link>
-              <Link href="/about-perm-process">
-                <Button variant="ghost" className="text-white dark:text-gray-200 hover:bg-white/20">
-                  About PERM
-                </Button>
-              </Link>
-            </div>
-
-            {/* Client-side Navigation Controls */}
-            <ClientWrapper>
-              <NavControls />
-            </ClientWrapper>
-          </div>
-        </nav>
-        
-        {/* Mobile Menu */}
         <ClientWrapper>
-          <MobileMenu />
+          <div className="relative">
+            <nav className="container mx-auto px-4 py-6 flex justify-between items-center">
+              {/* Logo */}
+              <Link href="/" className="flex items-center space-x-2">
+                <Clock className="h-8 w-8" />
+                <span className="text-2xl font-bold">PERM Analytics</span>
+              </Link>
+
+              {/* Right side navigation - Desktop Navigation + Controls */}
+              <div className="flex items-center space-x-6">
+                {/* Desktop Navigation */}
+                <div className="hidden md:flex space-x-6">
+                  <Link href="/how-it-works">
+                    <Button variant="ghost" className="text-white dark:text-gray-200 hover:bg-white/20">
+                      Timeline Estimator
+                    </Button>
+                  </Link>
+                  <Link href="/about-perm-process">
+                    <Button variant="ghost" className="text-white dark:text-gray-200 hover:bg-white/20">
+                      About PERM
+                    </Button>
+                  </Link>
+                </div>
+
+                {/* Client-side Navigation Controls */}
+                <NavControls />
+              </div>
+            </nav>
+            
+            {/* Mobile Menu */}
+            <MobileMenu />
+          </div>
         </ClientWrapper>
         
         {/* Hero Section - Server Rendered */}
@@ -152,6 +152,7 @@ export default function Container({ children }: ContainerProps) {
           </div>
         </section>
       )}
+
       {/* Footer - Server Rendered */}
       <footer className="bg-gray-900 text-white py-8">
         <div className="container mx-auto px-4">

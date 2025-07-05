@@ -31,7 +31,7 @@ interface CompanyCasesResponse {
   };
 }
 
-export default function CompanySearchPage() {
+export default function CaseSearchPage() {
   const [companyQuery, setCompanyQuery] = useState('');
   const [selectedCompany, setSelectedCompany] = useState('');
   const [startDate, setStartDate] = useState('2025-05-01');
@@ -183,7 +183,7 @@ export default function CompanySearchPage() {
     <ClientWrapper>
       <Container>
         <div className="container mx-auto px-4 py-12">
-          <h1 className="text-3xl font-bold mb-8 dark:text-white">Company Case Search</h1>
+          <h1 className="text-3xl font-bold mb-8 dark:text-white">Case Search</h1>
           
           <div className="mx-auto">
             {/* Search Form */}
@@ -321,10 +321,10 @@ export default function CompanySearchPage() {
 
             {/* Info Section */}
             <div className="mt-8 bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg border border-blue-200 dark:border-blue-800">
-              <h3 className="text-lg font-semibold mb-3 text-blue-800 dark:text-blue-200">About Company Search</h3>
+              <h3 className="text-lg font-semibold mb-3 text-blue-800 dark:text-blue-200">About Case Search</h3>
               <ul className="text-blue-700 dark:text-blue-300 space-y-2">
                 <li>• Search for PERM cases by company name and date range</li>
-                <li>• Data is currently limited to May and June 2025 submissions to help new people find thei case number</li>
+                <li>• Data is currently limited to May and June 2025 submissions to help new people find their case number</li>
                 <li>• Results include case numbers, job titles, and submission dates</li>
                 <li>• Use the autocomplete feature to find exact company names</li>
               </ul>
