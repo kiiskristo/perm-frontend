@@ -279,7 +279,7 @@ export default function CaseSearchPage() {
 
             {/* Results */}
             {searchResults.length > 0 && (
-              <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+              <div className="bg-white dark:bg-gray-800 mt-8 p-6 rounded-lg shadow">
                 <h2 className="text-xl font-semibold mb-4 dark:text-white">
                   Search Results ({totalResults.toLocaleString()} total cases found)
                 </h2>
