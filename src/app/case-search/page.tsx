@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Container from '@/components/Container';
 import ClientWrapper from '@/components/ClientWrapper';
 import { executeRecaptcha } from '@/utils/recaptcha';
+import { AdCard } from '@/components/ui/AdCard';
 
 interface CompanySearchResponse {
   companies: string[];
@@ -273,6 +274,8 @@ export default function CaseSearchPage() {
                 <p className="mt-4 text-sm text-red-600 dark:text-red-400">{searchError}</p>
               )}
             </div>
+            
+            <AdCard adSlot="2964232736" />
 
             {/* Results */}
             {searchResults.length > 0 && (
