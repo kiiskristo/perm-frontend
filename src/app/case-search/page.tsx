@@ -48,9 +48,17 @@ export default function CaseSearchPage() {
   
   const suggestionTimeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const inputRef = useRef<HTMLInputElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Debounced company search
   useEffect(() => {
+    // Don't search for suggestions if a company is already selected and matches the query
+    if (selectedCompany && selectedCompany === companyQuery) {
+      setSuggestions([]);
+      setShowSuggestions(false);
+      return;
+    }
+
     if (companyQuery.length >= 3) {
       if (suggestionTimeoutRef.current) {
         clearTimeout(suggestionTimeoutRef.current);
@@ -97,7 +105,26 @@ export default function CaseSearchPage() {
         clearTimeout(suggestionTimeoutRef.current);
       }
     };
-  }, [companyQuery]);
+  }, [companyQuery, selectedCompany]);
+
+  // Close suggestions when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current && 
+        !dropdownRef.current.contains(event.target as Node) &&
+        inputRef.current &&
+        !inputRef.current.contains(event.target as Node)
+      ) {
+        setShowSuggestions(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const handleCompanySelect = (company: string) => {
     setSelectedCompany(company);
@@ -211,7 +238,10 @@ export default function CaseSearchPage() {
                   
                   {/* Suggestions Dropdown */}
                   {showSuggestions && suggestions.length > 0 && (
-                    <div className="absolute z-10 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md shadow-lg max-h-60 overflow-y-auto">
+                    <div 
+                      ref={dropdownRef}
+                      className="absolute z-10 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md shadow-lg max-h-60 overflow-y-auto"
+                    >
                       {suggestions.map((company, index) => (
                         <button
                           key={index}
