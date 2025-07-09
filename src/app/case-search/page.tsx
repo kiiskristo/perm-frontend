@@ -5,6 +5,7 @@ import Container from '@/components/Container';
 import ClientWrapper from '@/components/ClientWrapper';
 import { executeRecaptcha } from '@/utils/recaptcha';
 import { AdCard } from '@/components/ui/AdCard';
+import { trackCaseSearch } from '@/utils/analytics';
 
 interface CompanySearchResponse {
   companies: string[];
@@ -49,6 +50,8 @@ export default function CaseSearchPage() {
   const suggestionTimeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Page views are automatically tracked by GA4
 
   // Debounced company search
   useEffect(() => {
@@ -186,6 +189,15 @@ export default function CaseSearchPage() {
       
       setTotalResults(data.total);
       setCurrentOffset(offset + data.cases.length);
+      
+      // Track successful case search (only for initial search, not load more)
+      if (offset === 0) {
+        trackCaseSearch(
+          selectedCompany,
+          data.total,
+          `${startDate} to ${endDate}`
+        );
+      }
     } catch (error) {
       setSearchError(error instanceof Error ? error.message : 'Failed to search cases');
     } finally {

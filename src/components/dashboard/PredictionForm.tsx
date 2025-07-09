@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { getPrediction, type DatePrediction } from '@/services/permService';
 import { executeRecaptcha } from '@/utils/recaptcha';
+import { trackPredictionUsage, trackPredictionResult } from '@/utils/analytics';
 
 interface PredictionFormProps {
   type: 'date' | 'caseNumber';
@@ -70,6 +71,15 @@ export function PredictionForm({ type = 'date' }: PredictionFormProps) {
         type === 'caseNumber' ? inputValue : undefined
       );
       setDatePrediction(prediction);
+      
+      // Track successful prediction
+      trackPredictionUsage(type, employerFirstLetter, true);
+      trackPredictionResult(
+        type,
+        employerFirstLetter,
+        prediction.estimated_days,
+        prediction.confidence_level
+      );
     } catch (err) {
       let errorMessage = 'Failed to get prediction';
       
@@ -84,6 +94,9 @@ export function PredictionForm({ type = 'date' }: PredictionFormProps) {
       
       setPredictionError(errorMessage);
       console.error('Error getting prediction:', err);
+      
+      // Track failed prediction
+      trackPredictionUsage(type, employerFirstLetter, false, errorMessage);
     } finally {
       setPredictionLoading(false);
     }
