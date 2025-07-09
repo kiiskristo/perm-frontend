@@ -6,7 +6,7 @@ declare global {
       command: 'config' | 'event' | 'js',
       targetId: string | Date,
       config?: {
-        [key: string]: any;
+        [key: string]: string | number | boolean | null;
       }
     ) => void;
   }
@@ -16,7 +16,7 @@ declare global {
 export const trackEvent = (
   eventName: string,
   parameters?: {
-    [key: string]: any;
+    [key: string]: string | number | boolean | null;
   }
 ) => {
   // Only track if gtag is available (client-side and GA loaded)
