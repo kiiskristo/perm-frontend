@@ -32,7 +32,30 @@ export const trackEvent = (
 // Ad blocker detection utility
 export const detectAdBlocker = (): Promise<boolean> => {
   return new Promise((resolve) => {
-    // Method 1: Try to create a fake ad element
+    // Method 1: Check if AdSense script loaded
+    const adSenseScriptLoaded = window.adsbygoogle !== undefined;
+    
+    // Method 2: Check if actual AdSense elements are empty/blocked
+    const adSenseElements = document.querySelectorAll('ins.adsbygoogle');
+    let adSenseBlocked = false;
+    
+    if (adSenseElements.length > 0) {
+      // Check if any AdSense elements are empty or have no content
+      adSenseBlocked = Array.from(adSenseElements).every(element => {
+        const htmlElement = element as HTMLElement;
+        const computedStyle = window.getComputedStyle(htmlElement);
+        const hasContent = htmlElement.innerHTML.trim() !== '';
+        const isVisible = computedStyle.display !== 'none' && 
+                         computedStyle.visibility !== 'hidden' &&
+                         htmlElement.offsetHeight > 0 &&
+                         htmlElement.offsetWidth > 0;
+        
+        // If element exists but has no content and is not visible, likely blocked
+        return !hasContent && !isVisible;
+      });
+    }
+    
+    // Method 3: Try to create a fake ad element (fallback)
     const testAd = document.createElement('div');
     testAd.innerHTML = '&nbsp;';
     testAd.className = 'adsbox';
@@ -40,26 +63,25 @@ export const detectAdBlocker = (): Promise<boolean> => {
     document.body.appendChild(testAd);
     
     setTimeout(() => {
-      const isBlocked = testAd.offsetHeight === 0;
+      const testBlocked = testAd.offsetHeight === 0;
       document.body.removeChild(testAd);
       
-      // Method 2: Check for common ad blocker indicators
-      const hasAdBlockerExtension = 
-        // Check for uBlock Origin
-        document.querySelector('script[src*="ublock"]') !== null ||
-        // Check for AdBlock Plus
-        document.querySelector('script[src*="adblock"]') !== null ||
-        // Check for common ad blocker CSS classes
-        document.querySelector('.adsbygoogle') === null && 
-        document.querySelector('ins.adsbygoogle') !== null;
+      // Ad blocker detected if:
+      // 1. AdSense script didn't load, OR
+      // 2. AdSense elements are blocked/empty, OR  
+      // 3. Test element was blocked
+      const isBlocked = !adSenseScriptLoaded || adSenseBlocked || testBlocked;
       
-      resolve(isBlocked || hasAdBlockerExtension);
+      resolve(isBlocked);
     }, 100);
   });
 };
 
-// Track ad blocker status
-export const trackAdBlockerStatus = async () => {
+// Track ad blocker status (with delay to let AdSense load)
+export const trackAdBlockerStatus = async (delayMs: number = 3000) => {
+  // Wait for AdSense to load before checking
+  await new Promise(resolve => setTimeout(resolve, delayMs));
+  
   try {
     const hasAdBlocker = await detectAdBlocker();
     
