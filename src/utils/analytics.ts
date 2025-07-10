@@ -35,6 +35,9 @@ export const detectAdBlocker = (): Promise<boolean> => {
     // Method 1: Check if AdSense script actually loaded and is functional
     const adSenseScriptLoaded = window.adsbygoogle !== undefined && Array.isArray(window.adsbygoogle);
     
+    console.log(`[Debug] AdSense script loaded: ${adSenseScriptLoaded}`);
+    console.log(`[Debug] window.adsbygoogle:`, window.adsbygoogle);
+    
     // Method 2: Create test element (most reliable)
     const testAd = document.createElement('div');
     testAd.innerHTML = '&nbsp;';
@@ -44,12 +47,17 @@ export const detectAdBlocker = (): Promise<boolean> => {
     
     setTimeout(() => {
       const testBlocked = testAd.offsetHeight === 0 || testAd.offsetWidth === 0;
+      console.log(`[Debug] Test element - Height: ${testAd.offsetHeight}, Width: ${testAd.offsetWidth}`);
+      console.log(`[Debug] Test blocked: ${testBlocked}`);
+      
       document.body.removeChild(testAd);
       
       // Ad blocker detected if:
       // 1. AdSense script didn't load properly, OR
       // 2. Test element was blocked
       const isBlocked = !adSenseScriptLoaded || testBlocked;
+      
+      console.log(`[Debug] Final result - isBlocked: ${isBlocked} (!adSenseScriptLoaded: ${!adSenseScriptLoaded} || testBlocked: ${testBlocked})`);
       
       resolve(isBlocked);
     }, 200);
