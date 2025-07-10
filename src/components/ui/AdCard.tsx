@@ -58,7 +58,7 @@ export function AdCard({
           }
         }, 2000);
       }
-    } catch (err) {
+    } catch {
       // Track ad error
       const loadTime = Date.now() - startTime.current;
       trackAdPerformance(adSlot, false, true, loadTime);
@@ -69,7 +69,7 @@ export function AdCard({
       if (adElementRef.current) {
         try {
           (window.adsbygoogle = window.adsbygoogle || []).push({});
-        } catch (err) {
+        } catch {
           // Silent fallback - errors tracked via main ad performance
         }
       }
