@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { trackAdPerformance } from '@/utils/analytics';
 
 // Declare the adsbygoogle type for window
