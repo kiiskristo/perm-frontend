@@ -38,12 +38,13 @@ export const detectAdBlocker = (): Promise<boolean> => {
     const adSenseScriptLoaded = window.adsbygoogle !== undefined && 
                                typeof window.adsbygoogle === 'object' && 
                                !Array.isArray(window.adsbygoogle) &&
-                               (window.adsbygoogle as any).loaded === true;
+                               'loaded' in window.adsbygoogle && 
+                               (window.adsbygoogle as Record<string, unknown>).loaded === true;
     
     console.log(`[Debug] AdSense script loaded: ${adSenseScriptLoaded}`);
     console.log(`[Debug] window.adsbygoogle:`, window.adsbygoogle);
     console.log(`[Debug] Is array:`, Array.isArray(window.adsbygoogle));
-    console.log(`[Debug] Has loaded property:`, (window.adsbygoogle as any)?.loaded);
+
     
     // Method 2: Create test element (most reliable)
     const testAd = document.createElement('div');
