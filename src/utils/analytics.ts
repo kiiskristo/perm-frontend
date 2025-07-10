@@ -35,11 +35,7 @@ export const detectAdBlocker = (): Promise<boolean> => {
     // Method 1: Check if AdSense script actually loaded and is functional
     const adSenseScriptLoaded = window.adsbygoogle !== undefined && Array.isArray(window.adsbygoogle);
     
-    // Method 2: Look for blocked script elements
-    const adSenseScripts = document.querySelectorAll('script[src*="adsbygoogle.js"]');
-    const scriptBlocked = adSenseScripts.length > 0 && !adSenseScriptLoaded;
-    
-    // Method 3: Create test element
+    // Method 2: Create test element (most reliable)
     const testAd = document.createElement('div');
     testAd.innerHTML = '&nbsp;';
     testAd.className = 'adsbox';
@@ -51,9 +47,9 @@ export const detectAdBlocker = (): Promise<boolean> => {
       document.body.removeChild(testAd);
       
       // Ad blocker detected if:
-      // 1. Script tag exists but adsbygoogle is not properly loaded, OR
+      // 1. AdSense script didn't load properly, OR
       // 2. Test element was blocked
-      const isBlocked = scriptBlocked || testBlocked;
+      const isBlocked = !adSenseScriptLoaded || testBlocked;
       
       resolve(isBlocked);
     }, 200);
