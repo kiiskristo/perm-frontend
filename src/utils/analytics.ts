@@ -29,6 +29,75 @@ export const trackEvent = (
   }
 };
 
+// Ad blocker detection utility
+export const detectAdBlocker = (): Promise<boolean> => {
+  return new Promise((resolve) => {
+    // Method 1: Try to create a fake ad element
+    const testAd = document.createElement('div');
+    testAd.innerHTML = '&nbsp;';
+    testAd.className = 'adsbox';
+    testAd.style.cssText = 'position:absolute;left:-10000px;';
+    document.body.appendChild(testAd);
+    
+    setTimeout(() => {
+      const isBlocked = testAd.offsetHeight === 0;
+      document.body.removeChild(testAd);
+      
+      // Method 2: Check for common ad blocker indicators
+      const hasAdBlockerExtension = 
+        // Check for uBlock Origin
+        document.querySelector('script[src*="ublock"]') !== null ||
+        // Check for AdBlock Plus
+        document.querySelector('script[src*="adblock"]') !== null ||
+        // Check for common ad blocker CSS classes
+        document.querySelector('.adsbygoogle') === null && 
+        document.querySelector('ins.adsbygoogle') !== null;
+      
+      resolve(isBlocked || hasAdBlockerExtension);
+    }, 100);
+  });
+};
+
+// Track ad blocker status
+export const trackAdBlockerStatus = async () => {
+  try {
+    const hasAdBlocker = await detectAdBlocker();
+    
+    trackEvent('ad_blocker_detected', {
+      event_category: 'Ad Blocker',
+      event_label: hasAdBlocker ? 'blocked' : 'allowed',
+      ad_blocker_enabled: hasAdBlocker,
+      user_agent: navigator.userAgent.substring(0, 100), // Truncate for GA limits
+      custom_parameter_1: 'ad_blocker_check',
+    });
+    
+    console.log(`[Analytics] Ad blocker detection: ${hasAdBlocker ? 'DETECTED' : 'NOT DETECTED'}`);
+    
+    return hasAdBlocker;
+  } catch (error) {
+    console.error('[Analytics] Ad blocker detection failed:', error);
+    return false;
+  }
+};
+
+// Track ad performance (success/failure)
+export const trackAdPerformance = (
+  adSlot: string,
+  loaded: boolean,
+  error: boolean,
+  loadTime?: number
+) => {
+  trackEvent('ad_performance', {
+    event_category: 'Ad Performance',
+    event_label: loaded ? 'loaded' : 'failed',
+    ad_slot: adSlot,
+    ad_loaded: loaded,
+    ad_error: error,
+    load_time_ms: loadTime || null,
+    custom_parameter_1: 'ad_tracking',
+  });
+};
+
 // Specific event tracking functions
 export const trackPredictionUsage = (
   predictionType: 'date' | 'caseNumber',

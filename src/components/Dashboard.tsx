@@ -17,6 +17,7 @@ import { MostActiveMonthChart } from './dashboard/MostActiveMonthChart';
 import { PredictionForm } from './dashboard/PredictionForm';
 import { AdCard } from './ui/AdCard';
 import { MetricsCardSkeleton, ProcessTimeCardSkeleton, ChartSkeleton, LetterChartSkeleton, BacklogChartSkeleton } from './dashboard/SkeletonLoaders';
+import { trackAdBlockerStatus } from '@/utils/analytics';
 
 // Main Dashboard Component
 const Dashboard = () => {
@@ -39,6 +40,19 @@ const Dashboard = () => {
     const todayString = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
     return asOfDate !== todayString;
   };
+
+  // Track ad blocker status on dashboard load
+  useEffect(() => {
+    const checkAdBlocker = async () => {
+      try {
+        await trackAdBlockerStatus();
+      } catch (error) {
+        console.error('[Dashboard] Ad blocker detection failed:', error);
+      }
+    };
+    
+    checkAdBlocker();
+  }, []); // Run once on component mount
 
   // Fetch dashboard data
   useEffect(() => {

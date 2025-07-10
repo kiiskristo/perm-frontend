@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
+import { trackAdPerformance } from '@/utils/analytics';
 
 // Declare the adsbygoogle type for window
 declare global {
@@ -20,10 +21,11 @@ export function AdCard({
   adClient = "ca-pub-9390909578965799",
   className = ""
 }: AdCardProps) {
-  const [adLoaded, setAdLoaded] = useState(false);
-  const [adError, setAdError] = useState(false);
   const adInitialized = useRef(false);
   const adElementRef = useRef<HTMLModElement>(null);
+  const startTime = useRef<number>(Date.now());
+
+
 
   useEffect(() => {
     // Only initialize the ad once
@@ -31,49 +33,54 @@ export function AdCard({
       return;
     }
 
-    const timer = setTimeout(() => {
-      try {
-        // Check if the ad element exists and hasn't been initialized
-        if (adElementRef.current && !adInitialized.current) {
-          // Mark as initialized before pushing to prevent duplicate calls
-          adInitialized.current = true;
-          
-          console.log(`Initializing AdSense ad for slot: ${adSlot}`);
-          
-          // Push the ad to AdSense
-          (window.adsbygoogle = window.adsbygoogle || []).push({});
-          
-          // Check if ad loaded after a longer delay (AdSense can be slow)
-          setTimeout(() => {
-            if (adElementRef.current) {
-              const adDisplay = window.getComputedStyle(adElementRef.current).display;
-              const adHeight = adElementRef.current.clientHeight;
-              
-              console.log(`Ad slot ${adSlot} - Display: ${adDisplay}, Height: ${adHeight}`);
-              
-              // Ad loaded if it's visible and has height
-              if (adDisplay !== 'none' && adHeight > 0) {
-                setAdLoaded(true);
-                console.log(`Ad slot ${adSlot} loaded successfully`);
-              } else {
-                console.log(`Ad slot ${adSlot} may not have loaded yet or failed to load`);
-                // Don't set error - ads might still be loading
-              }
+    // 🚀 OPTIMIZATION 1: Call push immediately (no setTimeout delay)
+    try {
+      if (adElementRef.current && !adInitialized.current) {
+        adInitialized.current = true;
+        
+        // Push immediately to AdSense
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+        
+        // Check if ad loaded after reasonable delay
+        setTimeout(() => {
+          if (adElementRef.current) {
+            const adDisplay = window.getComputedStyle(adElementRef.current).display;
+            const adHeight = adElementRef.current.clientHeight;
+            const loadTime = Date.now() - startTime.current;
+            
+            if (adDisplay !== 'none' && adHeight > 0) {
+              // Track successful ad load
+              trackAdPerformance(adSlot, true, false, loadTime);
+            } else {
+              // Track failed ad load (could be ad blocker or no fill)
+              trackAdPerformance(adSlot, false, false, loadTime);
             }
-          }, 3000); // Increased timeout to 3 seconds
-        }
-      } catch (err) {
-        console.error('AdSense error:', err);
-        setAdError(true);
+          }
+        }, 2000);
       }
-    }, 100);
+    } catch (err) {
+      // Track ad error
+      const loadTime = Date.now() - startTime.current;
+      trackAdPerformance(adSlot, false, true, loadTime);
+    }
+
+    // 🚀 OPTIMIZATION 2: Defensive fallback push for hydration/route changes
+    const fallbackTimer = setTimeout(() => {
+      if (adElementRef.current) {
+        try {
+          (window.adsbygoogle = window.adsbygoogle || []).push({});
+        } catch (err) {
+          // Silent fallback - errors tracked via main ad performance
+        }
+      }
+    }, 3000);
 
     return () => {
-      clearTimeout(timer);
+      clearTimeout(fallbackTimer);
     };
-  }, [adSlot]); // Only depend on adSlot, not on other state changes
+  }, [adSlot]);
 
-  // Always render the ad container - let AdSense handle the content
+  // 🚀 OPTIMIZATION 3: Always render ins immediately (no conditional rendering)
   return (
     <div className={`text-center ${className}`}>
       <ins 
@@ -85,12 +92,7 @@ export function AdCard({
         data-ad-format="auto"
         data-full-width-responsive="true"
       />
-      {/* Debug info in development */}
-      {process.env.NODE_ENV === 'development' && (
-        <div className="text-xs text-gray-500 mt-2">
-          Ad Slot: {adSlot} | Loaded: {adLoaded ? 'Yes' : 'No'} | Error: {adError ? 'Yes' : 'No'}
-        </div>
-      )}
+
     </div>
   );
 } 
