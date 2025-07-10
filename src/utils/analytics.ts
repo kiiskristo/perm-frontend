@@ -33,7 +33,9 @@ export const trackEvent = (
 export const detectAdBlocker = (): Promise<boolean> => {
   return new Promise((resolve) => {
     // Method 1: Check if AdSense script actually loaded and is functional
-    const adSenseScriptLoaded = window.adsbygoogle !== undefined && Array.isArray(window.adsbygoogle);
+    const adSenseScriptLoaded = window.adsbygoogle !== undefined && 
+                               typeof window.adsbygoogle === 'object' && 
+                               typeof window.adsbygoogle.push === 'function';
     
     console.log(`[Debug] AdSense script loaded: ${adSenseScriptLoaded}`);
     console.log(`[Debug] window.adsbygoogle:`, window.adsbygoogle);
