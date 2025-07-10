@@ -41,12 +41,7 @@ export const detectAdBlocker = (): Promise<boolean> => {
                                'loaded' in window.adsbygoogle && 
                                (window.adsbygoogle as Record<string, unknown>).loaded === true;
     
-    console.log(`[Debug] AdSense script loaded: ${adSenseScriptLoaded}`);
-    console.log(`[Debug] window.adsbygoogle:`, window.adsbygoogle);
-    console.log(`[Debug] Is array:`, Array.isArray(window.adsbygoogle));
-
-    
-    // Method 2: Create test element (most reliable)
+        // Method 2: Create test element (most reliable)
     const testAd = document.createElement('div');
     testAd.innerHTML = '&nbsp;';
     testAd.className = 'adsbox';
@@ -55,17 +50,12 @@ export const detectAdBlocker = (): Promise<boolean> => {
     
     setTimeout(() => {
       const testBlocked = testAd.offsetHeight === 0 || testAd.offsetWidth === 0;
-      console.log(`[Debug] Test element - Height: ${testAd.offsetHeight}, Width: ${testAd.offsetWidth}`);
-      console.log(`[Debug] Test blocked: ${testBlocked}`);
-      
       document.body.removeChild(testAd);
       
       // Ad blocker detected if:
       // 1. AdSense script didn't load properly, OR
       // 2. Test element was blocked
       const isBlocked = !adSenseScriptLoaded || testBlocked;
-      
-      console.log(`[Debug] Final result - isBlocked: ${isBlocked} (!adSenseScriptLoaded: ${!adSenseScriptLoaded} || testBlocked: ${testBlocked})`);
       
       resolve(isBlocked);
     }, 200);
@@ -87,8 +77,6 @@ export const trackAdBlockerStatus = async (delayMs: number = 5000) => {
       user_agent: navigator.userAgent.substring(0, 100), // Truncate for GA limits
       custom_parameter_1: 'ad_blocker_check',
     });
-    
-    console.log(`[Analytics] Ad blocker detection: ${hasAdBlocker ? 'DETECTED' : 'NOT DETECTED'}`);
     
     return hasAdBlocker;
   } catch (error) {

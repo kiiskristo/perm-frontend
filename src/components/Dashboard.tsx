@@ -54,6 +54,26 @@ const Dashboard = () => {
     checkAdBlocker();
   }, []); // Run once on component mount
 
+  // Console message for developers
+  useEffect(() => {
+    console.log(
+      '%c🚀 PERMupdate Developer Console',
+      'color: #3b82f6; font-size: 16px; font-weight: bold;'
+    );
+    console.log(
+      '%c💡 Got ideas for new features or want to discuss PERM analytics tech?',
+      'color: #10b981; font-size: 14px;'
+    );
+    console.log(
+      '%c📱 Join our Telegram group: https://t.me/+pka9Y1te1KwwNmY8',
+      'color: #8b5cf6; font-size: 14px; font-weight: bold;'
+    );
+    console.log(
+      '%c🔧 We love hearing from developers and data enthusiasts!',
+      'color: #f59e0b; font-size: 12px;'
+    );
+  }, []); // Run once on component mount
+
   // Fetch dashboard data
   useEffect(() => {
     async function loadDashboardData() {
