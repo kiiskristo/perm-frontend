@@ -35,51 +35,34 @@ export const detectAdBlocker = (): Promise<boolean> => {
     // Method 1: Check if AdSense script loaded
     const adSenseScriptLoaded = window.adsbygoogle !== undefined;
     
-    // Method 2: Check if actual AdSense elements are empty/blocked
-    const adSenseElements = document.querySelectorAll('ins.adsbygoogle');
-    let adSenseBlocked = false;
-    
-    if (adSenseElements.length > 0) {
-      // Check if any AdSense elements are empty or have no content
-      adSenseBlocked = Array.from(adSenseElements).every(element => {
-        const htmlElement = element as HTMLElement;
-        const computedStyle = window.getComputedStyle(htmlElement);
-        const hasContent = htmlElement.innerHTML.trim() !== '';
-        const isVisible = computedStyle.display !== 'none' && 
-                         computedStyle.visibility !== 'hidden' &&
-                         htmlElement.offsetHeight > 0 &&
-                         htmlElement.offsetWidth > 0;
-        
-        // If element exists but has no content and is not visible, likely blocked
-        return !hasContent && !isVisible;
-      });
+    // If AdSense script didn't load at all, definitely blocked
+    if (!adSenseScriptLoaded) {
+      resolve(true);
+      return;
     }
     
-    // Method 3: Try to create a fake ad element (fallback)
+    // Method 2: Create test element (more reliable than checking real ads)
     const testAd = document.createElement('div');
     testAd.innerHTML = '&nbsp;';
     testAd.className = 'adsbox';
-    testAd.style.cssText = 'position:absolute;left:-10000px;';
+    testAd.style.cssText = 'position:absolute;left:-10000px;width:1px;height:1px;';
     document.body.appendChild(testAd);
     
     setTimeout(() => {
-      const testBlocked = testAd.offsetHeight === 0;
+      const testBlocked = testAd.offsetHeight === 0 || testAd.offsetWidth === 0;
       document.body.removeChild(testAd);
       
-      // Ad blocker detected if:
-      // 1. AdSense script didn't load, OR
-      // 2. AdSense elements are blocked/empty, OR  
-      // 3. Test element was blocked
-      const isBlocked = !adSenseScriptLoaded || adSenseBlocked || testBlocked;
-      
-      resolve(isBlocked);
-    }, 100);
+      // Only consider it blocked if:
+      // 1. AdSense script didn't load (checked above), OR
+      // 2. Test element was clearly blocked (height/width = 0)
+      resolve(testBlocked);
+    }, 200);
   });
 };
 
 // Track ad blocker status (with delay to let AdSense load)
-export const trackAdBlockerStatus = async (delayMs: number = 3000) => {
-  // Wait for AdSense to load before checking
+export const trackAdBlockerStatus = async (delayMs: number = 5000) => {
+  // Wait longer for AdSense to fully load before checking
   await new Promise(resolve => setTimeout(resolve, delayMs));
   
   try {
