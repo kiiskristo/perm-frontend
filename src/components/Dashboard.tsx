@@ -29,10 +29,15 @@ const Dashboard = () => {
   const [error, setError] = useState('');
 
   const isDataFromPreviousDay = (asOfDate: string) => {
-    // Get today's date in local timezone as YYYY-MM-DD
-    const today = new Date();
-    const todayString = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-    return asOfDate !== todayString;
+    // Get today's date in ET timezone as YYYY-MM-DD
+    const todayET = new Date().toLocaleDateString("en-US", {timeZone: "America/New_York"});
+    const etDateParts = new Date(todayET);
+    const todayStringET = `${etDateParts.getFullYear()}-${String(etDateParts.getMonth() + 1).padStart(2, '0')}-${String(etDateParts.getDate()).padStart(2, '0')}`;
+    
+    // Get the date part from the API response
+    const apiDate = asOfDate.split('T')[0];
+    
+    return apiDate !== todayStringET;
   };
 
   // Track ad blocker status on dashboard load
