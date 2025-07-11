@@ -7,6 +7,7 @@ import { fetchDashboardData, type DashboardData } from '@/services/permService';
 // Import all of our components
 import { MetricsCard } from './dashboard/MetricsCard';
 import { ProcessTimeCard } from './dashboard/ProcessTimeCard';
+import { LastSyncCard } from './dashboard/LastSyncCard';
 import { DailyVolumeChart } from './dashboard/DailyVolumeChart';
 import { WeeklyAverageChart } from './dashboard/WeeklyAverageChart';
 import { WeeklyVolumeChart } from './dashboard/WeeklyVolumeChart';
@@ -26,19 +27,6 @@ const Dashboard = () => {
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-
-
-  // Format date and time for Last Sync
-  const formatLastSync = (dateString: string) => {
-    const date = new Date(dateString);
-    const formattedDate = date.toLocaleDateString();
-    const formattedTime = date.toLocaleTimeString('en-US', {
-      hour: 'numeric',
-      minute: '2-digit',
-      timeZoneName: 'short'
-    });
-    return { date: formattedDate, time: formattedTime };
-  };
 
   const isDataFromPreviousDay = (asOfDate: string) => {
     // Get today's date in local timezone as YYYY-MM-DD
@@ -207,17 +195,7 @@ const Dashboard = () => {
                 iconColor="text-green-600 dark:text-green-400"
               />
               
-              <MetricsCard
-                title="Last Sync"
-                value={formatLastSync(dashboardData.metrics.processing_times.as_of_date).date}
-                bgColorClass="bg-purple-100 dark:bg-purple-900/30"
-                icon={RefreshCw}
-                iconColor="text-purple-600 dark:text-purple-400"
-              >
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                  {formatLastSync(dashboardData.metrics.processing_times.as_of_date).time}
-                </p>
-              </MetricsCard>
+              <LastSyncCard asOfDate={dashboardData.metrics.processing_times.as_of_date} />
               
               <ProcessTimeCard
                 medianDays={dashboardData.metrics.processing_times.median_days}
