@@ -36,15 +36,6 @@ export function LastSyncCard({ asOfDate }: LastSyncCardProps) {
     const lastSyncDate = asOfDate.split('T')[0]; // Get just the date part
     const hasLatestData = lastSyncDate === todayStringET;
     
-    // Debug logging
-    console.log('Sync Debug:', {
-      etHour,
-      todayStringET,
-      lastSyncDate,
-      hasLatestData,
-      shouldSpin: etHour >= 22 && !hasLatestData
-    });
-    
     // Spin if it's after 10 PM ET and we don't have today's data yet
     return etHour >= 22 && !hasLatestData;
   }, [asOfDate]);
