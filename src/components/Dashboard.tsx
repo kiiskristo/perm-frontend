@@ -174,8 +174,8 @@ const Dashboard = () => {
             {/* Key Metrics */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <MetricsCard
-                title="Today's Processed Cases (RFI, Denied, Certified)"
-                alternativeTitle="Yesterday's Processed Cases"
+                title="Today's Reviewed Cases (RFI, Denied, Certified)"
+                alternativeTitle="Yesterday's Reviewed Cases (RFI, Denied, Certified)"
                 showAlternativeTitle={isDataFromPreviousDay(dashboardData.metrics.processing_times.as_of_date)}
                 value={dashboardData.metrics.new_cases}
                 change={dashboardData.metrics.new_cases_change}
