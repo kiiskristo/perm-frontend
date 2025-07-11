@@ -8,6 +8,12 @@ interface ProcessTimeCardProps {
 }
 
 export function ProcessTimeCard({ medianDays, lowerEstimate, upperEstimate, asOfDate }: ProcessTimeCardProps) {
+  // Simple date formatting - timestamp is already in ET
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString();
+  };
+
   return (
     <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
       <h3 className="text-gray-500 dark:text-gray-400 text-sm font-medium mb-4">Average Process Time</h3>
@@ -20,7 +26,7 @@ export function ProcessTimeCard({ medianDays, lowerEstimate, upperEstimate, asOf
             Range: {lowerEstimate}-{upperEstimate} days
           </p>
           <p className="text-xs text-gray-500 dark:text-gray-400">
-            As of {new Date(asOfDate).toLocaleDateString()}
+            As of {formatDate(asOfDate)}
           </p>
         </div>
         <div className="h-12 w-12 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center">

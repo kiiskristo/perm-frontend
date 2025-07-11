@@ -27,11 +27,17 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  // Utility function to safely format dates without timezone issues
-  const formatDateSafely = (dateString: string) => {
-    const [year, month, day] = dateString.split('-').map(Number);
-    const date = new Date(year, month - 1, day); // month is 0-indexed
-    return date.toLocaleDateString();
+
+  // Format date and time for Last Sync
+  const formatLastSync = (dateString: string) => {
+    const date = new Date(dateString);
+    const formattedDate = date.toLocaleDateString();
+    const formattedTime = date.toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      timeZoneName: 'short'
+    });
+    return { date: formattedDate, time: formattedTime };
   };
 
   const isDataFromPreviousDay = (asOfDate: string) => {
@@ -203,11 +209,15 @@ const Dashboard = () => {
               
               <MetricsCard
                 title="Last Sync"
-                value={formatDateSafely(dashboardData.metrics.processing_times.as_of_date)}
+                value={formatLastSync(dashboardData.metrics.processing_times.as_of_date).date}
                 bgColorClass="bg-purple-100 dark:bg-purple-900/30"
                 icon={RefreshCw}
                 iconColor="text-purple-600 dark:text-purple-400"
-              />
+              >
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  {formatLastSync(dashboardData.metrics.processing_times.as_of_date).time}
+                </p>
+              </MetricsCard>
               
               <ProcessTimeCard
                 medianDays={dashboardData.metrics.processing_times.median_days}
