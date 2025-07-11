@@ -22,21 +22,28 @@ export function LastSyncCard({ asOfDate }: LastSyncCardProps) {
 
   // Check if we should be spinning (after 10 PM ET until we get today's data)
   const shouldSpin = () => {
-    const now = new Date();
-    const currentHour = now.getHours();
-    const currentMinute = now.getMinutes();
+    // Get current time in ET
+    const nowET = new Date().toLocaleString("en-US", {timeZone: "America/New_York"});
+    const etDate = new Date(nowET);
+    const etHour = etDate.getHours();
     
-    // Convert current time to ET
-    const etTime = new Date(now.toLocaleString("en-US", {timeZone: "America/New_York"}));
-    const etHour = etTime.getHours();
+    // Get today's date in ET timezone in YYYY-MM-DD format
+    const todayET = new Date().toLocaleDateString("en-US", {timeZone: "America/New_York"});
+    const etDateParts = new Date(todayET);
+    const todayStringET = `${etDateParts.getFullYear()}-${String(etDateParts.getMonth() + 1).padStart(2, '0')}-${String(etDateParts.getDate()).padStart(2, '0')}`;
     
-    // Get today's date in YYYY-MM-DD format
-    const today = new Date();
-    const todayString = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-    
-    // Check if last sync is from today
+    // Check if last sync is from today (ET)
     const lastSyncDate = asOfDate.split('T')[0]; // Get just the date part
-    const hasLatestData = lastSyncDate === todayString;
+    const hasLatestData = lastSyncDate === todayStringET;
+    
+    // Debug logging
+    console.log('Sync Debug:', {
+      etHour,
+      todayStringET,
+      lastSyncDate,
+      hasLatestData,
+      shouldSpin: etHour >= 22 && !hasLatestData
+    });
     
     // Spin if it's after 10 PM ET and we don't have today's data yet
     return etHour >= 22 && !hasLatestData;
