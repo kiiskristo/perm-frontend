@@ -1,5 +1,5 @@
 import { RefreshCw } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 
 interface LastSyncCardProps {
   asOfDate: string;
@@ -21,7 +21,7 @@ export function LastSyncCard({ asOfDate }: LastSyncCardProps) {
   };
 
   // Check if we should be spinning (after 10 PM ET until we get today's data)
-  const shouldSpin = () => {
+  const shouldSpin = useCallback(() => {
     // Get current time in ET
     const nowET = new Date().toLocaleString("en-US", {timeZone: "America/New_York"});
     const etDate = new Date(nowET);
@@ -47,7 +47,7 @@ export function LastSyncCard({ asOfDate }: LastSyncCardProps) {
     
     // Spin if it's after 10 PM ET and we don't have today's data yet
     return etHour >= 22 && !hasLatestData;
-  };
+  }, [asOfDate]);
 
   // Update spinning state
   useEffect(() => {
@@ -62,7 +62,7 @@ export function LastSyncCard({ asOfDate }: LastSyncCardProps) {
     const interval = setInterval(updateSpinning, 60000);
 
     return () => clearInterval(interval);
-  }, [asOfDate]);
+  }, [shouldSpin]);
 
   const { date, time } = formatLastSync(asOfDate);
 
