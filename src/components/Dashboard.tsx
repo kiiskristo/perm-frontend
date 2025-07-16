@@ -103,7 +103,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="space-y-8 dark:text-white">
+    <div className="space-y-8 dark:text-white" data-dashboard>
       {/* Header with title and time range selector */}
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold dark:text-white">PERM Dashboard</h2>
@@ -245,10 +245,10 @@ const Dashboard = () => {
       </div>
       
       {/* Ad Card before Timeline Estimator */}
-      <AdCard adSlot="8024987722" />
+      <AdCard adSlot="8024987722" data-timeline-ad />
       
       {/* Prediction Forms - Always visible and separate from loading state */}
-      <div className="mt-8">
+      <div className="mt-8" data-timeline-estimator>
         <h2 className="text-xl font-semibold mb-4 dark:text-white">Timeline Estimator</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <PredictionForm type="caseNumber" />

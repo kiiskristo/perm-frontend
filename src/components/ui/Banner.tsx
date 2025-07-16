@@ -11,6 +11,7 @@ interface BannerProps {
   link?: {
     text: string;
     href: string;
+    newTab: boolean;
   };
 }
 
@@ -63,8 +64,8 @@ export function Banner({
                 {link && link.text && link.href && (
                   <a 
                     href={link.href}
-                    className="ml-2 underline hover:no-underline font-semibold"
-                    target="_blank"
+                    className="underline hover:no-underline font-semibold"
+                    target={link.newTab ? '_blank' : '_self'}
                     rel="noopener noreferrer"
                   >
                     {link.text}

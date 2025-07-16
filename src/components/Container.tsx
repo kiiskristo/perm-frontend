@@ -8,17 +8,23 @@ import ClientWrapper, { NavControls, MobileMenu } from './ClientWrapper';
 
 interface ContainerProps {
   children?: ReactNode;
+  showHero?: boolean;
 }
 
-export default function Container({ children }: ContainerProps) {
+export default function Container({ children, showHero = true }: ContainerProps) {
   return (
     <div className="min-h-screen flex flex-col bg-white text-black dark:bg-gray-900 dark:text-white">
       {/* News/Updates Banner */}
       <Banner 
-        message="Currently finishing up May and June 2025 data, so new people can get current estimations. Case number search coming next week."
+        message="April started! You can see exact cases processed daily "
         type="info"
         dismissible={true}
-        enabled={false}
+        enabled={true}
+        link={{
+          text: 'here',
+          href: '/updated-cases',
+          newTab: false
+        }}
       />
       {/* Header */}
       <header className="bg-gradient-to-r from-purple-600 to-blue-600 text-white dark:from-gray-800 dark:to-gray-700 relative">
@@ -58,12 +64,14 @@ export default function Container({ children }: ContainerProps) {
         </ClientWrapper>
         
         {/* Hero Section - Server Rendered */}
-        <section className="py-10 px-4 text-center">
-          <h1 className="text-5xl font-bold mb-6">PERM Timeline Tracker</h1>
-          <p className="text-xl mb-8 max-w-2xl mx-auto">
-            Track your PERM processing times and get accurate timeline predictions with our advanced case tracking system.
-          </p>
-        </section>
+        {showHero && (
+          <section className="py-10 px-4 text-center">
+            <h1 className="text-5xl font-bold mb-6">PERM Timeline Tracker</h1>
+            <p className="text-xl mb-8 max-w-2xl mx-auto">
+              Track your PERM processing times and get accurate timeline predictions with our advanced case tracking system.
+            </p>
+          </section>
+        )}
       </header>
 
       <main className="flex-grow container mx-auto px-4 py-8">
