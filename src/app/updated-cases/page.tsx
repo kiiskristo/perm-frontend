@@ -6,6 +6,7 @@ import ClientWrapper from '@/components/ClientWrapper';
 import { Button } from '@/components/ui/button';
 import { executeRecaptcha } from '@/utils/recaptcha';
 import { AdCard } from '@/components/ui/AdCard';
+import { trackUpdatedCasesSearch } from '@/utils/analytics';
 import { ChevronLeft, ChevronRight, Calendar, RefreshCw } from 'lucide-react';
 
 interface UpdatedPermCase {
@@ -55,8 +56,8 @@ export default function UpdatedCasesPage() {
     try {
       // Get reCAPTCHA token
       const recaptchaKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || '';
-      const recaptchaToken = await executeRecaptcha(recaptchaKey, 'updated_cases');
-      
+      const recaptchaToken = await executeRecaptcha(recaptchaKey, 'updatedcases');
+
       if (!recaptchaToken) {
         setError('Failed to verify reCAPTCHA. Please try again.');
         setLoading(false);
@@ -64,7 +65,7 @@ export default function UpdatedCasesPage() {
       }
 
       const offset = (page - 1) * casesPerPage;
-      
+
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/data/updated-cases`, {
         method: 'POST',
         headers: {
@@ -83,7 +84,7 @@ export default function UpdatedCasesPage() {
         throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
       }
 
-      const data: UpdatedCasesResponse = await response.json();
+            const data: UpdatedCasesResponse = await response.json();
       setCases(data.cases);
       setTotalCases(data.total);
       setCurrentPage(page);
@@ -91,6 +92,11 @@ export default function UpdatedCasesPage() {
       
       // Store the server's target_date to avoid timezone issues in display
       setServerTargetDate(data.target_date);
+
+      // Track successful search (only for initial search, not pagination)
+      if (page === 1) {
+        trackUpdatedCasesSearch(data.target_date, data.total);
+      }
 
       if (data.cases.length === 0) {
         setError(`No PERM cases were updated on ${targetDate}. Try a different date.`);
@@ -115,8 +121,8 @@ export default function UpdatedCasesPage() {
   const formatDate = (dateString: string) => {
     // Backend returns simple date string, just format it directly
     const [year, month, day] = dateString.split('-');
-    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
-                       'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     return `${monthNames[parseInt(month) - 1]} ${parseInt(day)}, ${year}`;
   };
 
@@ -142,63 +148,62 @@ export default function UpdatedCasesPage() {
       <Container showHero={false}>
         <div className="container mx-auto px-4 py-12">
           <h1 className="text-3xl font-bold mb-8 dark:text-white">Updated Cases by Date</h1>
-          
+
           <div className="mx-auto">
             {/* Search Form */}
             <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow mb-8">
               <div className="text-center mb-6">
                 <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-                  Search for all PERM cases that were updated on a specific date. This includes status changes, 
+                  Search for all PERM cases that were updated on a specific date. This includes status changes,
                   certifications, denials, and other case updates.
                 </p>
               </div>
 
-          <form onSubmit={handleSubmit} className="max-w-md mx-auto">
-            <div className="mb-4">
-              <label htmlFor="targetDate" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Update Date
-              </label>
-              <div className="relative">
-                <Calendar className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
-                <input
-                  type="date"
-                  id="targetDate"
-                  value={targetDate}
-                  onChange={(e) => setTargetDate(e.target.value)}
-                  min="2025-07-01"
-                  max={localToday}
-                  className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent dark:bg-gray-700 dark:text-white [color-scheme:light] dark:[color-scheme:dark]"
-                  placeholder="Select date..."
-                  required
-                />
-              </div>
-            </div>
+              <form onSubmit={handleSubmit} className="max-w-md mx-auto">
+                <div className="mb-4">
+                  <label htmlFor="targetDate" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Update Date
+                  </label>
+                  <div className="relative">
+                    <Calendar className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+                    <input
+                      type="date"
+                      id="targetDate"
+                      value={targetDate}
+                      onChange={(e) => setTargetDate(e.target.value)}
+                      min="2025-07-01"
+                      max={localToday}
+                      className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent dark:bg-gray-700 dark:text-white [color-scheme:light] dark:[color-scheme:dark]"
+                      placeholder="Select date..."
+                      required
+                    />
+                  </div>
+                </div>
 
 
 
-            <Button
-              type="submit"
-              disabled={loading || !targetDate.trim()}
-              className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {loading ? (
-                <>
-                  <RefreshCw className="animate-spin h-4 w-4 mr-2" />
-                  Searching...
-                </>
-              ) : (
-                'Search Updated Cases'
+                <Button
+                  type="submit"
+                  disabled={loading || !targetDate.trim()}
+                  className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {loading ? (
+                    <>
+                      <RefreshCw className="animate-spin h-4 w-4 mr-2" />
+                      Searching...
+                    </>
+                  ) : (
+                    'Search Updated Cases'
+                  )}
+                </Button>
+              </form>
+
+              {error && (
+                <div className="mt-6 p-4 bg-red-50 border border-red-200 rounded-md">
+                  <p className="text-red-600 text-center">{error}</p>
+                </div>
               )}
-            </Button>
-          </form>
-
-          {error && (
-            <div className="mt-6 p-4 bg-red-50 border border-red-200 rounded-md">
-              <p className="text-red-600 text-center">{error}</p>
             </div>
-          )}
-        </div>
-
             {/* Results */}
             {searchPerformed && cases.length > 0 && (
               <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden mt-8">
@@ -256,50 +261,76 @@ export default function UpdatedCasesPage() {
                           </td>
                         </tr>
                       ))}
-                </tbody>
-              </table>
-            </div>
+                    </tbody>
+                  </table>
+                </div>
+                
+                <AdCard adSlot="2964232736" />
 
                 {totalPages > 1 && (
-                  <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between">
-                    <div className="text-sm text-gray-700 dark:text-gray-300">
-                      Showing {((currentPage - 1) * casesPerPage) + 1} to {Math.min(currentPage * casesPerPage, totalCases)} of {totalCases.toLocaleString()} cases
+                  <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700">
+                    {/* Mobile: Stack vertically */}
+                    <div className="flex flex-col space-y-3 sm:hidden">
+                      <div className="text-sm text-gray-700 dark:text-gray-300 text-center">
+                        Showing {((currentPage - 1) * casesPerPage) + 1} to {Math.min(currentPage * casesPerPage, totalCases)} of {totalCases.toLocaleString()} cases
+                      </div>
+                      <div className="flex items-center justify-center space-x-2">
+                        <Button
+                          onClick={() => searchUpdatedCases(currentPage - 1)}
+                          disabled={currentPage === 1 || loading}
+                          variant="outline"
+                          size="sm"
+                        >
+                          <ChevronLeft className="h-4 w-4" />
+                        </Button>
+                        <span className="px-3 py-2 text-sm text-gray-700 dark:text-gray-300">
+                          {currentPage} of {totalPages}
+                        </span>
+                        <Button
+                          onClick={() => searchUpdatedCases(currentPage + 1)}
+                          disabled={currentPage === totalPages || loading}
+                          variant="outline"
+                          size="sm"
+                        >
+                          <ChevronRight className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </div>
-                    <div className="flex space-x-2">
-                      <Button
-                        onClick={() => searchUpdatedCases(currentPage - 1)}
-                        disabled={currentPage === 1 || loading}
-                        variant="outline"
-                        size="sm"
-                      >
-                        <ChevronLeft className="h-4 w-4 mr-1" />
-                        Previous
-                      </Button>
-                      <span className="px-3 py-2 text-sm text-gray-700 dark:text-gray-300">
-                        Page {currentPage} of {totalPages}
-                      </span>
-                      <Button
-                        onClick={() => searchUpdatedCases(currentPage + 1)}
-                        disabled={currentPage === totalPages || loading}
-                        variant="outline"
-                        size="sm"
-                      >
-                        Next
-                        <ChevronRight className="h-4 w-4 ml-1" />
-                      </Button>
+                    
+                    {/* Desktop: Side by side */}
+                    <div className="hidden sm:flex items-center justify-between">
+                      <div className="text-sm text-gray-700 dark:text-gray-300">
+                        Showing {((currentPage - 1) * casesPerPage) + 1} to {Math.min(currentPage * casesPerPage, totalCases)} of {totalCases.toLocaleString()} cases
+                      </div>
+                      <div className="flex space-x-2">
+                        <Button
+                          onClick={() => searchUpdatedCases(currentPage - 1)}
+                          disabled={currentPage === 1 || loading}
+                          variant="outline"
+                          size="sm"
+                        >
+                          <ChevronLeft className="h-4 w-4 mr-1" />
+                          Previous
+                        </Button>
+                        <span className="px-3 py-2 text-sm text-gray-700 dark:text-gray-300">
+                          Page {currentPage} of {totalPages}
+                        </span>
+                        <Button
+                          onClick={() => searchUpdatedCases(currentPage + 1)}
+                          disabled={currentPage === totalPages || loading}
+                          variant="outline"
+                          size="sm"
+                        >
+                          Next
+                          <ChevronRight className="h-4 w-4 ml-1" />
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 )}
+              </div>
+            )}
           </div>
-        )}
-          
-          {/* Ad Card */}
-          <div className="mt-8">
-            <AdCard adSlot="7053262348" />
-          </div>
-          
-
-        </div>
         </div>
       </Container>
     </ClientWrapper>

@@ -153,5 +153,18 @@ export const trackCaseSearch = (
   });
 };
 
+export const trackUpdatedCasesSearch = (
+  searchDate: string,
+  resultsCount: number
+) => {
+  trackEvent('updated_cases_search_performed', {
+    event_category: 'Updated Cases Search',
+    event_label: 'date_search',
+    search_date: searchDate,
+    results_count: resultsCount,
+    custom_parameter_1: 'updated_cases_search',
+  });
+};
+
 // Note: Page views are automatically tracked by GA4
 // Custom page view tracking removed to avoid duplication 
