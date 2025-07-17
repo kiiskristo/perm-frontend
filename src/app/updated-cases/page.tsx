@@ -204,6 +204,9 @@ export default function UpdatedCasesPage() {
                 </div>
               )}
             </div>
+            
+            <AdCard adSlot="2964232736" />
+
             {/* Results */}
             {searchPerformed && cases.length > 0 && (
               <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden mt-8">
@@ -264,8 +267,6 @@ export default function UpdatedCasesPage() {
                     </tbody>
                   </table>
                 </div>
-                
-                <AdCard adSlot="2964232736" />
 
                 {totalPages > 1 && (
                   <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700">
