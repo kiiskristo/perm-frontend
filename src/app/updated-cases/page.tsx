@@ -108,6 +108,16 @@ export default function UpdatedCasesPage() {
 
       if (data.cases.length === 0) {
         setError(`No PERM cases were updated on ${targetDate}. Try a different date.`);
+        
+        // Scroll to error message on mobile when no results found
+        if (page === 1) {
+          setTimeout(() => {
+            const errorElement = document.querySelector('[data-error-section]');
+            if (errorElement) {
+              errorElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+          }, 100);
+        }
       }
     } catch (err) {
       console.error('Search error:', err);
@@ -154,10 +164,10 @@ export default function UpdatedCasesPage() {
   return (
     <ClientWrapper>
       <Container showHero={false}>
-        <div className="container mx-auto px-4">
+        <div>
           <h1 className="text-3xl font-bold mb-8 dark:text-white">Updated Cases</h1>
 
-          <div className="mx-auto">
+          <div>
             {/* Search Form */}
             <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow mb-8">
               <div className="text-center mb-6">
@@ -207,7 +217,7 @@ export default function UpdatedCasesPage() {
               </form>
 
               {error && (
-                <div className="mt-6 p-4 bg-red-50 border border-red-200 rounded-md">
+                <div data-error-section className="mt-6 p-4 bg-red-50 border border-red-200 rounded-md">
                   <p className="text-red-600 text-center">{error}</p>
                 </div>
               )}
@@ -215,9 +225,9 @@ export default function UpdatedCasesPage() {
             
             <AdCard adSlot="2964232736" />
 
-            {/* Results */}
-            {searchPerformed && cases.length > 0 && (
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden mt-8">
+                         {/* Results */}
+             {searchPerformed && cases.length > 0 && (
+               <div data-results-section className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden mt-8">
                 <div className="p-6 border-b border-gray-200 dark:border-gray-700">
                   <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
                     Search Results ({totalCases.toLocaleString()} cases updated on {formatDate(serverTargetDate)})

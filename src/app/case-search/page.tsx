@@ -237,10 +237,10 @@ export default function CaseSearchPage() {
   return (
     <ClientWrapper>
       <Container showHero={false}>
-        <div className="container mx-auto px-4">
+        <div>
           <h1 className="text-3xl font-bold mb-8 dark:text-white">Case Search</h1>
           
-          <div className="mx-auto">
+          <div>
             {/* Search Form */}
             <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow mb-8">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
