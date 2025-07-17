@@ -96,6 +96,14 @@ export default function UpdatedCasesPage() {
       // Track successful search (only for initial search, not pagination)
       if (page === 1) {
         trackUpdatedCasesSearch(data.target_date, data.total);
+        
+        // Scroll to results on mobile after initial search
+        setTimeout(() => {
+          const resultsElement = document.querySelector('[data-results-section]');
+          if (resultsElement) {
+            resultsElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }, 100); // Small delay to ensure DOM is updated
       }
 
       if (data.cases.length === 0) {
@@ -146,8 +154,8 @@ export default function UpdatedCasesPage() {
   return (
     <ClientWrapper>
       <Container showHero={false}>
-        <div className="container mx-auto px-4 py-12">
-          <h1 className="text-3xl font-bold mb-8 dark:text-white">Updated Cases by Date</h1>
+        <div className="container mx-auto px-4">
+          <h1 className="text-3xl font-bold mb-8 dark:text-white">Updated Cases</h1>
 
           <div className="mx-auto">
             {/* Search Form */}
