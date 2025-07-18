@@ -172,8 +172,7 @@ export default function UpdatedCasesPage() {
             <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow mb-8">
               <div className="text-center mb-6">
                 <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-                  Search for all PERM cases that were updated on a specific date. This includes status changes,
-                  certifications, denials, and other case updates.
+                  Search for all PERM cases that were updated on a specific date.
                 </p>
               </div>
 
@@ -349,6 +348,16 @@ export default function UpdatedCasesPage() {
                 )}
               </div>
             )}
+            {/* Info Section */}
+            <div className="mt-8 bg-purple-50 dark:bg-purple-900/20 p-6 rounded-lg border border-purple-200 dark:border-purple-800">
+              <h3 className="text-lg font-semibold mb-3 text-purple-800 dark:text-purple-200">About Updated Cases</h3>
+              <ul className="text-purple-700 dark:text-purple-300 space-y-2">
+                <li>• Search for PERM cases that were updated on a specific date</li>
+                <li>• Data available from July 1st, 2025 onwards</li>
+                <li>• Includes certifications, denials, withdrawals, and status changes</li>
+                <li>• All timestamps shown in Eastern Time (ET)</li>
+              </ul>
+            </div>
           </div>
         </div>
       </Container>

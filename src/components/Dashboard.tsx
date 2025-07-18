@@ -17,6 +17,7 @@ import { DailySyncLettersChart } from './dashboard/DailySyncLettersChart';
 import { MostActiveMonthChart } from './dashboard/MostActiveMonthChart';
 import { PredictionForm } from './dashboard/PredictionForm';
 import { AdCard } from './ui/AdCard';
+import { PollOverlay } from './ui/PollOverlay';
 import { MetricsCardSkeleton, ProcessTimeCardSkeleton, ChartSkeleton, LetterChartSkeleton, BacklogChartSkeleton } from './dashboard/SkeletonLoaders';
 import { trackAdBlockerStatus } from '@/utils/analytics';
 
@@ -27,6 +28,7 @@ const Dashboard = () => {
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [showPoll, setShowPoll] = useState(false);
 
   const isDataFromPreviousDay = (asOfDate: string) => {
     // Get today's date in ET timezone as YYYY-MM-DD
@@ -82,6 +84,14 @@ const Dashboard = () => {
       try {
         const data = await fetchDashboardData(timeRange);
         setDashboardData(data);
+        
+        // Show poll after successful data load (with small delay) - only if not completed before
+        setTimeout(() => {
+          const pollCompleted = localStorage.getItem('perm-poll-completed');
+          if (!pollCompleted) {
+            setShowPoll(true);
+          }
+        }, 3000); // Show poll 3 seconds after dashboard loads
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load dashboard data');
         console.error('Error loading dashboard data:', err);
@@ -219,7 +229,19 @@ const Dashboard = () => {
             {/* Second row of charts - 2 columns */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
               <WeeklyVolumeChart data={dashboardData.weekly_volumes} />
-              <MonthlyVolumeChart data={dashboardData.monthly_volumes} />
+              <MonthlyVolumeChart 
+                data={dashboardData.monthly_volumes} 
+                overlay={
+                  <PollOverlay
+                    isVisible={showPoll}
+                    onClose={() => setShowPoll(false)}
+                    onComplete={() => {
+                      setShowPoll(false);
+                      localStorage.setItem('perm-poll-completed', 'true');
+                    }}
+                  />
+                }
+              />
             </div>
             
             {/* Monthly Backlog Chart (full width) */}
