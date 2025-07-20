@@ -29,11 +29,16 @@ interface UpdatedCasesResponse {
 }
 
 export default function UpdatedCasesPage() {
-  // Set today as default date in local timezone
-  const today = new Date();
-  const localToday = new Date(today.getTime() - today.getTimezoneOffset() * 60000)
-    .toISOString().split('T')[0];
-  const [targetDate, setTargetDate] = useState(localToday);
+  // Set today as default date - use a simple approach to avoid timezone issues
+  const getTodayString = () => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+  
+  const [targetDate, setTargetDate] = useState(getTodayString());
   const [cases, setCases] = useState<UpdatedPermCase[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -188,8 +193,8 @@ export default function UpdatedCasesPage() {
                       id="targetDate"
                       value={targetDate}
                       onChange={(e) => setTargetDate(e.target.value)}
-                      min="2025-07-01"
-                      max={localToday}
+                                        min="2025-07-01"
+                  max={getTodayString()}
                       className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent dark:bg-gray-700 dark:text-white [color-scheme:light] dark:[color-scheme:dark]"
                       placeholder="Select date..."
                       required
