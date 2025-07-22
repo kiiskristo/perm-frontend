@@ -29,12 +29,14 @@ interface UpdatedCasesResponse {
 }
 
 export default function UpdatedCasesPage() {
-  // Set today as default date - use a simple approach to avoid timezone issues
+  // Set today as default date - get Eastern Time date explicitly
   const getTodayString = () => {
     const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const day = String(now.getDate()).padStart(2, '0');
+    // Get the date in Eastern Time
+    const etDate = new Date(now.toLocaleString("en-US", {timeZone: "America/New_York"}));
+    const year = etDate.getFullYear();
+    const month = String(etDate.getMonth() + 1).padStart(2, '0');
+    const day = String(etDate.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
   };
   
