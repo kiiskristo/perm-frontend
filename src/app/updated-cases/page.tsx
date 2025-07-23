@@ -40,7 +40,8 @@ export default function UpdatedCasesPage() {
     return `${year}-${month}-${day}`;
   };
   
-  const [targetDate, setTargetDate] = useState(getTodayString());
+  const todayET = getTodayString();
+  const [targetDate, setTargetDate] = useState(todayET);
   const [cases, setCases] = useState<UpdatedPermCase[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -196,7 +197,7 @@ export default function UpdatedCasesPage() {
                       value={targetDate}
                       onChange={(e) => setTargetDate(e.target.value)}
                                         min="2025-07-01"
-                  max={getTodayString()}
+                  max={todayET}
                       className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent dark:bg-gray-700 dark:text-white [color-scheme:light] dark:[color-scheme:dark]"
                       placeholder="Select date..."
                       required
