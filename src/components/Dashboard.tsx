@@ -270,7 +270,7 @@ const Dashboard = () => {
       <AdCard adSlot="8024987722" data-timeline-ad />
       
       {/* Prediction Forms - Always visible and separate from loading state */}
-      <div className="mt-8" data-timeline-estimator>
+      <div className="mt-8" id="timeline-estimator" data-timeline-estimator>
         <h2 className="text-xl font-semibold mb-4 dark:text-white">Timeline Estimator</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <PredictionForm type="caseNumber" />

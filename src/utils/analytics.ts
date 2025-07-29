@@ -166,5 +166,18 @@ export const trackUpdatedCasesSearch = (
   });
 };
 
+// Simple chatbot tracking functions
+export const trackChatbotOpen = () => {
+  trackEvent('chatbot_open');
+};
+
+export const trackChatbotClose = () => {
+  trackEvent('chatbot_close');
+};
+
+export const trackChatbotMessage = () => {
+  trackEvent('chatbot_message_sent');
+};
+
 // Note: Page views are automatically tracked by GA4
 // Custom page view tracking removed to avoid duplication 

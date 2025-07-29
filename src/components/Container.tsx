@@ -5,6 +5,7 @@ import { Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Banner } from '@/components/ui/Banner';
 import ClientWrapper, { NavControls, MobileMenu } from './ClientWrapper';
+import Chatbot from './Chatbot';
 
 interface ContainerProps {
   children?: ReactNode;
@@ -193,6 +194,11 @@ export default function Container({ children, showHero = true }: ContainerProps)
           <p className="text-gray-400">&copy; 2025 PERM Analytics. All rights reserved.</p>
         </div>
       </footer>
+      
+      {/* Chatbot Component */}
+      <ClientWrapper>
+        <Chatbot />
+      </ClientWrapper>
     </div>
   );
 } 
