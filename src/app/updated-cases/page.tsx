@@ -16,6 +16,7 @@ interface UpdatedPermCase {
   employer_name: string;
   employer_first_letter: string;
   status: string;
+  previous_status?: string;
   updated_at: string;
 }
 
@@ -260,7 +261,10 @@ export default function UpdatedCasesPage() {
                           Submit Date
                         </th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                          Status
+                          Previous Status
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                          Current Status
                         </th>
                       </tr>
                     </thead>
@@ -280,6 +284,15 @@ export default function UpdatedCasesPage() {
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
                             {formatDate(permCase.submit_date)}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm">
+                            {permCase.previous_status ? (
+                              <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(permCase.previous_status)}`}>
+                                {permCase.previous_status}
+                              </span>
+                            ) : (
+                              <span className="text-gray-400 dark:text-gray-500 text-xs">—</span>
+                            )}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm">
                             <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(permCase.status)}`}>
