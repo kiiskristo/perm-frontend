@@ -272,6 +272,11 @@ export default function Chatbot({ className = '' }: ChatbotProps) {
 function ChatMessage({ message }: { message: ChatMessage }) {
   const isBot = message.type === 'bot';
   
+  // Function to convert **text** to <strong>text</strong>
+  const formatBoldText = (text: string): string => {
+    return text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  };
+  
   return (
     <div className={`flex ${isBot ? 'justify-start' : 'justify-end'}`}>
       <div className={`flex max-w-[80%] ${isBot ? 'flex-row' : 'flex-row-reverse'} items-start space-x-2`}>
@@ -301,7 +306,10 @@ function ChatMessage({ message }: { message: ChatMessage }) {
             </div>
                      ) : (
              <>
-               <div className="text-sm whitespace-pre-wrap">{message.content}</div>
+               <div 
+                 className="text-sm whitespace-pre-wrap"
+                 dangerouslySetInnerHTML={{ __html: formatBoldText(message.content) }}
+               />
                
                {/* Render links if present */}
                {message.links && message.links.length > 0 && (
