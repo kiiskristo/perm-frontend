@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Bot, User, Loader2, HelpCircle, X, ExternalLink } from 'lucide-react';
+import { Send, Bot, User, Loader2, X, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { chatbotService, type ChatbotResponse } from '../services/chatbotService';
