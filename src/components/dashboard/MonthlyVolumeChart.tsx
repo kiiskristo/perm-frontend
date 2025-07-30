@@ -1,12 +1,10 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { ReactNode } from 'react';
 
 interface MonthlyVolumeChartProps {
   data: { month: string; volume: number }[];
-  overlay?: ReactNode;
 }
 
-export function MonthlyVolumeChart({ data, overlay }: MonthlyVolumeChartProps) {
+export function MonthlyVolumeChart({ data }: MonthlyVolumeChartProps) {
   return (
     <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow relative">
       <h3 className="text-lg font-semibold mb-4 dark:text-white">Monthly Volume Trend</h3>
@@ -35,7 +33,6 @@ export function MonthlyVolumeChart({ data, overlay }: MonthlyVolumeChartProps) {
           </BarChart>
         </ResponsiveContainer>
       </div>
-      {overlay}
     </div>
   );
 } 
