@@ -193,6 +193,7 @@ export default function Chatbot({ className = '' }: ChatbotProps) {
                 trackChatbotOpen();
               }}
               className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-full w-14 h-14 shadow-lg transition-all duration-300 hover:scale-110 flex items-center justify-center border-0"
+              aria-label="Open PERM Assistant chatbot"
             >
               <Bot className="h-6 w-6 text-white stroke-2" />
             </button>

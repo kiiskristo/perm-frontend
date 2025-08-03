@@ -22,7 +22,7 @@ export default function Container({ children, showHero = true }: ContainerProps)
         dismissible={true}
         enabled={true}
         link={{
-          text: 'here',
+          text: 'on our updated cases page',
           href: '/updated-cases',
           newTab: false
         }}
