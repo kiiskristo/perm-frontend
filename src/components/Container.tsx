@@ -17,7 +17,7 @@ export default function Container({ children, showHero = true }: ContainerProps)
     <div className="min-h-screen flex flex-col bg-white text-black dark:bg-gray-900 dark:text-white">
       {/* News/Updates Banner */}
       <Banner 
-        message="April started! You can see exact cases processed daily "
+        message="May started! You can see exact cases processed daily "
         type="info"
         dismissible={true}
         enabled={true}
