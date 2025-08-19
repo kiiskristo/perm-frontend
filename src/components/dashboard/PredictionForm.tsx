@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { getPrediction, type DatePrediction } from '@/services/permService';
-import { executeRecaptcha } from '@/utils/recaptcha';
+
 import { trackPredictionUsage, trackPredictionResult } from '@/utils/analytics';
 
 interface PredictionFormProps {
@@ -30,14 +30,6 @@ export function PredictionForm({ type = 'date' }: PredictionFormProps) {
     setPredictionError('');
     
     try {
-      // Get reCAPTCHA token
-      const recaptchaKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || '';
-      const token = await executeRecaptcha(recaptchaKey, 'prediction_form');
-      
-      if (!token) {
-        throw new Error("Failed to verify you're human. Please try again.");
-      }
-      
       let submitDate = inputValue;
       
       // If this is a case number, parse the date from it
@@ -63,10 +55,9 @@ export function PredictionForm({ type = 'date' }: PredictionFormProps) {
         submitDate = `${year}-${month}-${day}`;
       }
       
-      // Pass the reCAPTCHA token and employer first letter to your backend
+      // Get prediction with employer first letter
       const prediction = await getPrediction(
         submitDate, 
-        token, 
         employerFirstLetter.toUpperCase(),
         type === 'caseNumber' ? inputValue : undefined
       );

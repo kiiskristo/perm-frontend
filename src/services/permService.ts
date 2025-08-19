@@ -87,7 +87,6 @@ export interface DatePrediction {
 // Request body interface for prediction API
 interface PredictionRequest {
   submit_date: string;
-  recaptcha_token: string;
   employer_first_letter: string;
   case_number?: string;
 }
@@ -107,13 +106,11 @@ export async function fetchDashboardData(days = 30): Promise<DashboardData> {
  */
 export async function getPrediction(
   submitDate: string, 
-  recaptchaToken: string, 
   employerFirstLetter: string = '',
   caseNumber?: string
 ): Promise<DatePrediction> {
   const requestBody: PredictionRequest = { 
     submit_date: submitDate,
-    recaptcha_token: recaptchaToken,
     employer_first_letter: employerFirstLetter
   };
   
