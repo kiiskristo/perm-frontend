@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Container from '@/components/Container';
 import ClientWrapper from '@/components/ClientWrapper';
 import { Button } from '@/components/ui/button';
-import { executeRecaptcha } from '@/utils/recaptcha';
+
 import { AdCard } from '@/components/ui/AdCard';
 import { trackUpdatedCasesSearch } from '@/utils/analytics';
 import { ChevronLeft, ChevronRight, Calendar, RefreshCw } from 'lucide-react';
@@ -63,16 +63,6 @@ export default function UpdatedCasesPage() {
     setError('');
 
     try {
-      // Get reCAPTCHA token
-      const recaptchaKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || '';
-      const recaptchaToken = await executeRecaptcha(recaptchaKey, 'updatedcases');
-
-      if (!recaptchaToken) {
-        setError('Failed to verify reCAPTCHA. Please try again.');
-        setLoading(false);
-        return;
-      }
-
       const offset = (page - 1) * casesPerPage;
 
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/data/updated-cases`, {
@@ -84,7 +74,6 @@ export default function UpdatedCasesPage() {
           target_date: targetDate,
           limit: casesPerPage,
           offset: offset,
-          recaptcha_token: recaptchaToken,
         }),
       });
 

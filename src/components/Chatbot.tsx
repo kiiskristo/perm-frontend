@@ -5,7 +5,7 @@ import { Send, Bot, User, Loader2, X, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { chatbotService, type ChatbotResponse } from '../services/chatbotService';
-import { executeRecaptcha } from '@/utils/recaptcha';
+
 import { trackChatbotOpen, trackChatbotClose, trackChatbotMessage } from '@/utils/analytics';
 
 interface ChatMessage {
@@ -127,16 +127,8 @@ export default function Chatbot({ className = '' }: ChatbotProps) {
     trackChatbotMessage();
 
     try {
-      // Get reCAPTCHA token
-      const recaptchaKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || '';
-      const token = await executeRecaptcha(recaptchaKey, 'chatbot');
-      
-      if (!token) {
-        throw new Error("Failed to verify you're human. Please try again.");
-      }
-
       // Send message to chatbot API
-      const response = await chatbotService.sendMessage(userMessage.content, token);
+      const response = await chatbotService.sendMessage(userMessage.content);
       
       // Remove typing indicator and add actual response
       setMessages(prev => {

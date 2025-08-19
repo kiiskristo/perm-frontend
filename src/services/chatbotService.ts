@@ -2,7 +2,6 @@ import { fetchFromAPI } from './api';
 
 export interface ChatbotRequest {
   message: string;
-  recaptcha_token: string;
 }
 
 export interface ChatbotLink {
@@ -27,14 +26,13 @@ class ChatbotService {
     this.apiUrl = process.env.NEXT_PUBLIC_API_URL || '';
   }
 
-  async sendMessage(message: string, recaptchaToken: string): Promise<ChatbotResponse> {
+  async sendMessage(message: string): Promise<ChatbotResponse> {
     if (!this.apiUrl) {
       throw new Error('API URL not configured');
     }
 
     const requestBody: ChatbotRequest = {
       message,
-      recaptcha_token: recaptchaToken,
     };
 
     try {
