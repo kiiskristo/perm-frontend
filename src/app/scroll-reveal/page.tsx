@@ -1,9 +1,4 @@
-import { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: 'Simple Scroll Reveal',
-  description: 'Scroll reveal animation demo',
-};
+'use client';
 
 export default function ScrollRevealPage() {
   return (
