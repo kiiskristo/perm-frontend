@@ -163,35 +163,68 @@ export default function Container({ children, showHero = true }: ContainerProps)
       )}
 
       {/* Footer - Server Rendered */}
-      <footer className="bg-gray-900 text-white py-8">
+      <footer className="bg-gray-900 text-white py-12">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-left">
-              <h3 className="text-lg font-semibold mb-4">PERM Timeline Tracker</h3>
-              <p className="text-gray-400">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
+            {/* Company Info */}
+            <div className="space-y-4">
+              <h3 className="text-xl font-bold text-white">PERM Timeline Tracker</h3>
+              <p className="text-gray-300 text-sm leading-relaxed">
                 Track your PERM labor certification timeline with our advanced processing time tracker and real-time predictions.
               </p>
             </div>
-            <div className="text-center">
-              <h3 className="text-lg font-semibold mb-4">Resources</h3>
-              <ul className="space-y-2 text-gray-400">
-                <li><Link href="/about-perm-process" className="hover:text-white">About PERM Process</Link></li>
-                <li><Link href="/how-it-works" className="hover:text-white">Timeline Estimator</Link></li>
-                <li><Link href="/faq" className="hover:text-white">FAQ</Link></li>
+            
+            {/* Resources */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold text-white">Resources</h3>
+              <ul className="space-y-3">
+                <li>
+                  <Link href="/about-perm-process" className="text-gray-300 hover:text-white transition-colors duration-200 text-sm">
+                    About PERM Process
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/how-it-works" className="text-gray-300 hover:text-white transition-colors duration-200 text-sm">
+                    Timeline Estimator
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/faq" className="text-gray-300 hover:text-white transition-colors duration-200 text-sm">
+                    FAQ
+                  </Link>
+                </li>
               </ul>
             </div>
-            <div className="text-right">
-              <h3 className="text-lg font-semibold mb-4">Legal</h3>
-              <ul className="space-y-2 text-gray-400">
-                <li><Link href="/privacy-policy" className="hover:text-white">Privacy Policy</Link></li>
-                <li><Link href="/terms-of-service" className="hover:text-white">Terms of Service</Link></li>
-                <li><Link href="/disclaimer" className="hover:text-white">Disclaimer</Link></li>
+            
+            {/* Legal */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold text-white">Legal</h3>
+              <ul className="space-y-3">
+                <li>
+                  <Link href="/privacy-policy" className="text-gray-300 hover:text-white transition-colors duration-200 text-sm">
+                    Privacy Policy
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/terms-of-service" className="text-gray-300 hover:text-white transition-colors duration-200 text-sm">
+                    Terms of Service
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/disclaimer" className="text-gray-300 hover:text-white transition-colors duration-200 text-sm">
+                    Disclaimer
+                  </Link>
+                </li>
               </ul>
             </div>
           </div>
-        </div>
-        <div className="container mx-auto px-4 mt-8 pt-8 border-t border-gray-800 text-center">
-          <p className="text-gray-400">&copy; 2025 PERM Analytics. All rights reserved.</p>
+          
+          {/* Copyright */}
+          <div className="mt-12 pt-8 border-t border-gray-800">
+            <p className="text-center text-gray-400 text-sm">
+              &copy; 2025 PERM Analytics. All rights reserved.
+            </p>
+          </div>
         </div>
       </footer>
       
