@@ -18,6 +18,7 @@ import { MostActiveMonthChart } from './dashboard/MostActiveMonthChart';
 import { PredictionForm } from './dashboard/PredictionForm';
 import { AdCard } from './ui/AdCard';
 import { MetricsCardSkeleton, ProcessTimeCardSkeleton, ChartSkeleton, LetterChartSkeleton, BacklogChartSkeleton } from './dashboard/SkeletonLoaders';
+import { SegmentedControl } from './ui/SegmentedControl';
 import { trackAdBlockerStatus } from '@/utils/analytics';
 
 // Main Dashboard Component
@@ -27,6 +28,7 @@ const Dashboard = () => {
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [dataType, setDataType] = useState<'certified' | 'processed'>('certified');
 
   const isDataFromPreviousDay = (asOfDate: string) => {
     // Get today's date in ET timezone as YYYY-MM-DD
@@ -39,6 +41,23 @@ const Dashboard = () => {
     
     return apiDate !== todayStringET;
   };
+
+  // Load dataType from localStorage on component mount
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const savedDataType = localStorage.getItem('dashboard-data-type') as 'certified' | 'processed' | null;
+      if (savedDataType && (savedDataType === 'certified' || savedDataType === 'processed')) {
+        setDataType(savedDataType);
+      }
+    }
+  }, []);
+
+  // Save dataType to localStorage whenever it changes
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('dashboard-data-type', dataType);
+    }
+  }, [dataType]);
 
   // Track ad blocker status on dashboard load
   useEffect(() => {
@@ -80,7 +99,7 @@ const Dashboard = () => {
       setError('');
       
       try {
-        const data = await fetchDashboardData(timeRange);
+        const data = await fetchDashboardData(timeRange, dataType);
         setDashboardData(data);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load dashboard data');
@@ -91,7 +110,7 @@ const Dashboard = () => {
     }
     
     loadDashboardData();
-  }, [timeRange]);
+  }, [timeRange, dataType]);
 
   const toggleTimeOptions = () => {
     setShowTimeOptions(!showTimeOptions);
@@ -103,30 +122,60 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="space-y-8 dark:text-white" data-dashboard>
-      {/* Header with title and time range selector */}
-      <div className="flex justify-between items-center">
+    <div className="space-y-8 dark:text-white">
+      {/* Header with title and controls */}
+      <div className="flex flex-col space-y-4 lg:flex-row lg:justify-between lg:items-center lg:space-y-0">
         <h2 className="text-2xl font-bold dark:text-white">PERM Dashboard</h2>
-        <div className="relative">
-          <button
-            onClick={toggleTimeOptions}
-            className="flex items-center space-x-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md px-4 py-2 text-sm"
-          >
-            <span>Last {timeRange} days</span>
-            {showTimeOptions ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-          </button>
-          
-          {showTimeOptions && (
-            <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg border border-gray-200 dark:border-gray-700 z-10">
-              <ul className="py-1">
-                <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer" onClick={() => changeTimeRange(7)}>Last 7 days</li>
-                <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer" onClick={() => changeTimeRange(30)}>Last 30 days</li>
-                <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer" onClick={() => changeTimeRange(90)}>Last 90 days</li>
-                <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer" onClick={() => changeTimeRange(180)}>Last 180 days</li>
-                <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer" onClick={() => changeTimeRange(365)}>Last 1 year</li>
-              </ul>
+        
+        {/* Controls with shared label */}
+        <div className="flex flex-col space-y-2">
+          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Data type and duration:</span>
+          <div className="flex flex-row items-stretch space-x-3">
+            {/* Data Type Segmented Control */}
+            <div className="flex-1">
+              <SegmentedControl
+                options={[
+                  { 
+                    value: 'certified', 
+                    label: 'Certified',
+                    description: 'Show certified cases data'
+                  },
+                  { 
+                    value: 'processed', 
+                    label: 'Processed',
+                    description: 'Show all processed cases data (certified + denied + withdrawn)'
+                  }
+                ]}
+                value={dataType}
+                onChange={(value) => setDataType(value as 'certified' | 'processed')}
+                size="sm"
+                className="w-full"
+              />
             </div>
-          )}
+
+            {/* Time Range Selector */}
+            <div className="relative flex-1">
+              <button
+                onClick={toggleTimeOptions}
+                className="flex items-center justify-center space-x-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md px-4 py-2 text-sm whitespace-nowrap w-full h-full"
+              >
+                <span>Last {timeRange} days</span>
+                {showTimeOptions ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+              </button>
+              
+              {showTimeOptions && (
+                <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg border border-gray-200 dark:border-gray-700 z-10">
+                  <ul className="py-1">
+                    <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer" onClick={() => changeTimeRange(7)}>Last 7 days</li>
+                    <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer" onClick={() => changeTimeRange(30)}>Last 30 days</li>
+                    <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer" onClick={() => changeTimeRange(90)}>Last 90 days</li>
+                    <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer" onClick={() => changeTimeRange(180)}>Last 180 days</li>
+                    <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer" onClick={() => changeTimeRange(365)}>Last 1 year</li>
+                  </ul>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
       

@@ -97,8 +97,8 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 /**
  * Fetch dashboard data with metrics and charts
  */
-export async function fetchDashboardData(days = 30): Promise<DashboardData> {
-  return fetchFromAPI<DashboardData>(`${API_URL}/data/dashboard?days=${days}`);
+export async function fetchDashboardData(days = 30, dataType: 'certified' | 'processed' = 'certified'): Promise<DashboardData> {
+  return fetchFromAPI<DashboardData>(`${API_URL}/data/dashboard?days=${days}&data_type=${dataType}`);
 }
 
 /**

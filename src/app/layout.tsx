@@ -2,6 +2,7 @@ import React from 'react';
 import './globals.css';
 import { Inter } from 'next/font/google';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
+import ClientWrapper from '@/components/ClientWrapper';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -48,7 +49,11 @@ export default function RootLayout({
         />
       </head>
       <GoogleAnalytics ga_id={process.env.NEXT_PUBLIC_GA_ID!} />
-      <body className={`${inter.className} h-full`}>{children}</body>
+      <body className={`${inter.className} h-full`}>
+        <ClientWrapper>
+          {children}
+        </ClientWrapper>
+      </body>
     </html>
   );
 }
