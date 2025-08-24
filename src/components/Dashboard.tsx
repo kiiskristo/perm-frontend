@@ -28,7 +28,16 @@ const Dashboard = () => {
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [dataType, setDataType] = useState<'certified' | 'processed'>('certified');
+  // Initialize dataType with localStorage value or default to 'certified'
+  const [dataType, setDataType] = useState<'certified' | 'processed'>(() => {
+    if (typeof window !== 'undefined') {
+      const savedDataType = localStorage.getItem('dashboard-data-type') as 'certified' | 'processed' | null;
+      if (savedDataType && (savedDataType === 'certified' || savedDataType === 'processed')) {
+        return savedDataType;
+      }
+    }
+    return 'certified';
+  });
 
   const isDataFromPreviousDay = (asOfDate: string) => {
     // Get today's date in ET timezone as YYYY-MM-DD
@@ -41,16 +50,6 @@ const Dashboard = () => {
     
     return apiDate !== todayStringET;
   };
-
-  // Load dataType from localStorage on component mount
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const savedDataType = localStorage.getItem('dashboard-data-type') as 'certified' | 'processed' | null;
-      if (savedDataType && (savedDataType === 'certified' || savedDataType === 'processed')) {
-        setDataType(savedDataType);
-      }
-    }
-  }, []);
 
   // Save dataType to localStorage whenever it changes
   useEffect(() => {
