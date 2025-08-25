@@ -28,16 +28,8 @@ const Dashboard = () => {
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  // Initialize dataType with localStorage value or default to 'certified'
-  const [dataType, setDataType] = useState<'certified' | 'processed'>(() => {
-    if (typeof window !== 'undefined') {
-      const savedDataType = localStorage.getItem('dashboard-data-type') as 'certified' | 'processed' | null;
-      if (savedDataType && (savedDataType === 'certified' || savedDataType === 'processed')) {
-        return savedDataType;
-      }
-    }
-    return 'certified';
-  });
+  const [dataType, setDataType] = useState<'certified' | 'processed'>('certified');
+  const [isDataTypeInitialized, setIsDataTypeInitialized] = useState(false);
 
   const isDataFromPreviousDay = (asOfDate: string) => {
     // Get today's date in ET timezone as YYYY-MM-DD
@@ -51,12 +43,23 @@ const Dashboard = () => {
     return apiDate !== todayStringET;
   };
 
-  // Save dataType to localStorage whenever it changes
+  // Initialize dataType from localStorage on client-side only
   useEffect(() => {
     if (typeof window !== 'undefined') {
+      const savedDataType = localStorage.getItem('dashboard-data-type') as 'certified' | 'processed' | null;
+      if (savedDataType && (savedDataType === 'certified' || savedDataType === 'processed')) {
+        setDataType(savedDataType);
+      }
+      setIsDataTypeInitialized(true);
+    }
+  }, []);
+
+  // Save dataType to localStorage whenever it changes (but only after initialization)
+  useEffect(() => {
+    if (typeof window !== 'undefined' && isDataTypeInitialized) {
       localStorage.setItem('dashboard-data-type', dataType);
     }
-  }, [dataType]);
+  }, [dataType, isDataTypeInitialized]);
 
   // Track ad blocker status on dashboard load
   useEffect(() => {
@@ -91,8 +94,10 @@ const Dashboard = () => {
     );
   }, []); // Run once on component mount
 
-  // Fetch dashboard data
+  // Fetch dashboard data (only after dataType is initialized)
   useEffect(() => {
+    if (!isDataTypeInitialized) return;
+
     async function loadDashboardData() {
       setLoading(true);
       setError('');
@@ -109,7 +114,7 @@ const Dashboard = () => {
     }
     
     loadDashboardData();
-  }, [timeRange, dataType]);
+  }, [timeRange, dataType, isDataTypeInitialized]);
 
   const toggleTimeOptions = () => {
     setShowTimeOptions(!showTimeOptions);
