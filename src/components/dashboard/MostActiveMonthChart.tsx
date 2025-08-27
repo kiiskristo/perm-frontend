@@ -53,7 +53,7 @@ export function MostActiveMonthChart({
     return null;
   };
 
-  // Sort data by total volume (certified + review) descending
+  // Sort data alphabetically by letter (A-Z)
   const chartData = data
     .map(item => ({
       letter: item.employer_first_letter,
@@ -61,7 +61,7 @@ export function MostActiveMonthChart({
       review: item.review_count,
       total: item.certified_count + item.review_count
     }))
-    .sort((a, b) => b.total - a.total);
+    .sort((a, b) => a.letter.localeCompare(b.letter));
 
   return (
     <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
