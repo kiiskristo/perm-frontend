@@ -46,7 +46,7 @@ export default function HowItWorks() {
           <div className="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-lg border border-yellow-200 dark:border-yellow-800 mb-6">
             <h3 className="text-lg font-semibold text-yellow-800 dark:text-yellow-200 mb-2">Current Processing Times</h3>
             <p className="text-yellow-700 dark:text-yellow-300">
-              PERM applications are currently taking <strong>490-500+ days</strong> to process. This timeline varies 
+              PERM applications are currently taking <strong>462-478 days</strong> to process. This timeline varies 
               based on your submission month and employer name initial within that month.
             </p>
           </div>
