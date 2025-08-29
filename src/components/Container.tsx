@@ -17,7 +17,7 @@ export default function Container({ children, showHero = true }: ContainerProps)
     <div className="min-h-screen flex flex-col bg-white text-black dark:bg-gray-900 dark:text-white">
       {/* News/Updates Banner */}
       <Banner 
-        message="Today's update will be delayed at least for an hour. Expect after 11:15PM EDT"
+        message="Today's update will be delayed at least for an hour. Expect after 11:45PM EDT"
         type="warning"
         dismissible={true}
         enabled={true}
