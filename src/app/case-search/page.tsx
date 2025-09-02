@@ -36,8 +36,8 @@ interface CompanyCasesResponse {
 export default function CaseSearchPage() {
   const [companyQuery, setCompanyQuery] = useState('');
   const [selectedCompany, setSelectedCompany] = useState('');
-  const [startDate, setStartDate] = useState('2025-07-01');
-  const [endDate, setEndDate] = useState('2025-07-14');
+  const [startDate, setStartDate] = useState('2025-08-11');
+  const [endDate, setEndDate] = useState('2025-08-25');
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [searchResults, setSearchResults] = useState<CaseResult[]>([]);
@@ -221,14 +221,14 @@ export default function CaseSearchPage() {
 
   // Calculate max end date (2 weeks from start date)
   const getMaxEndDate = (startDateValue: string) => {
-    if (!startDateValue) return "2025-07-31";
+    if (!startDateValue) return "2025-08-31";
     
     const start = new Date(startDateValue);
     const maxEnd = new Date(start);
     maxEnd.setDate(start.getDate() + 14); // Add 14 days (2 weeks)
     
     // Don't exceed the overall max date
-    const overallMax = new Date("2025-07-31");
+    const overallMax = new Date("2025-08-31");
     const finalMaxEnd = maxEnd > overallMax ? overallMax : maxEnd;
     
     return finalMaxEnd.toISOString().split('T')[0];
@@ -309,7 +309,7 @@ export default function CaseSearchPage() {
                       }
                     }}
                     min="2024-03-01"
-                    max="2025-07-31"
+                    max="2025-08-31"
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
                   />
                 </div>
@@ -400,7 +400,7 @@ export default function CaseSearchPage() {
               <h3 className="text-lg font-semibold mb-3 text-blue-800 dark:text-blue-200">About Case Search</h3>
               <ul className="text-blue-700 dark:text-blue-300 space-y-2">
                 <li>• Search for PERM cases by company name and date range</li>
-                <li>• Data includes March 2024 -July 2025 submissions</li>
+                <li>• Data includes March 2024 - August 2025 submissions</li>
                 <li>• Results include case numbers, job titles, and submission dates</li>
                 <li>• Use the autocomplete feature to find exact company names</li>
               </ul>
