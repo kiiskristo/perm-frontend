@@ -284,6 +284,7 @@ const Dashboard = () => {
                 <DailySyncLettersChart 
                   data={dashboardData.perm_cases.daily_activity.activity_data}
                   dataDate={dashboardData.perm_cases.daily_activity.data_date}
+                  dataType={dataType}
                 />
                 <MostActiveMonthChart 
                   data={dashboardData.perm_cases.latest_month_activity.activity_data}

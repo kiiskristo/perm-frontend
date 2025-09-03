@@ -5,11 +5,13 @@ interface DailySyncLettersChartProps {
     employer_first_letter: string;
     submit_month: number;
     certified_count: number;
+    processed_count: number;
   }[];
   dataDate: string;
+  dataType: 'certified' | 'processed';
 }
 
-export function DailySyncLettersChart({ data, dataDate }: DailySyncLettersChartProps) {
+export function DailySyncLettersChart({ data, dataDate, dataType }: DailySyncLettersChartProps) {
   // Utility function to safely format dates without timezone issues
   const formatDateSafely = (dateString: string) => {
     const [year, month, day] = dateString.split('-').map(Number);
@@ -75,13 +77,16 @@ export function DailySyncLettersChart({ data, dataDate }: DailySyncLettersChartP
 
   // Transform data to show individual letter-month combinations
   const chartData = data
-    .filter(item => item.certified_count >= 10) // Filter for meaningful data (10+ cases)
+    .filter(item => {
+      const count = dataType === 'certified' ? item.certified_count : item.processed_count;
+      return count >= 10; // Filter for meaningful data (10+ cases)
+    })
     .map(item => ({
       letterMonth: `${item.employer_first_letter}-${getMonthName(item.submit_month).slice(0, 3)}`,
       letter: item.employer_first_letter,
       month: item.submit_month,
       monthName: getMonthName(item.submit_month),
-      count: item.certified_count,
+      count: dataType === 'certified' ? item.certified_count : item.processed_count,
       color: getMonthColor(item.submit_month)
     }))
     .sort((a, b) => {
