@@ -36,8 +36,8 @@ interface CompanyCasesResponse {
 export default function CaseSearchPage() {
   const [companyQuery, setCompanyQuery] = useState('');
   const [selectedCompany, setSelectedCompany] = useState('');
-  const [startDate, setStartDate] = useState('2025-08-11');
-  const [endDate, setEndDate] = useState('2025-08-25');
+  const [startDate, setStartDate] = useState('2025-08-17');
+  const [endDate, setEndDate] = useState('2025-08-31');
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [searchResults, setSearchResults] = useState<CaseResult[]>([]);
