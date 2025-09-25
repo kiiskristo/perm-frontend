@@ -1,0 +1,53 @@
+# 🚀 Performance: Cache optimization for GitHub Pages
+# Static assets with long cache times (1 year for immutable assets)
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# JavaScript chunks
+*.js
+  Cache-Control: public, max-age=31536000, immutable
+
+# CSS files
+*.css
+  Cache-Control: public, max-age=31536000, immutable
+
+# Font files
+*.woff2
+  Cache-Control: public, max-age=31536000, immutable
+
+*.woff
+  Cache-Control: public, max-age=31536000, immutable
+
+# Images
+*.png
+  Cache-Control: public, max-age=2592000
+
+*.jpg
+  Cache-Control: public, max-age=2592000
+
+*.jpeg
+  Cache-Control: public, max-age=2592000
+
+*.svg
+  Cache-Control: public, max-age=2592000
+
+*.webp
+  Cache-Control: public, max-age=2592000
+
+# HTML files (shorter cache for content updates)
+*.html
+  Cache-Control: public, max-age=3600
+
+# Root HTML
+/
+  Cache-Control: public, max-age=3600
+
+# Manifest and service worker
+/manifest.webmanifest
+  Cache-Control: public, max-age=86400
+
+/robots.txt
+  Cache-Control: public, max-age=86400
+
+/sitemap.xml
+  Cache-Control: public, max-age=86400

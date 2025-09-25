@@ -1,4 +1,4 @@
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, TooltipProps } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 
 interface MonthlyBacklogData {
   month: string;
@@ -15,7 +15,13 @@ interface MonthlyBacklogChartProps {
 }
 
 // Custom tooltip component
-const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>) => {
+const CustomTooltip = ({ active, payload, label }: {
+  active?: boolean;
+  payload?: Array<{
+    payload: MonthlyBacklogData;
+  }>;
+  label?: string;
+}) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload as MonthlyBacklogData;
     return (

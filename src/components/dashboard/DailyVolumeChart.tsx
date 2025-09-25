@@ -35,6 +35,13 @@ export function DailyVolumeChart({ data }: DailyVolumeChartProps) {
             <Tooltip 
               formatter={(value) => [`${value} cases`, 'Volume']}
               labelFormatter={formatDate}
+              contentStyle={{
+                backgroundColor: 'rgb(31 41 55)', // gray-800
+                border: '1px solid rgb(75 85 99)', // gray-600
+                borderRadius: '6px',
+                color: 'white'
+              }}
+              labelStyle={{ color: 'white' }}
             />
             <Line type="monotone" dataKey="volume" stroke="#3B82F6" />
           </LineChart>

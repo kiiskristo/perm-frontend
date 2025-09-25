@@ -28,6 +28,13 @@ export function MonthlyVolumeChart({ data }: MonthlyVolumeChartProps) {
             />
             <Tooltip 
               formatter={(value) => [`${value.toLocaleString()} cases`, 'Volume']}
+              contentStyle={{
+                backgroundColor: 'rgb(31 41 55)', // gray-800
+                border: '1px solid rgb(75 85 99)', // gray-600
+                borderRadius: '6px',
+                color: 'white'
+              }}
+              labelStyle={{ color: 'white' }}
             />
             <Bar dataKey="volume" fill="#8B5CF6" />
           </BarChart>

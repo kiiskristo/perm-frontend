@@ -17,7 +17,7 @@ export default function Container({ children, showHero = true }: ContainerProps)
     <div className="min-h-screen flex flex-col bg-white text-black dark:bg-gray-900 dark:text-white">
       {/* News/Updates Banner */}
       <Banner 
-        message="June started! You can see daily updated cases "
+        message="July started! You can see daily updated cases "
         type="info"
         dismissible={true}
         enabled={true}
@@ -28,7 +28,7 @@ export default function Container({ children, showHero = true }: ContainerProps)
         }}
       />
       {/* Header */}
-      <header className="bg-gradient-to-r from-purple-600 to-blue-600 text-white dark:from-gray-800 dark:to-gray-700 relative">
+      <header className="bg-linear-to-r from-purple-600 to-blue-600 text-white dark:from-gray-800 dark:to-gray-700 relative">
         <ClientWrapper>
           <div className="relative">
             <nav className="container mx-auto px-4 py-6 flex justify-between items-center">
@@ -75,7 +75,7 @@ export default function Container({ children, showHero = true }: ContainerProps)
         )}
       </header>
 
-      <main className="flex-grow container mx-auto px-4 py-8">
+      <main className="grow container mx-auto px-4 py-8">
         {children ? children : (
           <>
             {/* Dashboard Section - Client-side */}

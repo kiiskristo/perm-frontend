@@ -184,7 +184,7 @@ export default function Chatbot({ className = '' }: ChatbotProps) {
                 setIsOpen(true);
                 trackChatbotOpen();
               }}
-              className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-full w-14 h-14 shadow-lg transition-all duration-300 hover:scale-110 flex items-center justify-center border-0"
+              className="bg-linear-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-full w-14 h-14 shadow-lg transition-all duration-300 hover:scale-110 flex items-center justify-center border-0"
               aria-label="Open PERM Assistant chatbot"
             >
               <Bot className="h-6 w-6 text-white stroke-2" />
@@ -196,7 +196,7 @@ export default function Chatbot({ className = '' }: ChatbotProps) {
       {isOpen && (
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 w-96 h-[500px] flex flex-col">
           {/* Header */}
-          <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white p-4 rounded-t-lg flex items-center justify-between">
+          <div className="bg-linear-to-r from-purple-600 to-blue-600 text-white p-4 rounded-t-lg flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <div className="bg-white/20 rounded-full p-1">
                 <Bot className="h-5 w-5" />
@@ -246,7 +246,7 @@ export default function Chatbot({ className = '' }: ChatbotProps) {
               <Button
                 onClick={handleSendMessage}
                 disabled={!inputValue.trim() || isLoading}
-                className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-3"
+                className="bg-linear-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-3"
               >
                 {isLoading ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
@@ -274,9 +274,9 @@ function ChatMessage({ message }: { message: ChatMessage }) {
     <div className={`flex ${isBot ? 'justify-start' : 'justify-end'}`}>
       <div className={`flex max-w-[80%] ${isBot ? 'flex-row' : 'flex-row-reverse'} items-start space-x-2`}>
         {/* Avatar */}
-        <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
+        <div className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
           isBot 
-            ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white' 
+            ? 'bg-linear-to-r from-purple-500 to-blue-500 text-white' 
             : 'bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-300'
         }`}>
           {isBot ? <Bot className="h-4 w-4" /> : <User className="h-4 w-4" />}
@@ -286,7 +286,7 @@ function ChatMessage({ message }: { message: ChatMessage }) {
         <div className={`rounded-lg px-3 py-2 ${
           isBot 
             ? 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100' 
-            : 'bg-gradient-to-r from-purple-600 to-blue-600 text-white'
+            : 'bg-linear-to-r from-purple-600 to-blue-600 text-white'
         }`}>
           {message.isTyping ? (
             <div className="flex items-center space-x-1">
