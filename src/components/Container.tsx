@@ -21,11 +21,6 @@ export default function Container({ children, showHero = true }: ContainerProps)
         type="info"
         dismissible={true}
         enabled={true}
-        link={{
-          text: 'on our updated cases page',
-          href: '/updated-cases',
-          newTab: false
-        }}
       />
       <Banner 
         message="July started! You can see daily updated cases "
