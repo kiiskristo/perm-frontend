@@ -17,6 +17,17 @@ export default function Container({ children, showHero = true }: ContainerProps)
     <div className="min-h-screen flex flex-col bg-white text-black dark:bg-gray-900 dark:text-white">
       {/* News/Updates Banner */}
       <Banner 
+        message="Due to new month start, we had an problem with summarizing case statuses, its been solved now. Thank you for the patience. "
+        type="info"
+        dismissible={true}
+        enabled={true}
+        link={{
+          text: 'on our updated cases page',
+          href: '/updated-cases',
+          newTab: false
+        }}
+      />
+      <Banner 
         message="July started! You can see daily updated cases "
         type="info"
         dismissible={true}
