@@ -5,7 +5,7 @@ import Container from '@/components/Container';
 import ClientWrapper from '@/components/ClientWrapper';
 import { executeRecaptcha } from '@/utils/recaptcha';
 import { AdCard } from '@/components/ui/AdCard';
-import { trackCaseSearch } from '@/utils/analytics';
+import { trackCaseSearch, trackCompanySearch } from '@/utils/analytics';
 
 interface CompanySearchResponse {
   companies: string[];
@@ -93,6 +93,9 @@ export default function CaseSearchPage() {
             const data: CompanySearchResponse = await response.json();
             setSuggestions(data.companies);
             setShowSuggestions(true);
+            
+            // Track company search autocomplete
+            trackCompanySearch(companyQuery, data.companies.length);
           }
         } catch (error) {
           console.error('Error searching companies:', error);

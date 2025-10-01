@@ -138,6 +138,19 @@ export const trackPredictionResult = (
   });
 };
 
+export const trackCompanySearch = (
+  companyQuery: string,
+  suggestionsCount: number
+) => {
+  trackEvent('company_search_performed', {
+    event_category: 'Company Search',
+    event_label: 'autocomplete_search',
+    company_query: companyQuery,
+    suggestions_count: suggestionsCount,
+    custom_parameter_1: 'company_autocomplete',
+  });
+};
+
 export const trackCaseSearch = (
   companyName: string,
   resultsCount: number,
