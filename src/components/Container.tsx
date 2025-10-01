@@ -17,6 +17,12 @@ export default function Container({ children, showHero = true }: ContainerProps)
     <div className="min-h-screen flex flex-col bg-white text-black dark:bg-gray-900 dark:text-white">
       {/* News/Updates Banner */}
       <Banner 
+        message="Due to Government shutdown, DOL has stopped processing cases. Expect to see no updates until the shutdown is over."
+        type="warning"
+        dismissible={true}
+        enabled={true}
+      />
+      <Banner 
         message="July started! You can see daily updated cases "
         type="info"
         dismissible={true}
