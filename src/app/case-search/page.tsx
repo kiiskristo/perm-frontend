@@ -19,6 +19,7 @@ interface CaseResult {
   submit_date: string;
   employer_name: string;
   employer_first_letter: string;
+  status?: string;
 }
 
 interface CompanyCasesResponse {
@@ -367,6 +368,7 @@ export default function CaseSearchPage() {
                         <th className="px-4 py-3">Case Number</th>
                         <th className="px-4 py-3">Job Title</th>
                         <th className="px-4 py-3">Submit Date</th>
+                        <th className="px-4 py-3">Status</th>
                         <th className="px-4 py-3">Company</th>
                       </tr>
                     </thead>
@@ -376,6 +378,7 @@ export default function CaseSearchPage() {
                           <td className="px-4 py-3 font-mono text-xs">{case_item.case_number}</td>
                           <td className="px-4 py-3">{case_item.job_title}</td>
                           <td className="px-4 py-3">{formatDate(case_item.submit_date)}</td>
+                          <td className="px-4 py-3">{case_item.status || '-'}</td>
                           <td className="px-4 py-3">{case_item.employer_name}</td>
                         </tr>
                       ))}
