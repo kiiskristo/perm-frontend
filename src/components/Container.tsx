@@ -17,7 +17,7 @@ export default function Container({ children, showHero = true }: ContainerProps)
     <div className="min-h-screen flex flex-col bg-white text-black dark:bg-gray-900 dark:text-white">
       {/* News/Updates Banner */}
       <Banner 
-        message="Perm process started again, July is the latest month! You can see daily updated cases "
+        message="We noticed confusement today about our updated cases page. We only sync data officially at 10PM EST time. Today we did some small runs just to check if the sync is working and if DOL started the process again. We do not have live data. NB! Ignore what 'VB' says"
         type="info"
         dismissible={true}
         enabled={true}
