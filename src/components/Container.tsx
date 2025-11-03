@@ -21,11 +21,13 @@ export default function Container({ children, showHero = true }: ContainerProps)
         type="info"
         dismissible={true}
         enabled={true}
+        /*
         link={{
           text: 'on our updated cases page',
           href: '/updated-cases',
           newTab: false
         }}
+        */
       />
       {/* Header */}
       <header className="bg-linear-to-r from-purple-600 to-blue-600 text-white dark:from-gray-800 dark:to-gray-700 relative">
