@@ -27,14 +27,6 @@ export default function Container({ children, showHero = true }: ContainerProps)
           newTab: false
         }}
       />
-      
-      {/* Sync Status Banner */}
-      <Banner
-        message="Yesterday's sync was completed today at 10:30 AM and includes some of this morning's cases. Total number of yesterday's and today's cases will be correct, but daily values may not be accurate."
-        type="warning"
-        dismissible={true}
-        enabled={true}
-      />
       {/* Header */}
       <header className="bg-linear-to-r from-purple-600 to-blue-600 text-white dark:from-gray-800 dark:to-gray-700 relative">
         <ClientWrapper>
