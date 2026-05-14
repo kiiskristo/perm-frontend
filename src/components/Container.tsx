@@ -95,7 +95,7 @@ export default function Container({ children, showHero = true }: ContainerProps)
 
               <div className="mb-6 p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800">
                 <p className="text-yellow-800 dark:text-yellow-200 font-medium">
-                  <strong>Current Reality:</strong> PERM applications are taking 462-478 days to process as of 2025.
+                  <strong>Current Reality:</strong> PERM applications are taking <strong>456 days</strong> (range: 444-475 days) to process as of 5/13/2026.
                 </p>
               </div>
 
@@ -113,7 +113,7 @@ export default function Container({ children, showHero = true }: ContainerProps)
                   <p className="text-gray-600 dark:text-gray-300 mb-4">
                     PERM processing times vary significantly based on several factors. The Department of Labor processes
                     applications by submission month first, then alphabetically by employer name within each month.
-                    For example, if you submit in May 2025, DOL will process all May 2025 cases, but companies with
+                    For example, if you submit in May 2026, DOL will process all May 2026 cases, but companies with
                     names starting with earlier letters (A-I) will be processed before those starting with later letters (S-Z).
                   </p>
                 </div>
@@ -222,7 +222,7 @@ export default function Container({ children, showHero = true }: ContainerProps)
           {/* Copyright */}
           <div className="mt-12 pt-8 border-t border-gray-800">
             <p className="text-center text-gray-400 text-sm">
-              &copy; 2025 PERM Analytics. All rights reserved.
+              &copy; 2026 PERM Analytics. All rights reserved.
             </p>
           </div>
         </div>
