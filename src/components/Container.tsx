@@ -52,6 +52,11 @@ export default function Container({ children, showHero = true }: ContainerProps)
                       About PERM
                     </Button>
                   </Link>
+                  <Link href="/visa-bulletin">
+                    <Button variant="ghost" className="text-white dark:text-gray-200 hover:bg-white/20">
+                      Visa Bulletin
+                    </Button>
+                  </Link>
                 </div>
 
                 {/* Client-side Navigation Controls */}
@@ -191,6 +196,11 @@ export default function Container({ children, showHero = true }: ContainerProps)
                 <li>
                   <Link href="/faq" className="text-gray-300 hover:text-white transition-colors duration-200 text-sm">
                     FAQ
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/visa-bulletin" className="text-gray-300 hover:text-white transition-colors duration-200 text-sm">
+                    Visa Bulletin
                   </Link>
                 </li>
               </ul>

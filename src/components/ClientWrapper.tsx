@@ -126,6 +126,11 @@ export function MobileMenu() {
             About PERM
           </Button>
         </Link>
+        <Link href="/visa-bulletin" onClick={closeMobileMenu}>
+          <Button variant="ghost" className="w-full text-left text-black dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700">
+            Visa Bulletin
+          </Button>
+        </Link>
       </div>
     </div>
   );
