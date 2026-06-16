@@ -99,7 +99,7 @@ const BULLETIN_MON: Record<string, number> = {
 };
 
 function parseCutoff(s: string): number | null {
-  if (!s || s === 'C') return null;
+  if (!s || s === 'C' || s === 'U') return null;
   const d = parseInt(s.slice(0, 2));
   const m = MON[s.slice(2, 5).toUpperCase()];
   const y = 2000 + parseInt(s.slice(5, 7));
@@ -112,12 +112,13 @@ function parseBulletinDate(dateStr: string): number {
   return new Date(parseInt(year), BULLETIN_MON[month] ?? 0, 1).getTime();
 }
 
-/** Returns backlog in fractional years. 0 = Current. */
-function calcBacklogYears(bulletinDateStr: string, cutoffStr: string): number {
+/** Returns backlog in fractional years, 0 for Current, null for Unavailable. */
+function calcBacklogYears(bulletinDateStr: string, cutoffStr: string): number | null {
   if (!cutoffStr || cutoffStr === 'C') return 0;
+  if (cutoffStr === 'U') return null;
   const bulletinTs = parseBulletinDate(bulletinDateStr);
   const cutoffTs = parseCutoff(cutoffStr);
-  if (cutoffTs === null) return 0;
+  if (cutoffTs === null) return null;
   const diffMs = bulletinTs - cutoffTs;
   return Math.max(0, diffMs / (1000 * 60 * 60 * 24 * 365.25));
 }
@@ -133,6 +134,7 @@ function fmtBacklogYears(years: number): string {
 
 function fmtCutoff(s: string): string {
   if (!s || s === 'C') return 'Current';
+  if (s === 'U') return 'Unavailable';
   const ts = parseCutoff(s);
   if (!ts) return s;
   return new Date(ts).toLocaleDateString('en-US', {
@@ -147,7 +149,7 @@ interface TooltipInnerProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   payload?: any[];
   label?: string;
-  chartData: Record<string, string | number>[];
+  chartData: Record<string, string | number | null>[];
   visibleCountries: CountryKey[];
 }
 
@@ -166,7 +168,7 @@ function CustomTooltip({ active, payload, label, chartData, visibleCountries }: 
               {COUNTRY_LABELS[c]}
             </span>
             <span className="text-gray-300">
-              {raw === 'C' || !raw ? 'Current' : `${fmtBacklogYears(years)} (${fmtCutoff(raw)})`}
+              {!raw || raw === 'C' ? 'Current' : raw === 'U' ? 'Unavailable' : `${fmtBacklogYears(years as number)} (${fmtCutoff(raw)})`}
             </span>
           </div>
         );
@@ -208,10 +210,13 @@ function SectionTable({ section, month }: { section: 'fad' | 'dff'; month: Bulle
                 {COUNTRIES.map((c) => {
                   const val = row[c];
                   const isCurrent = val === 'C';
+                  const isUnavailable = val === 'U';
                   return (
                     <td key={c} className={`px-4 py-2.5 text-center border border-gray-200 dark:border-gray-600 ${
                       isCurrent
                         ? 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 font-semibold'
+                        : isUnavailable
+                        ? 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 font-semibold'
                         : 'text-gray-700 dark:text-gray-300'
                     }`}>
                       {fmtCutoff(val)}
@@ -269,7 +274,7 @@ export default function BulletinPage() {
   const chartData = chartMonths.map((m) => {
     const sec = chartSection === 'fad' ? m.fad : m.dff;
     const cat = sec && sec[chartCat];
-    const pt: Record<string, string | number> = { month: m.date };
+    const pt: Record<string, string | number | null> = { month: m.date };
     COUNTRIES.forEach((c) => {
       const raw = cat ? cat[c] : '';
       pt[c] = calcBacklogYears(m.date, raw || '');
