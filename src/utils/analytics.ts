@@ -1,4 +1,6 @@
-// Google Analytics event tracking utilities
+// Analytics event tracking — GA4 + OpenPanel
+
+import { OpenPanel } from '@openpanel/nextjs';
 
 declare global {
   interface Window {
@@ -12,21 +14,30 @@ declare global {
   }
 }
 
-// Track custom events
+const op = new OpenPanel({
+  clientId: process.env.NEXT_PUBLIC_OPENPANEL_CLIENT_ID!,
+  apiUrl: 'https://openpanel-api-production-bbc2.up.railway.app',
+});
+
+// Track custom events — fires to both GA4 and OpenPanel
 export const trackEvent = (
   eventName: string,
   parameters?: {
     [key: string]: string | number | boolean | null;
   }
 ) => {
-  // Only track if gtag is available (client-side and GA loaded)
-  if (typeof window !== 'undefined' && window.gtag) {
+  if (typeof window === 'undefined') return;
+
+  // GA4
+  if (window.gtag) {
     window.gtag('event', eventName, {
       ...parameters,
-      // Add timestamp for better tracking
       timestamp: new Date().toISOString(),
     });
   }
+
+  // OpenPanel
+  op.track(eventName, parameters ?? {});
 };
 
 // Ad blocker detection utility
