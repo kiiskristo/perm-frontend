@@ -124,6 +124,12 @@ export function PredictionForm({ type = 'date' }: PredictionFormProps) {
                 }
               }}
             />
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+              Don&apos;t know your case number?{' '}
+              <Link href="/case-search" className="text-blue-600 dark:text-blue-400 hover:underline">
+                Search for it here
+              </Link>
+            </p>
           ) : (
             <>
               <input
