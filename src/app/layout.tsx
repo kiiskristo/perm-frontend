@@ -51,8 +51,8 @@ export default function RootLayout({
       </head>
       <GoogleAnalytics ga_id={process.env.NEXT_PUBLIC_GA_ID!} />
       <OpenPanelComponent
-        clientId={process.env.NEXT_PUBLIC_OPENPANEL_CLIENT_ID!}
-        apiUrl="https://openpanel-api-production-bbc2.up.railway.app"
+        clientId="7d385e2c-b272-4751-90aa-c41d9fd6deae"
+        apiUrl="https://track.permupdate.com"
         trackScreenViews
         trackOutgoingLinks
         trackAttributes
