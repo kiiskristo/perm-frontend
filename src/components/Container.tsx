@@ -100,7 +100,7 @@ export default function Container({ children, showHero = true }: ContainerProps)
 
               <div className="mb-6 p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800">
                 <p className="text-yellow-800 dark:text-yellow-200 font-medium">
-                  <strong>Current Reality:</strong> PERM applications are taking <strong>404 days</strong> (range: 403-426 days) to process as of 6/8/2026.
+                  <strong>Current Reality:</strong> PERM applications are taking <strong>387 days</strong> (range: 384-399 days) to process as of 6/24/2026.
                 </p>
               </div>
 

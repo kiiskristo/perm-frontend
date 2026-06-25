@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { getPrediction, type DatePrediction } from '@/services/permService';
 
@@ -124,20 +125,28 @@ export function PredictionForm({ type = 'date' }: PredictionFormProps) {
               }}
             />
           ) : (
-            <input
-              type="text"
-              id="input-caseNumber"
-              placeholder="G-100-XXXXX-XXXXXX"
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  e.preventDefault();
-                  handleDatePrediction();
-                }
-              }}
-            />
+            <>
+              <input
+                type="text"
+                id="input-caseNumber"
+                placeholder="G-100-XXXXX-XXXXXX"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleDatePrediction();
+                  }
+                }}
+              />
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                Don&apos;t know your case number?{' '}
+                <Link href="/case-search" className="text-blue-600 dark:text-blue-400 hover:underline">
+                  Search for it here
+                </Link>
+              </p>
+            </>
           )}
         </div>
         
