@@ -1,6 +1,4 @@
-// Analytics event tracking — GA4 + OpenPanel
-
-import { OpenPanel } from '@openpanel/nextjs';
+// Analytics event tracking — GA4 (OpenPanel paused to control self-hosting costs)
 
 declare global {
   interface Window {
@@ -14,12 +12,7 @@ declare global {
   }
 }
 
-const op = new OpenPanel({
-  clientId: '7d385e2c-b272-4751-90aa-c41d9fd6deae',
-  apiUrl: 'https://track.permupdate.com',
-});
-
-// Track custom events — fires to both GA4 and OpenPanel
+// Track custom events
 export const trackEvent = (
   eventName: string,
   parameters?: {
@@ -35,9 +28,6 @@ export const trackEvent = (
       timestamp: new Date().toISOString(),
     });
   }
-
-  // OpenPanel
-  op.track(eventName, parameters ?? {});
 };
 
 // Ad blocker detection utility

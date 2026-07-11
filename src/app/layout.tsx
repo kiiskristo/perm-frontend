@@ -3,7 +3,6 @@ import './globals.css';
 import { Inter } from 'next/font/google';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
 import ClientWrapper from '@/components/ClientWrapper';
-import { OpenPanelComponent } from '@openpanel/nextjs';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -50,13 +49,14 @@ export default function RootLayout({
         />
       </head>
       <GoogleAnalytics ga_id={process.env.NEXT_PUBLIC_GA_ID!} />
-      <OpenPanelComponent
+      {/* OpenPanel paused to control self-hosting costs — see src/utils/analytics.ts */}
+      {/* <OpenPanelComponent
         clientId="7d385e2c-b272-4751-90aa-c41d9fd6deae"
         apiUrl="https://track.permupdate.com"
         trackScreenViews
         trackOutgoingLinks
         trackAttributes
-      />
+      /> */}
       <body className={`${inter.className} h-full`}>
         <ClientWrapper>
           {children}
