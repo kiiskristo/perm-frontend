@@ -127,8 +127,11 @@ export function MobileMenu() {
           </Button>
         </Link>
         <Link href="/visa-bulletin" onClick={closeMobileMenu}>
-          <Button variant="ghost" className="w-full text-left text-black dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700">
+          <Button variant="ghost" className="w-full text-left text-black dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 inline-flex items-center gap-1.5">
             Visa Bulletin
+            <span className="bg-yellow-400 text-purple-900 text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none">
+              New
+            </span>
           </Button>
         </Link>
       </div>
