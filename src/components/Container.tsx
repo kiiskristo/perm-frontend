@@ -56,9 +56,11 @@ export default function Container({ children, showHero = true }: ContainerProps)
                     <Button variant="ghost" className="text-white dark:text-gray-200 hover:bg-white/20">
                       Visa Bulletin
                     </Button>
+                    {/* "New" badge — hidden for now, uncomment to re-enable
                     <span className="absolute -top-1 -right-1 bg-yellow-400 text-purple-900 text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none">
                       New
                     </span>
+                    */}
                   </Link>
                 </div>
 
@@ -204,9 +206,11 @@ export default function Container({ children, showHero = true }: ContainerProps)
                 <li>
                   <Link href="/visa-bulletin" className="text-gray-300 hover:text-white transition-colors duration-200 text-sm inline-flex items-center gap-1.5">
                     Visa Bulletin
+                    {/* "New" badge — hidden for now, uncomment to re-enable
                     <span className="bg-yellow-400 text-purple-900 text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none">
                       New
                     </span>
+                    */}
                   </Link>
                 </li>
               </ul>
