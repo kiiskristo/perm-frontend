@@ -281,16 +281,20 @@ const Dashboard = () => {
             {/* PERM Cases Activity Charts */}
             {dashboardData.perm_cases && (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-                <DailySyncLettersChart 
+                <DailySyncLettersChart
                   data={dashboardData.perm_cases.daily_activity.activity_data}
                   dataDate={dashboardData.perm_cases.daily_activity.data_date}
                   dataType={dataType}
+                  dayDistribution={dashboardData.perm_cases.daily_activity.day_distribution}
+                  mostActiveDay={dashboardData.perm_cases.daily_activity.most_active_day}
                 />
-                <MostActiveMonthChart 
+                <MostActiveMonthChart
                   data={dashboardData.perm_cases.latest_month_activity.activity_data}
                   mostActiveLetter={dashboardData.perm_cases.latest_month_activity.most_active_letter}
                   latestActiveMonth={dashboardData.perm_cases.latest_month_activity.latest_active_month}
                   totalCertifiedCases={dashboardData.perm_cases.latest_month_activity.total_certified_cases}
+                  dayDistribution={dashboardData.perm_cases.latest_month_activity.day_distribution}
+                  mostActiveDay={dashboardData.perm_cases.latest_month_activity.most_active_day}
                 />
               </div>
             )}

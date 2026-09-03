@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+import { SegmentedControl } from '@/components/ui/SegmentedControl';
 
 interface DailySyncLettersChartProps {
   data: {
@@ -9,9 +11,17 @@ interface DailySyncLettersChartProps {
   }[];
   dataDate: string;
   dataType: 'certified' | 'processed';
+  dayDistribution?: {
+    submit_day: number;
+    certified_count: number;
+    processed_count: number;
+  }[];
+  mostActiveDay?: number;
 }
 
-export function DailySyncLettersChart({ data, dataDate, dataType }: DailySyncLettersChartProps) {
+export function DailySyncLettersChart({ data, dataDate, dataType, dayDistribution, mostActiveDay }: DailySyncLettersChartProps) {
+  const [view, setView] = useState<'letter' | 'day'>('letter');
+
   // Utility function to safely format dates without timezone issues
   const formatDateSafely = (dateString: string) => {
     const [year, month, day] = dateString.split('-').map(Number);
@@ -49,7 +59,7 @@ export function DailySyncLettersChart({ data, dataDate, dataType }: DailySyncLet
     return monthColors[(monthNum - 1) % monthColors.length];
   };
 
-  // Custom tooltip component
+  // Custom tooltip component (letter view)
   const CustomTooltip = ({ active, payload }: {
     active?: boolean;
     payload?: Array<{
@@ -69,6 +79,23 @@ export function DailySyncLettersChart({ data, dataDate, dataType }: DailySyncLet
           <p className="font-medium text-gray-900 dark:text-white">{`Letter: ${data.letter}`}</p>
           <p className="text-gray-700 dark:text-gray-300">{`Month: ${data.monthName}`}</p>
           <p style={{ color: getMonthColor(data.month) }}>{`Cases: ${data.count.toLocaleString()}`}</p>
+        </div>
+      );
+    }
+    return null;
+  };
+
+  // Custom tooltip component (day view)
+  const DayTooltip = ({ active, payload, label }: {
+    active?: boolean;
+    payload?: Array<{ value: number }>;
+    label?: number;
+  }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-white dark:bg-gray-800 p-3 border border-gray-300 dark:border-gray-600 rounded shadow-lg">
+          <p className="font-medium text-gray-900 dark:text-white">{`Day of Month: ${label}`}</p>
+          <p className="text-blue-600 dark:text-blue-400">{`Cases: ${payload[0].value.toLocaleString()}`}</p>
         </div>
       );
     }
@@ -106,53 +133,117 @@ export function DailySyncLettersChart({ data, dataDate, dataType }: DailySyncLet
       color: getMonthColor(month)
     }));
 
+  // Transform day distribution data
+  const dayChartData = (dayDistribution ?? [])
+    .map(item => ({
+      day: item.submit_day,
+      count: dataType === 'certified' ? item.certified_count : item.processed_count,
+    }))
+    .sort((a, b) => a.day - b.day);
+
+  const hasDayDistribution = !!dayDistribution && dayDistribution.length > 0;
+
   return (
     <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-      <h3 className="text-lg font-semibold mb-4 dark:text-white">
-        Last Sync Letters Activity by Month
-      </h3>
+      <div className="flex items-center justify-between mb-4 gap-4 flex-wrap">
+        <h3 className="text-lg font-semibold dark:text-white">
+          Last Sync Activity by {view === 'letter' ? 'Letter & Month' : 'Day of Month'}
+        </h3>
+        {hasDayDistribution && (
+          <SegmentedControl
+            size="sm"
+            className="w-auto"
+            value={view}
+            onChange={(v) => setView(v as 'letter' | 'day')}
+            options={[
+              { value: 'letter', label: 'By Letter' },
+              { value: 'day', label: 'By Day' },
+            ]}
+          />
+        )}
+      </div>
       <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-        As of {formatDateSafely(dataDate)} (10+ cases only)<br/>
-        <span className="text-xs">X -letter includes numeric and special character company names</span>
+        As of {formatDateSafely(dataDate)} (10+ cases only)
+        {view === 'letter' && (
+          <>
+            <br />
+            <span className="text-xs">X -letter includes numeric and special character company names</span>
+          </>
+        )}
+        {view === 'day' && mostActiveDay !== undefined && (
+          <>
+            <br />
+            <span className="text-xs">Most active submission day: {mostActiveDay}</span>
+          </>
+        )}
       </p>
-      
-      {/* Legend */}
-      <div className="flex flex-wrap gap-2 mb-4">
-        {uniqueMonths.map(month => (
-          <div key={month.month} className="flex items-center">
-            <div 
-              className="w-3 h-3 rounded-full mr-1" 
-              style={{ backgroundColor: month.color }}
-            ></div>
-            <span className="text-xs text-gray-600 dark:text-gray-300">{month.name.slice(0, 3)}</span>
-          </div>
-        ))}
-      </div>
 
-      <div className="h-64">
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart
-            data={chartData}
-            margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-          >
-            <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.1} />
-            <XAxis 
-              dataKey="letterMonth" 
-              tick={{ fontSize: 10 }}
-              angle={-45}
-              textAnchor="end"
-              height={60}
-            />
-            <YAxis tick={{ fontSize: 12 }} />
-            <Tooltip content={<CustomTooltip />} />
-            <Bar dataKey="count">
-              {chartData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.color} />
-              ))}
-            </Bar>
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
+      {view === 'letter' ? (
+        <>
+          {/* Legend */}
+          <div className="flex flex-wrap gap-2 mb-4">
+            {uniqueMonths.map(month => (
+              <div key={month.month} className="flex items-center">
+                <div
+                  className="w-3 h-3 rounded-full mr-1"
+                  style={{ backgroundColor: month.color }}
+                ></div>
+                <span className="text-xs text-gray-600 dark:text-gray-300">{month.name.slice(0, 3)}</span>
+              </div>
+            ))}
+          </div>
+
+          <div className="h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart
+                data={chartData}
+                margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.1} />
+                <XAxis
+                  dataKey="letterMonth"
+                  tick={{ fontSize: 10 }}
+                  angle={-45}
+                  textAnchor="end"
+                  height={60}
+                />
+                <YAxis tick={{ fontSize: 12 }} />
+                <Tooltip content={<CustomTooltip />} />
+                <Bar dataKey="count">
+                  {chartData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </>
+      ) : (
+        <div className="h-64">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart
+              data={dayChartData}
+              margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.1} />
+              <XAxis
+                dataKey="day"
+                tick={{ fontSize: 11 }}
+              />
+              <YAxis tick={{ fontSize: 12 }} />
+              <Tooltip content={<DayTooltip />} />
+              <Bar dataKey="count">
+                {dayChartData.map((entry) => (
+                  <Cell
+                    key={`day-cell-${entry.day}`}
+                    fill={entry.day === mostActiveDay ? '#F59E0B' : '#3B82F6'}
+                  />
+                ))}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      )}
     </div>
   );
-} 
+}

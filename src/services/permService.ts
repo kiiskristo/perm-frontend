@@ -27,6 +27,12 @@ export interface DashboardData {
       most_active_month: number;
       total_certified_cases: number;
       data_date: string;
+      day_distribution?: {
+        submit_day: number;
+        certified_count: number;
+        processed_count: number;
+      }[];
+      most_active_day?: number;
     };
     latest_month_activity: {
       activity_data: {
@@ -38,6 +44,12 @@ export interface DashboardData {
       most_active_letter: string;
       latest_active_month: number;
       total_certified_cases: number;
+      day_distribution?: {
+        submit_day: number;
+        certified_count: number;
+        review_count: number;
+      }[];
+      most_active_day?: number;
     };
   };
   metrics: {
