@@ -13,7 +13,7 @@ interface MostActiveMonthChartProps {
   latestActiveMonth: number;
   totalCertifiedCases: number;
   dayDistribution?: {
-    submit_day: number;
+    day: number;
     certified_count: number;
     review_count: number;
   }[];
@@ -78,7 +78,7 @@ export function MostActiveMonthChart({
   // Transform day distribution data
   const dayChartData = (dayDistribution ?? [])
     .map(item => ({
-      day: item.submit_day,
+      day: item.day,
       certified: item.certified_count,
       review: item.review_count,
     }))

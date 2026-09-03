@@ -28,7 +28,7 @@ export interface DashboardData {
       total_certified_cases: number;
       data_date: string;
       day_distribution?: {
-        submit_day: number;
+        day: number;
         certified_count: number;
         processed_count: number;
       }[];
@@ -45,7 +45,7 @@ export interface DashboardData {
       latest_active_month: number;
       total_certified_cases: number;
       day_distribution?: {
-        submit_day: number;
+        day: number;
         certified_count: number;
         review_count: number;
       }[];

@@ -12,7 +12,7 @@ interface DailySyncLettersChartProps {
   dataDate: string;
   dataType: 'certified' | 'processed';
   dayDistribution?: {
-    submit_day: number;
+    day: number;
     certified_count: number;
     processed_count: number;
   }[];
@@ -136,7 +136,7 @@ export function DailySyncLettersChart({ data, dataDate, dataType, dayDistributio
   // Transform day distribution data
   const dayChartData = (dayDistribution ?? [])
     .map(item => ({
-      day: item.submit_day,
+      day: item.day,
       count: dataType === 'certified' ? item.certified_count : item.processed_count,
     }))
     .sort((a, b) => a.day - b.day);
