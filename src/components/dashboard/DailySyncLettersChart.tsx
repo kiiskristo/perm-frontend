@@ -13,6 +13,7 @@ interface DailySyncLettersChartProps {
   dataType: 'certified' | 'processed';
   dayDistribution?: {
     day: number;
+    submit_month: number;
     certified_count: number;
     processed_count: number;
   }[];
@@ -85,17 +86,26 @@ export function DailySyncLettersChart({ data, dataDate, dataType, dayDistributio
     return null;
   };
 
-  // Custom tooltip component (day view)
+  // Custom tooltip component (day view) — shows per-month breakdown for the stacked bar
   const DayTooltip = ({ active, payload, label }: {
     active?: boolean;
-    payload?: Array<{ value: number }>;
+    payload?: Array<{ value: number; name: string; color: string }>;
     label?: number;
   }) => {
     if (active && payload && payload.length) {
+      const visible = payload.filter(p => p.value > 0);
+      const total = visible.reduce((sum, p) => sum + p.value, 0);
       return (
         <div className="bg-white dark:bg-gray-800 p-3 border border-gray-300 dark:border-gray-600 rounded shadow-lg">
-          <p className="font-medium text-gray-900 dark:text-white">{`Day of Month: ${label}`}</p>
-          <p className="text-blue-600 dark:text-blue-400">{`Cases: ${payload[0].value.toLocaleString()}`}</p>
+          <p className="font-medium text-gray-900 dark:text-white mb-1">{`Day of Month: ${label}`}</p>
+          {visible.map((entry, index) => (
+            <p key={index} style={{ color: entry.color }} className="text-sm">
+              {`${entry.name}: ${entry.value.toLocaleString()}`}
+            </p>
+          ))}
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 pt-1 border-t border-gray-200 dark:border-gray-600">
+            {`Total: ${total.toLocaleString()}`}
+          </p>
         </div>
       );
     }
@@ -133,13 +143,26 @@ export function DailySyncLettersChart({ data, dataDate, dataType, dayDistributio
       color: getMonthColor(month)
     }));
 
-  // Transform day distribution data
-  const dayChartData = (dayDistribution ?? [])
-    .map(item => ({
-      day: item.day,
-      count: dataType === 'certified' ? item.certified_count : item.processed_count,
-    }))
-    .sort((a, b) => a.day - b.day);
+  // Unique months present in the day distribution (for stacking + legend)
+  const dayUniqueMonths = [...new Set((dayDistribution ?? []).map(item => item.submit_month))]
+    .sort((a, b) => a - b)
+    .map(month => ({
+      month,
+      name: getMonthName(month),
+      color: getMonthColor(month),
+    }));
+
+  // Pivot day distribution into one row per day, with a count per month key, so bars can stack by month
+  const dayChartData = (() => {
+    const byDay = new Map<number, Record<string, number>>();
+    (dayDistribution ?? []).forEach(item => {
+      const count = dataType === 'certified' ? item.certified_count : item.processed_count;
+      const row = byDay.get(item.day) ?? { day: item.day };
+      row[`m_${item.submit_month}`] = (row[`m_${item.submit_month}`] ?? 0) + count;
+      byDay.set(item.day, row);
+    });
+    return Array.from(byDay.values()).sort((a, b) => a.day - b.day);
+  })();
 
   const hasDayDistribution = !!dayDistribution && dayDistribution.length > 0;
 
@@ -219,30 +242,46 @@ export function DailySyncLettersChart({ data, dataDate, dataType, dayDistributio
           </div>
         </>
       ) : (
-        <div className="h-64">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart
-              data={dayChartData}
-              margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-            >
-              <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.1} />
-              <XAxis
-                dataKey="day"
-                tick={{ fontSize: 11 }}
-              />
-              <YAxis tick={{ fontSize: 12 }} />
-              <Tooltip content={<DayTooltip />} />
-              <Bar dataKey="count">
-                {dayChartData.map((entry) => (
-                  <Cell
-                    key={`day-cell-${entry.day}`}
-                    fill={entry.day === mostActiveDay ? '#F59E0B' : '#3B82F6'}
+        <>
+          {/* Legend */}
+          <div className="flex flex-wrap gap-2 mb-4">
+            {dayUniqueMonths.map(month => (
+              <div key={month.month} className="flex items-center">
+                <div
+                  className="w-3 h-3 rounded-full mr-1"
+                  style={{ backgroundColor: month.color }}
+                ></div>
+                <span className="text-xs text-gray-600 dark:text-gray-300">{month.name.slice(0, 3)}</span>
+              </div>
+            ))}
+          </div>
+
+          <div className="h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart
+                data={dayChartData}
+                margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.1} />
+                <XAxis
+                  dataKey="day"
+                  tick={{ fontSize: 11 }}
+                />
+                <YAxis tick={{ fontSize: 12 }} />
+                <Tooltip content={<DayTooltip />} />
+                {dayUniqueMonths.map(month => (
+                  <Bar
+                    key={month.month}
+                    dataKey={`m_${month.month}`}
+                    stackId="day"
+                    fill={month.color}
+                    name={month.name}
                   />
                 ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </>
       )}
     </div>
   );

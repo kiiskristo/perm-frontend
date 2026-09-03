@@ -29,6 +29,7 @@ export interface DashboardData {
       data_date: string;
       day_distribution?: {
         day: number;
+        submit_month: number;
         certified_count: number;
         processed_count: number;
       }[];
