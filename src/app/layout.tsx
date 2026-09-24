@@ -1,4 +1,5 @@
 import React from 'react';
+import type { Metadata } from 'next';
 import './globals.css';
 import { Inter } from 'next/font/google';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
@@ -10,10 +11,23 @@ export const viewport = {
   themeColor: '#4F46E5',
 };
 
-export const metadata = {
+export const metadata: Metadata = {
+  metadataBase: new URL('https://permupdate.com'),
   title: 'PERM Tracker & Timeline Analytics | Processing Time Predictions',
   description: 'Track your PERM case processing times with our advanced timeline tracker. Get accurate predictions and real-time analytics for your labor certification process.',
   keywords: 'perm tracker, perm timeline, perm processing time tracker, perm case tracking, labor certification timeline, perm approval tracker',
+  openGraph: {
+    type: 'website',
+    siteName: 'PERM Analytics',
+    locale: 'en_US',
+    title: 'PERM Tracker & Timeline Analytics',
+    description: 'Daily-updated PERM processing times, case search, and timeline predictions for labor certification.',
+  },
+  twitter: {
+    card: 'summary',
+    title: 'PERM Tracker & Timeline Analytics',
+    description: 'Daily-updated PERM processing times, case search, and timeline predictions for labor certification.',
+  },
   icons: {
     icon: [
       { url: '/icon.svg', type: 'image/svg+xml' },

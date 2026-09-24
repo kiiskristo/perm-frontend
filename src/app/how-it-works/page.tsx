@@ -2,8 +2,9 @@ import React from 'react';
 import Container from '@/components/Container';
 
 export const metadata = {
-  title: 'How It Works | PERM Analytics',
+  title: 'PERM Timeline Estimator | How We Predict Your PERM Approval Date',
   description: 'Learn how our Timeline Estimator predicts PERM application processing times using employer name initials and submission dates.',
+  alternates: { canonical: '/how-it-works' },
 };
 
 // Article Schema for structured data

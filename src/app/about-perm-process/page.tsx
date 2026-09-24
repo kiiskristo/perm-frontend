@@ -2,8 +2,9 @@ import React from 'react';
 import Container from '@/components/Container';
 
 export const metadata = {
-  title: 'About PERM Process | PERM Analytics',
+  title: 'PERM Labor Certification Process Explained | Steps & Timeline',
   description: 'Learn about the Program Electronic Review Management (PERM) process and its key steps for labor certification.',
+  alternates: { canonical: '/about-perm-process' },
 };
 
 // Organization Schema for structured data

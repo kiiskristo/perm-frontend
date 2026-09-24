@@ -4,6 +4,7 @@ import Container from '@/components/Container';
 export const metadata = {
   title: 'Disclaimer | PERM Analytics',
   description: 'Important disclaimers about the use of PERM Analytics and its data sources.',
+  alternates: { canonical: '/disclaimer' },
 };
 
 export default function Disclaimer() {

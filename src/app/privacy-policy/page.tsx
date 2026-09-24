@@ -4,6 +4,7 @@ import Container from '@/components/Container';
 export const metadata = {
   title: 'Privacy Policy | PERM Analytics',
   description: 'Privacy policy for PERM Analytics - Learn how we collect, use, and protect your information.',
+  alternates: { canonical: '/privacy-policy' },
 };
 
 export default function PrivacyPolicy() {

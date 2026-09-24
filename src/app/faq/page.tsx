@@ -2,8 +2,9 @@ import React from 'react';
 import Container from '@/components/Container';
 
 export const metadata = {
-  title: 'FAQ | PERM Analytics',
+  title: 'PERM Processing FAQ | Timelines, Backlog & Predictions Explained',
   description: 'Frequently asked questions about PERM processing times, data sources, and prediction accuracy.',
+  alternates: { canonical: '/faq' },
 };
 
 // FAQ Schema for structured data

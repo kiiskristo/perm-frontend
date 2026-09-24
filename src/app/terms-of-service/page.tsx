@@ -4,6 +4,7 @@ import Container from '@/components/Container';
 export const metadata = {
   title: 'Terms of Service | PERM Analytics',
   description: 'Terms and conditions for using PERM Analytics - Learn about your rights and responsibilities.',
+  alternates: { canonical: '/terms-of-service' },
 };
 
 export default function TermsOfService() {

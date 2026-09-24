@@ -1,0 +1,375 @@
+'use client';
+
+import { useState } from 'react';
+import Container from '@/components/Container';
+import ClientWrapper from '@/components/ClientWrapper';
+import { Button } from '@/components/ui/button';
+
+import { AdCard } from '@/components/ui/AdCard';
+import { trackUpdatedCasesSearch } from '@/utils/analytics';
+import { ChevronLeft, ChevronRight, Calendar, RefreshCw } from 'lucide-react';
+
+interface UpdatedPermCase {
+  case_number: string;
+  job_title: string;
+  submit_date: string;
+  employer_name: string;
+  employer_first_letter: string;
+  status: string;
+  previous_status?: string;
+  updated_at: string;
+}
+
+interface UpdatedCasesResponse {
+  cases: UpdatedPermCase[];
+  total: number;
+  limit: number;
+  offset: number;
+  target_date: string;
+  timezone_note: string;
+}
+
+export default function UpdatedCasesClient() {
+  // Set today as default date - get Eastern Time date explicitly
+  const getTodayString = () => {
+    const now = new Date();
+    // Get the date in Eastern Time
+    const etDate = new Date(now.toLocaleString("en-US", {timeZone: "America/New_York"}));
+    const year = etDate.getFullYear();
+    const month = String(etDate.getMonth() + 1).padStart(2, '0');
+    const day = String(etDate.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+  
+  const todayET = getTodayString();
+  const [targetDate, setTargetDate] = useState(todayET);
+  const [cases, setCases] = useState<UpdatedPermCase[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalCases, setTotalCases] = useState(0);
+  const [searchPerformed, setSearchPerformed] = useState(false);
+  const [serverTargetDate, setServerTargetDate] = useState('');
+
+  const casesPerPage = 50;
+
+  const searchUpdatedCases = async (page: number = 1) => {
+    if (!targetDate.trim()) {
+      setError('Please enter a date to search for updated cases.');
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+
+    try {
+      const offset = (page - 1) * casesPerPage;
+
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/data/updated-cases`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          target_date: targetDate,
+          limit: casesPerPage,
+          offset: offset,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+      }
+
+            const data: UpdatedCasesResponse = await response.json();
+      setCases(data.cases);
+      setTotalCases(data.total);
+      setCurrentPage(page);
+      setSearchPerformed(true);
+      
+      // Store the server's target_date to avoid timezone issues in display
+      setServerTargetDate(data.target_date);
+
+      // Track successful search (only for initial search, not pagination)
+      if (page === 1) {
+        trackUpdatedCasesSearch(data.target_date, data.total);
+        
+        // Scroll to results on mobile after initial search
+        setTimeout(() => {
+          const resultsElement = document.querySelector('[data-results-section]');
+          if (resultsElement) {
+            resultsElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }, 100); // Small delay to ensure DOM is updated
+      }
+
+      if (data.cases.length === 0) {
+        setError(`No PERM cases were updated on ${targetDate}. Try a different date.`);
+        
+        // Scroll to error message on mobile when no results found
+        if (page === 1) {
+          setTimeout(() => {
+            const errorElement = document.querySelector('[data-error-section]');
+            if (errorElement) {
+              errorElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+          }, 100);
+        }
+      }
+    } catch (err) {
+      console.error('Search error:', err);
+      setError(err instanceof Error ? err.message : 'An error occurred while searching for cases.');
+      setCases([]);
+      setTotalCases(0);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    searchUpdatedCases(1);
+  };
+
+  const totalPages = Math.ceil(totalCases / casesPerPage);
+
+  const formatDate = (dateString: string) => {
+    // Backend returns simple date string, just format it directly
+    const [year, month, day] = dateString.split('-');
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return `${monthNames[parseInt(month) - 1]} ${parseInt(day)}, ${year}`;
+  };
+
+
+
+  const getStatusColor = (status: string) => {
+    switch (status?.toUpperCase()) {
+      case 'CERTIFIED':
+        return 'text-green-600 bg-green-50';
+      case 'DENIED':
+        return 'text-red-600 bg-red-50';
+      case 'WITHDRAWN':
+        return 'text-orange-600 bg-orange-50';
+      case 'PENDING':
+        return 'text-blue-600 bg-blue-50';
+      default:
+        return 'text-gray-600 bg-gray-50';
+    }
+  };
+
+  return (
+    <ClientWrapper>
+      <Container showHero={false}>
+        <div>
+          <h1 className="text-3xl font-bold mb-8 dark:text-white">Updated Cases</h1>
+
+          <div>
+            {/* Search Form */}
+            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow mb-8">
+              <div className="text-center mb-6">
+                <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+                  Search for all PERM cases that were updated on a specific date.
+                </p>
+              </div>
+
+              <form onSubmit={handleSubmit} className="max-w-md mx-auto">
+                <div className="mb-4">
+                  <label htmlFor="targetDate" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Update Date
+                  </label>
+                  <div className="relative">
+                    <Calendar className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+                    <input
+                      type="date"
+                      id="targetDate"
+                      value={targetDate}
+                      onChange={(e) => setTargetDate(e.target.value)}
+                                        min="2025-07-01"
+                      className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent dark:bg-gray-700 dark:text-white scheme-light dark:scheme-dark"
+                      placeholder="Select date..."
+                      required
+                    />
+                  </div>
+                </div>
+
+
+
+                <Button
+                  type="submit"
+                  disabled={loading || !targetDate.trim()}
+                  className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {loading ? (
+                    <>
+                      <RefreshCw className="animate-spin h-4 w-4 mr-2" />
+                      Searching...
+                    </>
+                  ) : (
+                    'Search Updated Cases'
+                  )}
+                </Button>
+              </form>
+
+              {error && (
+                <div data-error-section className="mt-6 p-4 bg-red-50 border border-red-200 rounded-md">
+                  <p className="text-red-600 text-center">{error}</p>
+                </div>
+              )}
+            </div>
+            
+            <AdCard adSlot="2964232736" />
+
+                         {/* Results */}
+             {searchPerformed && cases.length > 0 && (
+               <div data-results-section className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden mt-8">
+                <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                    Search Results ({totalCases.toLocaleString()} cases updated on {formatDate(serverTargetDate)})
+                  </h2>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                    All timestamps are shown in Eastern Time (ET)
+                  </p>
+                </div>
+
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead className="bg-gray-50 dark:bg-gray-700">
+                      <tr>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                          Case Number
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                          Job Title
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                          Employer
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                          Submit Date
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                          Previous Status
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                          Current Status
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                      {cases.map((permCase, index) => (
+                        <tr key={`${permCase.case_number}-${index}`} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue-600 dark:text-blue-400">
+                            {permCase.case_number}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
+                            {permCase.job_title}
+                          </td>
+                          <td className="px-6 py-4 text-sm text-gray-900 dark:text-gray-100">
+                            <div className="max-w-xs truncate" title={permCase.employer_name}>
+                              {permCase.employer_name}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
+                            {formatDate(permCase.submit_date)}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm">
+                            {permCase.previous_status ? (
+                              <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(permCase.previous_status)}`}>
+                                {permCase.previous_status}
+                              </span>
+                            ) : (
+                              <span className="text-gray-400 dark:text-gray-500 text-xs">—</span>
+                            )}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm">
+                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(permCase.status)}`}>
+                              {permCase.status}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                {totalPages > 1 && (
+                  <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700">
+                    {/* Mobile: Stack vertically */}
+                    <div className="flex flex-col space-y-3 sm:hidden">
+                      <div className="text-sm text-gray-700 dark:text-gray-300 text-center">
+                        Showing {((currentPage - 1) * casesPerPage) + 1} to {Math.min(currentPage * casesPerPage, totalCases)} of {totalCases.toLocaleString()} cases
+                      </div>
+                      <div className="flex items-center justify-center space-x-2">
+                        <Button
+                          onClick={() => searchUpdatedCases(currentPage - 1)}
+                          disabled={currentPage === 1 || loading}
+                          variant="outline"
+                          size="sm"
+                        >
+                          <ChevronLeft className="h-4 w-4" />
+                        </Button>
+                        <span className="px-3 py-2 text-sm text-gray-700 dark:text-gray-300">
+                          {currentPage} of {totalPages}
+                        </span>
+                        <Button
+                          onClick={() => searchUpdatedCases(currentPage + 1)}
+                          disabled={currentPage === totalPages || loading}
+                          variant="outline"
+                          size="sm"
+                        >
+                          <ChevronRight className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                    
+                    {/* Desktop: Side by side */}
+                    <div className="hidden sm:flex items-center justify-between">
+                      <div className="text-sm text-gray-700 dark:text-gray-300">
+                        Showing {((currentPage - 1) * casesPerPage) + 1} to {Math.min(currentPage * casesPerPage, totalCases)} of {totalCases.toLocaleString()} cases
+                      </div>
+                      <div className="flex space-x-2">
+                        <Button
+                          onClick={() => searchUpdatedCases(currentPage - 1)}
+                          disabled={currentPage === 1 || loading}
+                          variant="outline"
+                          size="sm"
+                        >
+                          <ChevronLeft className="h-4 w-4 mr-1" />
+                          Previous
+                        </Button>
+                        <span className="px-3 py-2 text-sm text-gray-700 dark:text-gray-300">
+                          Page {currentPage} of {totalPages}
+                        </span>
+                        <Button
+                          onClick={() => searchUpdatedCases(currentPage + 1)}
+                          disabled={currentPage === totalPages || loading}
+                          variant="outline"
+                          size="sm"
+                        >
+                          Next
+                          <ChevronRight className="h-4 w-4 ml-1" />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+            {/* Info Section */}
+            <div className="mt-8 bg-purple-50 dark:bg-purple-900/20 p-6 rounded-lg border border-purple-200 dark:border-purple-800">
+              <h3 className="text-lg font-semibold mb-3 text-purple-800 dark:text-purple-200">About Updated Cases</h3>
+              <ul className="text-purple-700 dark:text-purple-300 space-y-2">
+                <li>• Search for PERM cases that were updated on a specific date</li>
+                <li>• Data available from July 1st, 2025 onwards</li>
+                <li>• Includes certifications, denials, withdrawals, and status changes</li>
+                <li>• All timestamps shown in Eastern Time (ET)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </Container>
+    </ClientWrapper>
+  );
+} 
